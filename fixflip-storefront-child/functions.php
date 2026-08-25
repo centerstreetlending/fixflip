@@ -1575,6 +1575,12 @@ function fixflip_enable_stripe_gateway_options() {
     if ($updated) {
         update_option('woocommerce_stripe_settings', $stripe_settings);
     }
+
+    // 3. Load secure credentials if config file exists
+    $config_file = get_stylesheet_directory() . '/stripe-config.php';
+    if ( file_exists( $config_file ) ) {
+        include_once $config_file;
+    }
 }
 
 add_filter('woocommerce_gateway_title', 'fixflip_custom_stripe_title', 10, 2);

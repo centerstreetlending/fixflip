@@ -1,0 +1,5 @@
+stripe-config.php
+fixflip-storefront-child/stripe-config.php
+*.key
+*.pem
+.env
