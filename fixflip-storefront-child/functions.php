@@ -641,22 +641,15 @@ function fixflip_custom_checkout_fields( $fields ) {
     return $fields;
 }
 
-// Hide empty payment method box & privacy policy text on checkout
+// Clean up checkout notices & privacy text
 add_filter( 'woocommerce_get_privacy_policy_text', '__return_empty_string', 999 );
-add_action( 'wp_head', 'fixflip_hide_empty_payment_box_checkout' );
-function fixflip_hide_empty_payment_box_checkout() {
+add_action( 'wp_head', 'fixflip_checkout_clean_styling' );
+function fixflip_checkout_clean_styling() {
     if ( is_checkout() ) {
         ?>
         <style>
-            .woocommerce-checkout table.shop_table tr.shipping,
-            .woocommerce-checkout table.shop_table tr.woocommerce-shipping-totals,
             .woocommerce-privacy-policy-text,
             p.woocommerce-privacy-policy-text {
-                display: none !important;
-            }
-            .woocommerce-checkout #payment .wc_payment_methods,
-            .woocommerce-checkout #payment ul.payment_methods,
-            .woocommerce-checkout #payment div.payment_box {
                 display: none !important;
             }
             .woocommerce-checkout #payment {
@@ -976,36 +969,75 @@ function fixflip_output_cart_drawer_items_html() {
     $boxes_total   = WC()->cart->get_cart_contents_count();
     $item_label    = $distinct_count === 1 ? '1 item' : $distinct_count . ' items';
 
+    // Calculate freight for drawer
+    $total_sqft = 0;
+    $has_bulk   = false;
+    foreach ( WC()->cart->get_cart() as $c_item ) {
+        if ( empty( $c_item['is_sample'] ) ) {
+            $has_bulk   = true;
+            $p_id       = isset( $c_item['product_id'] ) ? $c_item['product_id'] : 0;
+            $q_boxes    = isset( $c_item['quantity'] ) ? (int) $c_item['quantity'] : 1;
+            $cov        = (float) get_post_meta( $p_id, 'custom_coverage', true );
+            if ( empty($cov) ) $cov = 27.73;
+            $total_sqft += ($q_boxes * $cov);
+        }
+    }
+    $freight_cost = $has_bulk ? (450.00 + ($total_sqft * 0.40)) : 0.00;
+    $est_total    = $subtotal_val + $freight_cost;
+
     echo '<div style="padding-top: 16px; border-top: 2px solid #e2e8f0; margin-top: auto;">';
     
     // B2B Minimum Order Progress Bar
-    echo '<div style="margin-bottom: 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 12px 14px; border-radius: 4px;">';
-    if ($subtotal_val >= $min_target) {
-        echo '<div style="font-size: 11px; font-weight: 900; color: #16a34a; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">';
-        echo '<span>✅ MINIMUM ORDER REACHED ($2,000+)</span>';
+    if ( $has_bulk ) {
+        echo '<div style="margin-bottom: 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 12px 14px; border-radius: 4px;">';
+        if ($subtotal_val >= $min_target) {
+            echo '<div style="font-size: 11px; font-weight: 900; color: #16a34a; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">';
+            echo '<span>✅ MINIMUM ORDER REACHED ($2,000+)</span>';
+            echo '</div>';
+            echo '<div style="height: 6px; background: #dcfce7; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
+            echo '<div style="width: 100%; height: 100%; background: #16a34a;"></div>';
+            echo '</div>';
+            echo '<div style="font-size: 11px; color: #475569; font-weight: 600;">Eligible for 100% CSL Draw Financing &amp; Direct Jobsite Delivery!</div>';
+        } else {
+            echo '<div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between;">';
+            echo '<span>$2,000 MINIMUM ORDER REQUIREMENT</span>';
+            echo '<span>' . $percent . '%</span>';
+            echo '</div>';
+            echo '<div style="height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
+            echo '<div style="width: ' . $percent . '%; height: 100%; background: #007bff;"></div>';
+            echo '</div>';
+            echo '<div style="font-size: 11.5px; color: #dc2626; font-weight: 700;">Add $' . $needed . ' more to reach minimum order subtotal ($2,000.00).</div>';
+        }
         echo '</div>';
-        echo '<div style="height: 6px; background: #dcfce7; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
-        echo '<div style="width: 100%; height: 100%; background: #16a34a;"></div>';
-        echo '</div>';
-        echo '<div style="font-size: 11px; color: #475569; font-weight: 600;">Eligible for 100% CSL Draw Financing &amp; Direct Jobsite Delivery!</div>';
     } else {
-        echo '<div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between;">';
-        echo '<span>$2,000 MINIMUM ORDER REQUIREMENT</span>';
-        echo '<span>' . $percent . '%</span>';
+        echo '<div style="margin-bottom: 16px; background: #f0fdf4; border: 1.5px solid #86efac; padding: 10px 12px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">';
+        echo '<span style="font-size: 16px;">📦</span>';
+        echo '<div style="font-size: 11.5px; font-weight: 700; color: #166534;">Sample Swatch Order &bull; Free Courier Shipping Included</div>';
         echo '</div>';
-        echo '<div style="height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
-        echo '<div style="width: ' . $percent . '%; height: 100%; background: #007bff;"></div>';
-        echo '</div>';
-        echo '<div style="font-size: 11.5px; color: #dc2626; font-weight: 700;">Add $' . $needed . ' more to reach minimum order subtotal ($2,000.00).</div>';
+    }
+
+    // Line items breakdown
+    echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
+    echo '<span>Order Subtotal (' . $item_label . '):</span>';
+    echo '<span style="font-weight: 800; color: #0f172a;">' . WC()->cart->get_cart_subtotal() . '</span>';
+    echo '</div>';
+
+    echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
+    if ($has_bulk) {
+        echo '<span>🚚 Direct Jobsite Freight:</span>';
+        echo '<span style="color: #007bff; font-weight: 800;">$' . number_format($freight_cost, 2) . '</span>';
+    } else {
+        echo '<span>📦 Sample Courier Shipping:</span>';
+        echo '<span style="color: #16a34a; font-weight: 800;">FREE</span>';
     }
     echo '</div>';
 
-    echo '<div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 14px;">';
-    echo '<span>Order Subtotal (' . $item_label . ' &bull; ' . $boxes_total . ' boxes):</span>';
-    echo '<span>' . WC()->cart->get_cart_subtotal() . '</span>';
+    echo '<div style="display: flex; justify-content: space-between; font-size: 15.5px; font-weight: 900; color: #0f172a; margin-bottom: 16px; padding-top: 8px; border-top: 1.5px dashed #cbd5e1;">';
+    echo '<span>Estimated Total:</span>';
+    echo '<span style="color: #007bff;">$' . number_format($est_total, 2) . '</span>';
     echo '</div>';
     
-    if ($subtotal_val >= $min_target) {
+    if ( ! $has_bulk || $subtotal_val >= $min_target ) {
         echo '<a href="' . esc_url( wc_get_checkout_url() ) . '" style="display: block; width: 100%; padding: 16px; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none; border-radius: 0px; box-sizing: border-box; margin-bottom: 10px;">PROCEED TO CHECKOUT &rarr;</a>';
     } else {
         echo '<button type="button" disabled style="display: block; width: 100%; padding: 14px; background: #cbd5e1; color: #64748b; font-size: 13px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; border: none; border-radius: 0px; box-sizing: border-box; margin-bottom: 10px; cursor: not-allowed;">ADD $' . $needed . ' MORE TO CHECKOUT</button>';
@@ -1215,6 +1247,7 @@ function fixflip_ajax_add_to_cart_handler() {
  * Force WooCommerce Cart & Checkout to always require shipping & display freight estimate
  */
 add_filter( 'woocommerce_cart_needs_shipping', '__return_true', 999 );
+add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false', 999 );
 add_filter( 'woocommerce_shipping_cost_requires_address', '__return_false', 999 );
 
 /**
@@ -1222,8 +1255,6 @@ add_filter( 'woocommerce_shipping_cost_requires_address', '__return_false', 999 
  */
 add_filter( 'woocommerce_package_rates', 'fixflip_custom_freight_shipping_calculator', 10, 2 );
 function fixflip_custom_freight_shipping_calculator( $rates, $package ) {
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return $rates;
-
     $total_sqft = 0;
     $has_bulk   = false;
 
@@ -1268,33 +1299,23 @@ function fixflip_custom_freight_shipping_calculator( $rates, $package ) {
         'fixflip_freight'
     );
 
-    // Return custom rate as the primary authoritative shipping option
     return array( $rate_id => $custom_rate );
 }
 
-/**
- * Force Direct Jobsite Freight Delivery Line Item Row in Checkout Summary Table
- */
-add_action( 'woocommerce_review_order_before_order_total', 'fixflip_force_freight_line_item_checkout', 10 );
-function fixflip_force_freight_line_item_checkout() {
-    $freight_cost = 601.42;
-    if ( WC()->cart && ! WC()->cart->is_empty() ) {
-        $packages = WC()->shipping()->calculate_shipping(WC()->cart->get_shipping_packages());
-        if ( ! empty($packages[0]['rates']['fixflip_flat_freight']) ) {
-            $freight_cost = (float) $packages[0]['rates']['fixflip_flat_freight']->cost;
+// Force the chosen shipping method to our calculated rate so total is always updated
+add_filter( 'woocommerce_shipping_chosen_method', 'fixflip_force_chosen_shipping_method', 99, 2 );
+function fixflip_force_chosen_shipping_method( $default, $rates ) {
+    if ( ! empty( $rates ) ) {
+        if ( isset( $rates['fixflip_flat_freight'] ) ) {
+            return 'fixflip_flat_freight';
         }
+        if ( isset( $rates['fixflip_sample_shipping'] ) ) {
+            return 'fixflip_sample_shipping';
+        }
+        $keys = array_keys( $rates );
+        return reset( $keys );
     }
-    ?>
-    <tr class="freight-shipping-row" style="border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; background: #ffffff;">
-        <th style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 12px 14px 0; text-align: left; background: #ffffff; vertical-align: middle;">
-            🚚 DIRECT JOBSITE FREIGHT DELIVERY
-            <div style="font-size: 11px; font-weight: 600; color: #64748b; margin-top: 3px; text-transform: none; letter-spacing: normal;">Liftgate &amp; Power Pallet Jack Included (1-3 Hr Window)</div>
-        </th>
-        <td style="font-size: 14px; font-weight: 800; color: #0f172a; text-align: right; padding: 14px 0 14px 12px; background: #ffffff; vertical-align: middle;">
-            $<?php echo number_format($freight_cost, 2); ?>
-        </td>
-    </tr>
-    <?php
+    return $default;
 }
 
 /**
@@ -1302,12 +1323,20 @@ function fixflip_force_freight_line_item_checkout() {
  */
 add_filter( 'woocommerce_cart_shipping_method_full_html', 'fixflip_custom_shipping_method_checkout_html', 10, 2 );
 function fixflip_custom_shipping_method_checkout_html( $html, $method ) {
-    $cost = wc_price( $method->cost );
-    return '<span style="font-weight: 800; color: #0f172a;">Direct Jobsite Freight Delivery:</span> <strong style="font-weight: 900; color: #0f172a;">' . $cost . '</strong><div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">Liftgate &amp; Power Pallet Jack Included (1-3 Hr Scheduled Window)</div>';
+    $cost = $method->cost > 0 ? wc_price( $method->cost ) : '<span style="color: #16a34a; font-weight: 800;">FREE</span>';
+    
+    if ( $method->id === 'fixflip_sample_shipping' ) {
+        return '<span style="font-weight: 800; color: #0f172a;">Sample Courier Shipping:</span> <strong style="font-weight: 900; color: #16a34a;">' . $cost . '</strong><div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">USPS / FedEx Swatch Mail Delivery</div>';
+    }
+    
+    return '<span style="font-weight: 800; color: #0f172a;">Direct Jobsite Freight Delivery:</span> <strong style="font-weight: 900; color: #007bff; font-size: 15px;">' . $cost . '</strong><div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">Liftgate &amp; Power Pallet Jack Included (1-3 Hr Scheduled Window)</div>';
 }
 
 add_filter( 'woocommerce_shipping_rate_label', 'fixflip_custom_shipping_rate_label', 99, 2 );
 function fixflip_custom_shipping_rate_label( $label, $method ) {
+    if ( $method->id === 'fixflip_sample_shipping' ) {
+        return 'Standard Sample Courier Shipping';
+    }
     return 'Direct Jobsite Freight Delivery';
 }
 
