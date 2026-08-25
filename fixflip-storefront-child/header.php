@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="icon" type="image/png" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
+  <link rel="shortcut icon" type="image/png" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
+  <link rel="apple-touch-icon" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
+  <?php wp_head(); ?>
+  
+  <style>
+    /* Global Font Family Override */
+    html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, a, div {
+        font-family: 'Roboto', system-ui, -apple-system, sans-serif !important;
+    }
+
+    /* FORCE DRAWER RIGHT SIDE SLIDE-OUT ONLY (NO BOTTOM WIDGETS) */
+    .widget_shopping_cart,
+    .site-header-cart .widget_shopping_cart,
+    .storefront-handheld-footer-bar,
+    .storefront-handheld-footer-bar-cart,
+    .storefront-handheld-footer-bar-links,
+    #handheld-navigation,
+    .footer-cart-contents,
+    ul.storefront-handheld-footer-bar {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    #fd-cart-drawer-panel {
+        position: fixed !important;
+        top: 0 !important;
+        right: -450px;
+        left: auto !important;
+        bottom: auto !important;
+        width: 420px !important;
+        max-width: 90vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+        transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    #fd-cart-drawer-panel.is-open {
+        right: 0 !important;
+    }
+
+    /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
+    html, body, .site, .site-content, .site-shell, #page, #content, .content-area, .site-main, .col-full {
+        background-color: #f9f9f9 !important;
+    }
+    
+    /* Sticky Navigation & Original #f2f2f2 Header Color */
+    .top-header-wrapper {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999999 !important;
+        background-color: #f2f2f2 !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+    }
+    .header-tier-0,
+    .header-tier-1,
+    .header-tier-2,
+    .mega-menu-wrapper {
+        background-color: #f2f2f2 !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #e5e5e5 !important;
+    }
+    .mega-menu-link {
+        color: #111111 !important;
+    }
+    .mega-menu-link:hover {
+        color: #007bff !important;
+    }
+    .mega-dropdown {
+        background-color: #007bff !important;
+        border-top: none !important;
+    }
+    .mega-column h4,
+    .mega-column ul li a {
+        color: #ffffff !important;
+        border-color: rgba(255,255,255,0.2) !important; /* For the h4 border-bottom */
+    }
+    .mega-column ul li a:hover {
+        color: #ffffff !important;
+        text-decoration: underline !important;
+    }
+    .search-container form.woocommerce-product-search input.search-field,
+    .search-container form.custom-search-form input.custom-search-input {
+        background-color: #ffffff !important;
+        border: 1px solid #d4d4d4 !important;
+        border-radius: 4px !important;
+        box-shadow: none !important;
+    }
+    body.single-product .col-full {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+        box-sizing: border-box !important;
+        max-width: 1400px !important;
+        margin: 0 auto !important;
+    }
+    
+    /* Pro Breadcrumbs Styling */
+    .fd-breadcrumbs,
+    .woocommerce-breadcrumb {
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #888888 !important; /* Muted separators */
+        margin-bottom: 24px !important;
+    }
+    .fd-breadcrumbs a,
+    .woocommerce-breadcrumb a {
+        color: #555555 !important; /* Subtle medium grey for parent links */
+        text-decoration: none !important;
+        transition: color 0.15s ease !important;
+    }
+    .fd-breadcrumbs a:hover,
+    .woocommerce-breadcrumb a:hover {
+        color: #111111 !important; /* Turns dark charcoal on hover */
+        text-decoration: underline !important;
+    }
+    
+    /* Product Title Typography Softening */
+    body.single-product .fd-title,
+    body.single-product .product_title,
+    body.single-product h1.entry-title {
+        font-family: 'Roboto', 'Roboto', sans-serif !important;
+        font-weight: 600 !important; /* Reduced from heavy 800 to clean 600 */
+        font-size: 28px !important;
+        color: #111111 !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* Pro E-Commerce Vertical Rhythm Spacing */
+    body.single-product .fd-meta-row {
+        margin-bottom: 12px !important;
+    }
+    body.single-product .fd-price-row {
+        margin-bottom: 6px !important;
+    }
+    body.single-product .fd-price {
+        font-size: 36px !important;
+        font-weight: 800 !important;
+    }
+    body.single-product .fd-unit {
+        font-size: 15px !important;
+        color: #555 !important;
+    }
+    body.single-product .fd-sku {
+        margin-bottom: 12px !important;
+        font-size: 12px !important;
+        color: #777 !important;
+    }
+    body.single-product .fd-short-desc {
+        margin-top: 12px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* Global insert styling for summary card */
+    body.single-product .fd-product-summary,
+    body.single-product div.product .summary.entry-summary {
+        box-sizing: border-box !important;
+        background-color: transparent !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    /* Make EVERYTHING inside the summary box capable of shrinking/wrapping */
+    body.single-product .fd-product-summary *,
+    body.single-product div.product .summary.entry-summary * {
+        min-width: 0; 
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+    
+    /* Force wrapping on all internal flex rows */
+    body.single-product .fd-product-summary div[style*="display: flex"],
+    body.single-product div.product .summary.entry-summary div[style*="display: flex"] {
+        flex-wrap: wrap !important;
+    }
+    
+    /* Desktop Product Layout */
+    @media (min-width: 992px) {
+        body.single-product .fd-product-grid,
+        body.single-product div.product {
+            display: flex !important;
+            gap: 24px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            flex-wrap: nowrap !important;
+            align-items: flex-start !important;
+        }
+        body.single-product .fd-gallery-container,
+        body.single-product div.product .woocommerce-product-gallery {
+            flex: 1 1 55% !important;
+            min-width: 0 !important;
+            width: auto !important;
+        }
+        body.single-product .fd-gallery-container *,
+        body.single-product div.product .woocommerce-product-gallery * {
+            min-width: 0 !important;
+        }
+        body.single-product .fd-product-summary,
+        body.single-product div.product .summary.entry-summary {
+            flex: 1 1 45% !important; 
+            min-width: 0 !important;
+            max-width: none !important;
+            width: auto !important;
+        }
+    }
+    
+    /* Mobile / Responsive Product Layout */
+    @media (max-width: 991px) {
+        body.single-product .col-full {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+        body.single-product .fd-product-grid,
+        body.single-product div.product {
+            display: block !important;
+        }
+        body.single-product .fd-gallery-container,
+        body.single-product .fd-product-summary,
+        body.single-product div.product .woocommerce-product-gallery,
+        body.single-product div.product .summary.entry-summary {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: none !important;
+            margin-bottom: 32px !important;
+        }
+    }
+    
+    body.single-product .fd-gallery-container img,
+    body.single-product div.product .woocommerce-product-gallery img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Make the square footage calculator box white like Lululemon checkout card */
+    .fd-beige-box,
+    .fd-beige-box input,
+    .fd-beige-box input[type="number"] {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        border: 1px solid #d4d4d4 !important;
+        border-radius: 6px !important;
+    }
+    .fd-beige-box {
+        padding: 24px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+    }
+    
+    /* Make the calculator fully responsive so it doesn't break the column width */
+    .fd-beige-box .fd-calc-header {
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+    .fd-calc-row > div {
+        flex-wrap: wrap !important;
+    }
+    .fd-calc-row .input-group {
+        min-width: 120px !important;
+        flex: 1 1 auto !important;
+    }
+    
+    body.single-product .fd-product-summary > div,
+    body.single-product div.product .summary.entry-summary > div {
+        background: transparent !important;
+    }
+    
+    /* ULTIMATE EDGE-TO-EDGE FULL-WIDTH RESPONSIVE OVERRIDE */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: clip !important;
+        background-color: #ffffff !important;
+    }
+
+    #page,
+    .site,
+    .site-shell,
+    #content,
+    .site-content,
+    .site-header,
+    .top-header-wrapper,
+    .mega-menu-wrapper,
+    .fd-single-product,
+    body.single-product .fd-product-grid,
+    body.single-product div.product {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .site-main,
+    #main {
+        max-width: 1400px !important;
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .header-tier-1,
+    .mega-menu-container,
+    .fd-single-product,
+    #content {
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+    }
+
+    .header-tier-1 {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+        padding: 14px 24px !important;
+        max-width: 1320px !important;
+        margin: 0 auto !important;
+    }
+  </style>
+</head>
+<body <?php body_class(); ?>>
+  <div class="site-shell">
+    
+    <!-- Top Navigation -->
+    <div class="top-header-wrapper">
+      <!-- Announcement Bar (CSL Borrowers) -->
+      <div style="background: #0f172a; color: #ffffff; padding: 10px 32px; font-size: 13px; font-weight: 800; letter-spacing: 0.8px; box-sizing: border-box; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <span style="background: #007bff; color: #ffffff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 0px; letter-spacing: 0.5px; text-transform: uppercase;">CENTER STREET LENDING BORROWERS</span>
+        <span>Add Flooring &amp; Materials Directly to Your Active Rehab Loan</span>
+        <a href="/#csl-borrowers-banner" style="color: #60a5fa; text-decoration: underline; margin-left: 6px; font-weight: 800;">Roll Into Loan &rarr;</a>
+      </div>
+      
+      <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT BAR SCROLLS AWAY) -->
+      <div class="fd-sticky-header-inner" id="fd-sticky-header-inner" style="background-color: #f2f2f2 !important; border-bottom: 1px solid #e5e5e5; width: 100%; transition: box-shadow 0.2s ease;">
+      
+      <!-- Tier 0 Navigation Removed -->
+
+<!-- Account Drawer -->
+<div id="account-drawer-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; backdrop-filter: blur(2px);"></div>
+<div id="account-drawer" style="position: fixed; top: 0; right: -500px; width: 450px; max-width: 100%; height: 100vh; background: #fff; z-index: 9999; transition: right 0.3s ease-in-out; box-shadow: -5px 0 15px rgba(0,0,0,0.1); overflow-y: auto; display: flex; flex-direction: column;">
+  <div style="padding: 32px 40px; position: relative;">
+    <button id="account-drawer-close" style="position: absolute; top: 24px; right: 24px; background: none; border: none; cursor: pointer; color: #111;">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:currentColor;stroke-width:1.5;fill:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    
+    <h2 style="font-size: 20px; font-weight: 900; letter-spacing: 1px; margin-top: 16px; margin-bottom: 8px; color: #111; font-family: inherit;">WELCOME TO FIXFLIP</h2>
+    <p style="font-size: 14px; color: #444; line-height: 1.4; margin-bottom: 32px;">Log in for a faster, more personalized shopping experience</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; text-align: center; margin-bottom: 32px;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#007bff;stroke-width:2;fill:none;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span style="font-size: 11px; line-height: 1.2; font-weight: 500; color: #111;">Personalized<br>Shopping</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#007bff;stroke-width:2;fill:none;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        <span style="font-size: 11px; line-height: 1.2; font-weight: 500; color: #111;">Wishlist &amp;<br>Saved Items</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#007bff;stroke-width:2;fill:none;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        <span style="font-size: 11px; line-height: 1.2; font-weight: 500; color: #111;">Seamless<br>Experience</span>
+      </div>
+    </div>
+    
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+      <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" style="background: #111; color: #fff; text-decoration: none; text-align: center; padding: 14px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Login</a>
+      <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>?action=register" style="background: #fff; color: #111; border: 2px solid #111; text-decoration: none; text-align: center; padding: 12px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Create Account</a>
+    </div>
+  </div>
+  
+  <div style="margin-top: auto; border-top: 1px solid #eee; padding: 24px 40px; background: #fafafa;">
+      <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; text-decoration: none; color: #111; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#666;stroke-width:2;fill:none;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span style="font-size: 15px; font-weight: 500;">My Account</span>
+        </div>
+        <span style="font-size: 18px; color: #999;">&rsaquo;</span>
+      </a>
+      <a href="<?php echo wc_get_endpoint_url( 'orders', '', get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ); ?>" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; text-decoration: none; color: #111; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#666;stroke-width:2;fill:none;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span style="font-size: 15px; font-weight: 500;">Orders</span>
+        </div>
+        <span style="font-size: 18px; color: #999;">&rsaquo;</span>
+      </a>
+      <a href="<?php echo wc_get_endpoint_url( 'edit-address', '', get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ); ?>" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; text-decoration: none; color: #111; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#666;stroke-width:2;fill:none;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span style="font-size: 15px; font-weight: 500;">Addresses</span>
+        </div>
+        <span style="font-size: 18px; color: #999;">&rsaquo;</span>
+      </a>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var cartToggle = document.getElementById('header-cart-toggle');
+
+
+    var accLink = document.querySelector('.account-link');
+    var drawer = document.getElementById('account-drawer');
+    var overlay = document.getElementById('account-drawer-overlay');
+    var closeBtn = document.getElementById('account-drawer-close');
+
+    if (accLink && drawer && overlay && closeBtn) {
+        accLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            drawer.style.right = '0';
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeDrawer() {
+            drawer.style.right = '-500px';
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+    }
+
+    // ROCK-SOLID STICKY NAV SCROLL ENGINE
+    var stickyHeader = document.getElementById('fd-sticky-header-inner');
+    var topAnnounce = document.querySelector('.top-header-wrapper > div:first-child');
+    
+    if (stickyHeader) {
+        var spacer = document.createElement('div');
+        spacer.id = 'fd-sticky-spacer';
+        spacer.style.display = 'none';
+        stickyHeader.parentNode.insertBefore(spacer, stickyHeader.nextSibling);
+
+        function handleStickyScroll() {
+            var announceHeight = topAnnounce ? topAnnounce.offsetHeight : 38;
+            if (window.scrollY >= announceHeight) {
+                if (!stickyHeader.classList.contains('is-sticky')) {
+                    spacer.style.height = stickyHeader.offsetHeight + 'px';
+                    spacer.style.display = 'block';
+                    stickyHeader.classList.add('is-sticky');
+                    stickyHeader.style.position = 'fixed';
+                    stickyHeader.style.top = '0';
+                    stickyHeader.style.left = '0';
+                    stickyHeader.style.right = '0';
+                    stickyHeader.style.width = '100%';
+                    stickyHeader.style.zIndex = '999999';
+                    stickyHeader.style.boxShadow = '0 4px 20px rgba(0,0,0,0.12)';
+                }
+            } else {
+                if (stickyHeader.classList.contains('is-sticky')) {
+                    stickyHeader.classList.remove('is-sticky');
+                    stickyHeader.style.position = 'relative';
+                    stickyHeader.style.top = 'auto';
+                    stickyHeader.style.left = 'auto';
+                    stickyHeader.style.right = 'auto';
+                    stickyHeader.style.boxShadow = 'none';
+                    spacer.style.display = 'none';
+                }
+            }
+        }
+
+        window.addEventListener('scroll', handleStickyScroll);
+        window.addEventListener('resize', handleStickyScroll);
+        handleStickyScroll();
+    }
+});
+</script>
+      <header class="header-tier-1">
+        <!-- Logo Group -->
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" style="display: flex; text-decoration: none; align-items: center; flex-shrink: 0; position: relative; z-index: 10;">
+          <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 25px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
+        </a>
+        
+        <!-- Search & Partner Group -->
+        <div class="search-group" style="display: flex; align-items: center; gap: 14px; flex: 1; max-width: 540px; margin: 0 16px; position: relative; z-index: 10;">
+          <div class="search-container" style="flex: 1; max-width: 360px; min-width: 180px;">
+            <?php get_product_search_form(); ?>
+          </div>
+          
+          <!-- Partner Badge (Flush against Search Bar) -->
+          <div class="partner-badge" style="display: flex; flex-direction: column; text-align: left; font-size: 9px; color: #64748b; white-space: nowrap; flex-shrink: 0; line-height: 1.1;">
+            <span style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">In partnership with</span>
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 15px; width: auto; object-fit: contain; display: block;">
+          </div>
+        </div>
+        
+        <div class="user-links" style="display: flex; align-items: center; gap: 20px; height: 48px;">
+
+          <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="account-link" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+            <div style="display: flex; align-items: center; justify-content: center; color: #007bff;">
+              <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; text-align: left;">
+              <span style="color: #111; font-weight: 700; font-size: 14px; line-height: 1.2;">My Account</span>
+              <span style="color: #6c757d; font-weight: 500; font-size: 11px; line-height: 1.2;">Check Order Status</span>
+            </div>
+          </a>
+
+          <div class="cart-container" style="position: relative; height: 100%;">
+            <a href="<?php echo wc_get_cart_url(); ?>" class="cart-wrapper" id="header-cart-toggle" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center; height: 100%; margin-left: 16px; padding-left: 24px; border-left: 1px solid #cbd5e1;">
+              <div class="cart-icon-container" id="site-header-cart-icon" style="position: relative; display: flex; align-items: center; justify-content: center; color: #007bff;">
+                <svg class="header-icon" viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#007bff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <div class="cart-badge" style="position: absolute; top: -8px; right: -14px; background: #007bff; color: #ffffff; font-size: 10.5px; font-weight: 900; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; line-height: 1; box-sizing: border-box; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,123,255,0.4); border: 2px solid #ffffff; z-index: 5;">
+                  <?php 
+                    $cart_count = WC()->cart->get_cart_contents_count(); 
+                    echo ($cart_count > 99) ? '99+' : $cart_count; 
+                  ?>
+                </div>
+              </div>
+            </a>
+            <!-- Obsolete cart popup removed to prevent overlap with sleek Slideout Cart Drawer -->
+          </div>
+          
+        </div>
+      </header>
+
+            <!-- CLEAN CLASSIC TEXT DROPDOWN NAVIGATION TIER -->
+      <style>
+        .nav-item:hover .text-dropdown {
+            display: block !important;
+            animation: navFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes navFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .text-dropdown a {
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .text-dropdown a:hover {
+            background: #f1f5f9 !important;
+            color: #007bff !important;
+        }
+      </style>
+
+      <nav class="header-tier-2 mega-menu-wrapper" style="background: #ffffff !important; width: 100% !important; border-top: 1px solid #eaebed; border-bottom: 1px solid #eaebed; position: relative; z-index: 9999;">
+        <div class="mega-menu-container" style="max-width: 1080px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 36px; padding: 0;">
+          
+          <!-- 1. VINYL FLOORING NAV ITEM -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/category/spc/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+              VINYL FLOORING
+              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+
+            <!-- CLEAN TEXT DROPDOWN MENU -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 260px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+              <a href="/category/spc/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9;">All Vinyl Flooring (SPC) &rarr;</a>
+              <a href="/product/zion-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Zion Oak ($3.56 / sq ft)</a>
+              <a href="/product/riverside-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Riverside Oak ($3.56 / sq ft)</a>
+              <a href="/product/prairie-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Prairie Oak ($3.56 / sq ft)</a>
+              <a href="/product/smokey-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Smokey Oak ($3.56 / sq ft)</a>
+            </div>
+          </div>
+
+          <!-- 2. ENGINEERED HARDWOOD NAV ITEM -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/category/hardwood-flooring/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+              ENGINEERED HARDWOOD
+              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+
+            <!-- CLEAN TEXT DROPDOWN MENU -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 290px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+              <a href="/category/hardwood-flooring/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9;">All Engineered Hardwood &rarr;</a>
+              
+              <div style="padding: 6px 18px; font-size: 10px; font-weight: 900; color: #b45309; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px;">Good Tier Red Oak ($5.12 / sqft)</div>
+              <a href="/product/rustic-natural-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Rustic Natural Red Oak</a>
+              <a href="/product/biscuit-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Biscuit Red Oak</a>
+              <a href="/product/flax-seed-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Flax Seed Red Oak</a>
+              <a href="/product/kona-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Kona Red Oak</a>
+
+              <div style="padding: 8px 18px 6px 18px; font-size: 10px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.8px; border-top: 1px solid #f1f5f9; margin-top: 4px;">Better Tier White Oak ($5.97 / sqft)</div>
+              <a href="/product/exquisite-oak-engineered-hardwood/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Exquisite Oak</a>
+              <a href="/product/sophisticated-oak-engineered-hardwood/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Sophisticated Oak</a>
+              <a href="/product/cultivated-oak-engineered-hardwood/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Cultivated Oak</a>
+            </div>
+          </div>
+
+          <!-- 3. PRO FINANCING & DRAWS NAV ITEM -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/#how-fixflip-works" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+              PRO FINANCING &amp; DRAWS
+              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+
+            <!-- CLEAN TEXT DROPDOWN MENU -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 270px; background: #ffffff; border: 1.5px solid #007bff; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+              <a href="/#how-fixflip-works" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">⚡ How 5-Step Lender Draws Work</a>
+              <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">🛒 Review Active Cart ($2k Min)</a>
+              <a href="/checkout/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-top: 1px solid #f1f5f9;">💳 Submit Order for CSL Draw</a>
+            </div>
+          </div>
+
+        </div>
+      </nav>
+      </div><!-- End fd-sticky-header-inner -->

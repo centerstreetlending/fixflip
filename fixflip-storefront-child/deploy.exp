@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+set timeout -1
+set password "lTWCpDjIvOKd1c"
+spawn rsync -avz --exclude '.git' --exclude 'node_modules' --exclude '.DS_Store' -e "ssh -o StrictHostKeyChecking=no" /Users/gregmontoya/Local\ Sites/fixflipcom/app/public/wp-content/themes/fixflip-storefront-child/ client_6f9deacc45_1219708@1219708.us20.ssh.myftpupload.com:~/html/wp-content/themes/fixflip-storefront-child/
+expect "*?assword:*"
+send "$password\r"
+expect eof
