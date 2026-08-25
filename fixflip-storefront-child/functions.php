@@ -1591,6 +1591,14 @@ function fixflip_custom_stripe_title($title, $gateway_id) {
     return $title;
 }
 
+// Automatically pre-select Stripe on checkout
+add_action( 'woocommerce_before_checkout_form', 'fixflip_set_default_payment_gateway' );
+function fixflip_set_default_payment_gateway() {
+    if ( class_exists('WooCommerce') && WC()->session && ! WC()->session->get('chosen_payment_method') ) {
+        WC()->session->set('chosen_payment_method', 'stripe');
+    }
+}
+
 
 
 /**
