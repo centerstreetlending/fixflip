@@ -1244,22 +1244,17 @@ function fixflip_ajax_add_to_cart_handler() {
 }
 
 /**
- * Force WooCommerce Cart & Checkout to always require shipping & display freight estimate
+ * 100% Guaranteed Direct Jobsite Freight Delivery & Sample Shipping Calculation
  */
-add_filter( 'woocommerce_cart_needs_shipping', '__return_true', 999 );
-add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false', 999 );
-add_filter( 'woocommerce_shipping_cost_requires_address', '__return_false', 999 );
+add_action( 'woocommerce_cart_calculate_fees', 'fixflip_add_guaranteed_freight_fee', 20, 1 );
+function fixflip_add_guaranteed_freight_fee( $cart ) {
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
 
-/**
- * Custom WooCommerce Freight Shipping Calculator: $450 Base + $0.40/sqft (Free for Samples)
- */
-add_filter( 'woocommerce_package_rates', 'fixflip_custom_freight_shipping_calculator', 10, 2 );
-function fixflip_custom_freight_shipping_calculator( $rates, $package ) {
     $total_sqft = 0;
     $has_bulk   = false;
 
-    if ( isset( $package['contents'] ) && is_array( $package['contents'] ) ) {
-        foreach ( $package['contents'] as $item ) {
+    if ( $cart && ! $cart->is_empty() ) {
+        foreach ( $cart->get_cart() as $item ) {
             if ( empty( $item['is_sample'] ) ) {
                 $has_bulk   = true;
                 $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
@@ -1273,72 +1268,21 @@ function fixflip_custom_freight_shipping_calculator( $rates, $package ) {
                 $total_sqft += ($qty_boxes * $coverage);
             }
         }
-    }
 
-    if ( ! $has_bulk ) {
-        // Order only contains sample swatches -> Free Swatch Sample Shipping
-        $rate_id = 'fixflip_sample_shipping';
-        $custom_rate = new WC_Shipping_Rate(
-            $rate_id,
-            'Standard Swatch Sample Shipping (USPS / FedEx)',
-            0.00,
-            array(),
-            'fixflip_sample_shipping'
-        );
-        return array( $rate_id => $custom_rate );
-    }
-
-    $freight_cost = 450.00 + ($total_sqft * 0.40);
-    $rate_id = 'fixflip_flat_freight';
-
-    $custom_rate = new WC_Shipping_Rate(
-        $rate_id,
-        'Direct Jobsite Freight Delivery',
-        $freight_cost,
-        array(),
-        'fixflip_freight'
-    );
-
-    return array( $rate_id => $custom_rate );
-}
-
-// Force the chosen shipping method to our calculated rate so total is always updated
-add_filter( 'woocommerce_shipping_chosen_method', 'fixflip_force_chosen_shipping_method', 99, 2 );
-function fixflip_force_chosen_shipping_method( $default, $rates ) {
-    if ( ! empty( $rates ) ) {
-        if ( isset( $rates['fixflip_flat_freight'] ) ) {
-            return 'fixflip_flat_freight';
+        if ( $has_bulk ) {
+            $freight_cost = 450.00 + ($total_sqft * 0.40);
+            $cart->add_fee( '🚚 Direct Jobsite Freight Delivery (Liftgate & Power Pallet Jack)', $freight_cost, false );
+        } else {
+            $cart->add_fee( '📦 Standard Sample Courier Shipping (USPS / FedEx)', 0.00, false );
         }
-        if ( isset( $rates['fixflip_sample_shipping'] ) ) {
-            return 'fixflip_sample_shipping';
-        }
-        $keys = array_keys( $rates );
-        return reset( $keys );
     }
-    return $default;
 }
 
 /**
- * Custom Shipping Rate Label Formatter for Checkout Table
+ * Disable standard WooCommerce shipping rates package to prevent duplicate shipping rows
  */
-add_filter( 'woocommerce_cart_shipping_method_full_html', 'fixflip_custom_shipping_method_checkout_html', 10, 2 );
-function fixflip_custom_shipping_method_checkout_html( $html, $method ) {
-    $cost = $method->cost > 0 ? wc_price( $method->cost ) : '<span style="color: #16a34a; font-weight: 800;">FREE</span>';
-    
-    if ( $method->id === 'fixflip_sample_shipping' ) {
-        return '<span style="font-weight: 800; color: #0f172a;">Sample Courier Shipping:</span> <strong style="font-weight: 900; color: #16a34a;">' . $cost . '</strong><div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">USPS / FedEx Swatch Mail Delivery</div>';
-    }
-    
-    return '<span style="font-weight: 800; color: #0f172a;">Direct Jobsite Freight Delivery:</span> <strong style="font-weight: 900; color: #007bff; font-size: 15px;">' . $cost . '</strong><div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">Liftgate &amp; Power Pallet Jack Included (1-3 Hr Scheduled Window)</div>';
-}
-
-add_filter( 'woocommerce_shipping_rate_label', 'fixflip_custom_shipping_rate_label', 99, 2 );
-function fixflip_custom_shipping_rate_label( $label, $method ) {
-    if ( $method->id === 'fixflip_sample_shipping' ) {
-        return 'Standard Sample Courier Shipping';
-    }
-    return 'Direct Jobsite Freight Delivery';
-}
+add_filter( 'woocommerce_cart_needs_shipping', '__return_false', 999 );
+add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false', 999 );
 
 /**
  * Disable selectWoo / Select2 on Checkout for Clean Native HTML State Dropdowns
@@ -1483,6 +1427,8 @@ function fixflip_checkout_dropdown_styles() {
             }
             #order_review table.shop_table tr.tax-rate th, 
             #order_review table.shop_table tr.tax-rate td,
+            #order_review table.shop_table tr.fee th, 
+            #order_review table.shop_table tr.fee td,
             #order_review table.shop_table tr.shipping th, 
             #order_review table.shop_table tr.shipping td,
             #order_review table.shop_table tr.cart-subtotal th,
@@ -1490,6 +1436,12 @@ function fixflip_checkout_dropdown_styles() {
                 font-size: 14px !important;
                 font-weight: 700 !important;
                 color: #0f172a !important;
+            }
+            #order_review table.shop_table tr.fee td {
+                font-weight: 900 !important;
+                color: #007bff !important;
+                text-align: right !important;
+                font-size: 15px !important;
             }
             /* Sleek Enterprise Payment Gateway Box */
             .wc_payment_methods, ul.wc_payment_methods {
