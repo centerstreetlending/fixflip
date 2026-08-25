@@ -29,7 +29,7 @@ function fixflip_enqueue_styles() {
     wp_enqueue_style( 'fixflip-child-style',
         get_stylesheet_directory_uri() . '/style.css',
         array( $parent_style, 'fixflip-roboto' ),
-        filemtime( get_stylesheet_directory() . '/style.css' ) // Cache buster
+        '2.1.' . time() // Instant cache buster
     );
 
     // Dequeue heavy block library stylesheets on standard pages
