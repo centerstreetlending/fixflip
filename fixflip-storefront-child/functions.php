@@ -1444,31 +1444,56 @@ function fixflip_checkout_dropdown_styles() {
                 font-size: 15px !important;
             }
             /* Sleek Enterprise Payment Gateway Box */
+            #payment {
+                background: #ffffff !important;
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 6px !important;
+                padding: 24px !important;
+                margin-top: 24px !important;
+                margin-bottom: 24px !important;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.03) !important;
+            }
             .wc_payment_methods, ul.wc_payment_methods {
                 list-style: none !important;
                 padding: 0 !important;
-                margin: 0 0 24px 0 !important;
-                border: 1.5px solid #cbd5e1 !important;
-                border-radius: 6px !important;
-                overflow: hidden !important;
-                background: #ffffff !important;
+                margin: 0 0 20px 0 !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            .wc_payment_method {
+                margin-bottom: 14px !important;
             }
             .wc_payment_method label {
                 font-size: 15px !important;
                 font-weight: 800 !important;
                 color: #0f172a !important;
                 cursor: pointer !important;
-                display: flex !important;
+                display: inline-flex !important;
                 align-items: center !important;
                 gap: 8px !important;
             }
             .wc_payment_method div.payment_box {
                 background: #f8fafc !important;
-                border-top: 1px solid #e2e8f0 !important;
-                padding: 16px 20px !important;
+                border: 1.5px solid #e2e8f0 !important;
+                border-radius: 6px !important;
+                padding: 18px 20px !important;
                 font-size: 13.5px !important;
                 color: #475569 !important;
                 line-height: 1.5 !important;
+                margin-top: 10px !important;
+            }
+            .wc-stripe-elements-field, 
+            .wc-stripe-card-element,
+            .StripeElement {
+                background: #ffffff !important;
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 4px !important;
+                padding: 14px 16px !important;
+                margin-top: 8px !important;
+                min-height: 48px !important;
+                box-sizing: border-box !important;
+                display: block !important;
+                width: 100% !important;
             }
             /* Primary CTA Place Order Button */
             #place_order {
