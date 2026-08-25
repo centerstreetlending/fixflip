@@ -1688,6 +1688,35 @@ function fixflip_register_csl_draw_gateway( $gateways ) {
     return $gateways;
 }
 
+/**
+ * Strictly restrict checkout to ONLY the 2 desired options (CSL Draw & Stripe Card)
+ */
+add_filter( 'woocommerce_available_payment_gateways', 'fixflip_restrict_to_two_payment_gateways', 999 );
+function fixflip_restrict_to_two_payment_gateways( $gateways ) {
+    if ( is_admin() ) return $gateways;
+
+    $filtered = array();
+
+    // 1. Center Street Lending Draw Advance
+    if ( isset( $gateways['csl_draw_advance'] ) ) {
+        $filtered['csl_draw_advance'] = $gateways['csl_draw_advance'];
+    } elseif ( class_exists( 'WC_Gateway_CSL_Draw_Advance' ) ) {
+        $filtered['csl_draw_advance'] = new WC_Gateway_CSL_Draw_Advance();
+    }
+
+    // 2. Stripe Card / Apple Pay Gateway
+    if ( isset( $gateways['stripe'] ) ) {
+        $filtered['stripe'] = $gateways['stripe'];
+    } elseif ( isset( $gateways['stripe_cc'] ) ) {
+        $filtered['stripe_cc'] = $gateways['stripe_cc'];
+    }
+
+    return ! empty( $filtered ) ? $filtered : $gateways;
+}
+
+// Auto-check terms and conditions by default for seamless checkout
+add_filter( 'woocommerce_terms_is_checked_default', '__return_true', 999 );
+
 add_filter( 'woocommerce_gateway_title', 'fixflip_custom_all_gateway_titles', 99, 2 );
 function fixflip_custom_all_gateway_titles( $title, $gateway_id ) {
     if ( 'csl_draw_advance' === $gateway_id ) {
