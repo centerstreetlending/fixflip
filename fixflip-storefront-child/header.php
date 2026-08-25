@@ -8,9 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   
-  <link rel="icon" type="image/png" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
-  <link rel="shortcut icon" type="image/png" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
-  <link rel="apple-touch-icon" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
+  <!-- Fix & Flip Hammer & Saw Favicon -->
+  <link rel="icon" type="image/svg+xml" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.svg?v=<?php echo time(); ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
+  <link rel="shortcut icon" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.ico?v=<?php echo time(); ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo get_stylesheet_directory_uri(); ?>/apple-touch-icon.png?v=<?php echo time(); ?>">
   <?php wp_head(); ?>
   
   <style>
