@@ -45,14 +45,13 @@ add_action( 'wp_enqueue_scripts', 'fixflip_enqueue_styles', 20 );
  * HIGH-VELOCITY SPEED ACCELERATOR PACKAGE FOR FIXFLIP.COM
  */
 
-// 1. Enable Full Edge & Gateway Cache Headers for Logged-Out Visitors
-add_action('send_headers', 'fixflip_enable_fast_edge_caching_headers');
+// 1. Enable Instant Live Updates & Prevent Cloudflare HTML Stale Lock
+add_action('send_headers', 'fixflip_enable_fast_edge_caching_headers', 9999);
 function fixflip_enable_fast_edge_caching_headers() {
-    if (!is_admin() && !is_user_logged_in() && !is_cart() && !is_checkout()) {
-        header('Cache-Control: public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400');
-        header('Pragma: public');
-        header('X-Accelerated-By: FixFlip-Edge');
-    }
+    header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header('Expires: Wed, 11 Jan 1984 05:00:00 GMT');
+    header('X-Accelerated-By: FixFlip-LiveSync');
 }
 
 // 2. Disable Heavy Unnecessary WordPress Bloat (Emojis, WP Embeds)
