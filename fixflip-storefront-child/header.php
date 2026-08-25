@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <svg class="header-icon" viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#007bff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 <div class="cart-badge" style="position: absolute; top: -8px; right: -14px; background: #007bff; color: #ffffff; font-size: 10.5px; font-weight: 900; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; line-height: 1; box-sizing: border-box; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,123,255,0.4); border: 2px solid #ffffff; z-index: 5;">
                   <?php 
-                    $cart_count = WC()->cart->get_cart_contents_count(); 
+                    $cart_count = ( class_exists('WooCommerce') && WC()->cart ) ? count( WC()->cart->get_cart() ) : 0; 
                     echo ($cart_count > 99) ? '99+' : $cart_count; 
                   ?>
                 </div>

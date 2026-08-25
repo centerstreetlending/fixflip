@@ -282,14 +282,15 @@ function fixflip_reorganize_product_categories_once() {
 }
 
 /**
- * WooCommerce Cart AJAX Fragments for Header Cart
+ * WooCommerce Cart AJAX Fragments for Header Cart (Distinct Items Count)
  */
 function fixflip_header_cart_fragment( $fragments ) {
     ob_start();
+    $distinct_count = ( class_exists('WooCommerce') && WC()->cart ) ? count( WC()->cart->get_cart() ) : 0;
     ?>
     <div class="cart-icon-container" id="site-header-cart-icon" style="position: relative; height: 24px; display: flex; align-items: center; justify-content: center;">
         <svg class="header-icon" viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <div class="cart-badge" style="position: absolute; top: -8px; right: -14px; background: #007bff; color: #ffffff; font-size: 11px; font-weight: 900; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; line-height: 1; box-sizing: border-box; white-space: nowrap; border: 2px solid #ffffff; z-index: 5;"><?php echo WC()->cart->get_cart_contents_count(); ?></div>
+        <div class="cart-badge" style="position: absolute; top: -8px; right: -14px; background: #007bff; color: #ffffff; font-size: 11px; font-weight: 900; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; line-height: 1; box-sizing: border-box; white-space: nowrap; border: 2px solid #ffffff; z-index: 5;"><?php echo $distinct_count; ?></div>
     </div>
     <?php
     $fragments['#site-header-cart-icon'] = ob_get_clean();
@@ -834,11 +835,11 @@ add_filter( 'woocommerce_coupons_enabled', '__return_false' );
 add_filter( 'woocommerce_widget_cart_item_quantity', 'fixflip_custom_mini_cart_qty', 10, 3 );
 function fixflip_custom_mini_cart_qty( $html, $cart_item, $cart_item_key ) {
     $product_price = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $cart_item['data'] ), $cart_item, $cart_item_key );
-    
-    return '<div class="fd-mini-qty">Qty: ' . $cart_item['quantity'] . '</div><div class="fd-mini-price">' . $product_price . '</div>';
+    $boxes = isset($cart_item['quantity']) ? (int) $cart_item['quantity'] : 1;
+    return '<div class="fd-mini-qty">1 item &bull; ' . $boxes . ' boxes</div><div class="fd-mini-price">' . $product_price . '</div>';
 }
 
-// 12. Inject Product Images & Clean Titles into Checkout Table (Prevents Duplication)
+// 13. Inject Product Images & Clean Titles into Checkout Table
 add_filter( 'woocommerce_cart_item_name', 'fixflip_checkout_product_image', 10, 3 );
 function fixflip_checkout_product_image( $name, $cart_item, $cart_item_key ) {
     if ( ! is_checkout() || is_wc_endpoint_url() ) {
@@ -850,7 +851,19 @@ function fixflip_checkout_product_image( $name, $cart_item, $cart_item_key ) {
     return '<div style="display: inline-flex; align-items: center; gap: 12px; vertical-align: middle;">' . $thumbnail . '<span style="font-size: 15px; font-weight: 800; color: #0f172a; line-height: 1.3;">' . esc_html($raw_title) . '</span></div>';
 }
 
-
+// 14. Format Checkout Line Item Quantity (1 item • X boxes)
+add_filter( 'woocommerce_checkout_cart_item_quantity', 'fixflip_checkout_custom_qty', 10, 3 );
+function fixflip_checkout_custom_qty( $qty_html, $cart_item, $cart_item_key ) {
+    $boxes = isset($cart_item['quantity']) ? (int) $cart_item['quantity'] : 1;
+    $product_id = isset($cart_item['product_id']) ? $cart_item['product_id'] : 0;
+    $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
+    if ( empty($coverage) ) {
+        $coverage = 27.73;
+    }
+    $sqft = round($boxes * $coverage, 1);
+    
+    return ' <span class="product-quantity" style="font-weight: 700; color: #007bff; font-size: 13px;">&times; 1 item (' . $boxes . ' boxes &bull; ' . number_format($sqft, 1) . ' sq ft)</span>';
+}
 
 /**
  * Enable WooCommerce tax calculation based on customer shipping address
@@ -900,11 +913,19 @@ function fixflip_output_cart_drawer_items_html() {
             $subtotal      = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
             $remove_url    = wc_get_cart_remove_url( $cart_item_key );
 
+            $boxes = (int) $cart_item['quantity'];
+            $coverage = (float) get_post_meta( $_product->get_id(), 'custom_coverage', true );
+            if ( empty($coverage) ) {
+                $coverage = 27.73;
+            }
+            $total_sqft = round($boxes * $coverage, 1);
+
             echo '<div style="display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">';
             echo '<div style="flex-shrink:0;">' . $thumbnail . '</div>';
             echo '<div style="flex: 1;">';
             echo '<div style="font-size: 14px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 4px;">' . esc_html($product_name) . '</div>';
-            echo '<div style="font-size: 12px; color: #64748b; font-weight: 600;">Qty: ' . $cart_item['quantity'] . ' boxes &bull; ' . $subtotal . '</div>';
+            echo '<div style="font-size: 12px; color: #007bff; font-weight: 700; margin-bottom: 2px;">1 item &bull; ' . $boxes . ' boxes (' . number_format($total_sqft, 1) . ' sq ft)</div>';
+            echo '<div style="font-size: 13px; color: #0f172a; font-weight: 800;">' . $subtotal . '</div>';
             echo '</div>';
             echo '<a href="' . esc_url($remove_url) . '" style="color: #ef4444; font-size: 20px; font-weight: 700; text-decoration: none; padding: 4px;" title="Remove Item">&times;</a>';
             echo '</div>';
@@ -917,6 +938,9 @@ function fixflip_output_cart_drawer_items_html() {
     $min_target   = 2000.00;
     $percent      = min(100, round(($subtotal_val / $min_target) * 100));
     $needed       = number_format(max(0, $min_target - $subtotal_val), 2);
+    $distinct_count = count( WC()->cart->get_cart() );
+    $boxes_total   = WC()->cart->get_cart_contents_count();
+    $item_label    = $distinct_count === 1 ? '1 item' : $distinct_count . ' items';
 
     echo '<div style="padding-top: 16px; border-top: 2px solid #e2e8f0; margin-top: auto;">';
     
@@ -942,8 +966,8 @@ function fixflip_output_cart_drawer_items_html() {
     }
     echo '</div>';
 
-    echo '<div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 14px;">';
-    echo '<span>Order Subtotal:</span>';
+    echo '<div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 14px;">';
+    echo '<span>Order Subtotal (' . $item_label . ' &bull; ' . $boxes_total . ' boxes):</span>';
     echo '<span>' . WC()->cart->get_cart_subtotal() . '</span>';
     echo '</div>';
     
@@ -1139,7 +1163,8 @@ function fixflip_ajax_add_to_cart_handler() {
 
         wp_send_json_success( array(
             'drawer_html' => $drawer_html,
-            'cart_count'  => WC()->cart->get_cart_contents_count()
+            'cart_count'  => count( WC()->cart->get_cart() ),
+            'box_count'   => WC()->cart->get_cart_contents_count()
         ) );
     } else {
         wp_send_json_error( array( 'message' => 'Invalid Product ID' ) );
