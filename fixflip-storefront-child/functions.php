@@ -627,18 +627,29 @@ function fixflip_custom_checkout_fields( $fields ) {
     unset($fields['billing']['billing_phone']);
     unset($fields['order']['order_comments']);
     
-    // Add custom fields
+    // Add custom CSL loan field
     $fields['billing']['loan_number'] = array(
         'type'        => 'text',
         'label'       => __('Center Street Lending (CSL) Active Loan # or Property Address', 'fixflip'),
-        'placeholder' => _x('e.g. CSL-98241 or 123 Main St, Los Angeles, CA', 'placeholder', 'fixflip'),
-        'required'    => true,
+        'placeholder' => _x('Required for Draw Advance &bull; e.g. CSL-98241 or 123 Main St, Los Angeles, CA', 'placeholder', 'fixflip'),
+        'required'    => false, // Conditionally enforced for CSL Draw
         'class'       => array('form-row-wide'),
         'clear'       => true,
         'priority'    => 1, // Put it at the top
     );
     
     return $fields;
+}
+
+// Conditionally validate CSL Loan # only when CSL Draw Advance is selected
+add_action( 'woocommerce_checkout_process', 'fixflip_validate_csl_loan_field' );
+function fixflip_validate_csl_loan_field() {
+    $method = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
+    if ( $method === 'csl_draw_advance' ) {
+        if ( empty( $_POST['loan_number'] ) ) {
+            wc_add_notice( '<strong>Required for CSL Draw Advance:</strong> Please enter your active CSL Loan # or Project Property Address.', 'error' );
+        }
+    }
 }
 
 // Clean up checkout notices & privacy text
@@ -651,12 +662,6 @@ function fixflip_checkout_clean_styling() {
             .woocommerce-privacy-policy-text,
             p.woocommerce-privacy-policy-text {
                 display: none !important;
-            }
-            .woocommerce-checkout #payment {
-                background: transparent !important;
-                border: none !important;
-                padding: 0 !important;
-                margin-top: 16px !important;
             }
             .woocommerce-checkout #payment div.form-row.place-order {
                 padding: 0 !important;
@@ -1608,19 +1613,118 @@ function fixflip_enable_stripe_gateway_options() {
     }
 }
 
-add_filter('woocommerce_gateway_title', 'fixflip_custom_stripe_title', 10, 2);
-function fixflip_custom_stripe_title($title, $gateway_id) {
-    if ('stripe' === $gateway_id) {
-        return '💳 Credit Card / Debit Card / Apple Pay <span style="font-size: 11px; font-weight: 800; background: #007bff; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px;">STRIPE SECURE</span>';
+/**
+ * 1. CSL REHAB LOAN DRAW ADVANCEMENT PAYMENT GATEWAY CLASS
+ */
+add_action( 'plugins_loaded', 'fixflip_init_csl_draw_gateway_class' );
+function fixflip_init_csl_draw_gateway_class() {
+    if ( ! class_exists( 'WC_Payment_Gateway' ) ) return;
+
+    class WC_Gateway_CSL_Draw_Advance extends WC_Payment_Gateway {
+        public function __construct() {
+            $this->id                 = 'csl_draw_advance';
+            $this->icon               = '';
+            $this->has_fields         = false;
+            $this->method_title       = 'Center Street Lending Draw Advance';
+            $this->method_description = 'Allow borrowers to fund materials & freight directly from their active CSL rehab loan draw.';
+            $this->title              = '🏦 Center Street Lending (CSL) Draw Advance <span style="font-size: 10px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
+            $this->description        = 'No upfront card payment today. Your material and freight invoice will be funded 100% from your active Center Street Lending rehab loan draw budget upon verification.';
+            $this->order_button_text  = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT &rarr;';
+            
+            $this->init_form_fields();
+            $this->init_settings();
+            
+            $this->enabled = 'yes';
+            
+            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+        }
+
+        public function process_payment( $order_id ) {
+            $order = wc_get_order( $order_id );
+            
+            // Mark as on-hold / processing for CSL Draw review
+            $order->update_status( 'processing', __( 'CSL Draw Advancement requested by borrower.', 'fixflip' ) );
+            
+            // Reduce stock
+            wc_reduce_stock_levels( $order_id );
+            
+            // Empty cart
+            WC()->cart->empty_cart();
+            
+            return array(
+                'result'   => 'success',
+                'redirect' => $this->get_return_url( $order )
+            );
+        }
     }
-    return $title;
 }
 
-// Automatically pre-select Stripe on checkout
-add_action( 'woocommerce_before_checkout_form', 'fixflip_set_default_payment_gateway' );
-function fixflip_set_default_payment_gateway() {
-    if ( class_exists('WooCommerce') && WC()->session && ! WC()->session->get('chosen_payment_method') ) {
-        WC()->session->set('chosen_payment_method', 'stripe');
+add_filter( 'woocommerce_payment_gateways', 'fixflip_register_csl_draw_gateway' );
+function fixflip_register_csl_draw_gateway( $gateways ) {
+    $gateways[] = 'WC_Gateway_CSL_Draw_Advance';
+    return $gateways;
+}
+
+/**
+ * Dynamic Order Button Text on Server Render
+ */
+add_filter( 'woocommerce_order_button_text', 'fixflip_dynamic_order_button_text' );
+function fixflip_dynamic_order_button_text( $button_text ) {
+    $chosen_gateway = ( class_exists('WooCommerce') && WC()->session ) ? WC()->session->get('chosen_payment_method') : 'csl_draw_advance';
+    if ( $chosen_gateway === 'csl_draw_advance' ) {
+        return 'SUBMIT REQUEST FOR DRAW ADVANCEMENT &rarr;';
+    } else {
+        return 'PAY WITH CARD & PLACE ORDER &rarr;';
+    }
+}
+
+/**
+ * Automatically update Place Order button text & styling in Real Time when user switches payment method
+ */
+add_action( 'wp_footer', 'fixflip_checkout_payment_button_morpher', 999 );
+function fixflip_checkout_payment_button_morpher() {
+    if ( is_checkout() ) {
+        ?>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateCheckoutButton() {
+                const btn = document.getElementById('place_order');
+                if (!btn) return;
+                
+                const selected = document.querySelector('input[name="payment_method"]:checked');
+                const method = selected ? selected.value : 'csl_draw_advance';
+                
+                if (method === 'csl_draw_advance') {
+                    btn.value = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
+                    btn.textContent = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
+                    btn.style.setProperty('background', '#0f172a', 'important');
+                    btn.style.setProperty('box-shadow', '0 4px 16px rgba(15,23,42,0.3)', 'important');
+                } else {
+                    btn.value = 'PAY WITH CARD & PLACE ORDER \u2192';
+                    btn.textContent = 'PAY WITH CARD & PLACE ORDER \u2192';
+                    btn.style.setProperty('background', '#007bff', 'important');
+                    btn.style.setProperty('box-shadow', '0 4px 16px rgba(0,123,255,0.3)', 'important');
+                }
+            }
+
+            document.body.addEventListener('change', function(e) {
+                if (e.target && e.target.name === 'payment_method') {
+                    updateCheckoutButton();
+                }
+            });
+
+            if (typeof jQuery !== 'undefined') {
+                jQuery(document.body).on('updated_checkout payment_method_selected', function() {
+                    updateCheckoutButton();
+                });
+            }
+
+            updateCheckoutButton();
+            setTimeout(updateCheckoutButton, 400);
+            setTimeout(updateCheckoutButton, 1000);
+        });
+        </script>
+        <?php
     }
 }
 
