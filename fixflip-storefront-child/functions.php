@@ -1448,15 +1448,15 @@ function fixflip_checkout_dropdown_styles() {
                 text-align: right !important;
                 font-size: 15px !important;
             }
-            /* Sleek Enterprise Payment Gateway Box */
+            /* Sleek Dual Payment Gateway Cards */
             #payment {
                 background: #ffffff !important;
                 border: 1.5px solid #cbd5e1 !important;
-                border-radius: 6px !important;
+                border-radius: 8px !important;
                 padding: 24px !important;
                 margin-top: 24px !important;
                 margin-bottom: 24px !important;
-                box-shadow: 0 4px 14px rgba(0,0,0,0.03) !important;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.04) !important;
             }
             .wc_payment_methods, ul.wc_payment_methods {
                 list-style: none !important;
@@ -1464,9 +1464,21 @@ function fixflip_checkout_dropdown_styles() {
                 margin: 0 0 20px 0 !important;
                 border: none !important;
                 background: transparent !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 14px !important;
             }
             .wc_payment_method {
-                margin-bottom: 14px !important;
+                background: #f8fafc !important;
+                border: 2px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                padding: 16px 18px !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+            }
+            .wc_payment_method:hover {
+                border-color: #94a3b8 !important;
+                background: #f1f5f9 !important;
             }
             .wc_payment_method label {
                 font-size: 15px !important;
@@ -1475,17 +1487,25 @@ function fixflip_checkout_dropdown_styles() {
                 cursor: pointer !important;
                 display: inline-flex !important;
                 align-items: center !important;
-                gap: 8px !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+            .wc_payment_method input[type="radio"] {
+                width: 18px !important;
+                height: 18px !important;
+                margin: 0 !important;
+                cursor: pointer !important;
+                accent-color: #007bff !important;
             }
             .wc_payment_method div.payment_box {
-                background: #f8fafc !important;
-                border: 1.5px solid #e2e8f0 !important;
+                background: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
                 border-radius: 6px !important;
-                padding: 18px 20px !important;
+                padding: 16px 18px !important;
                 font-size: 13.5px !important;
-                color: #475569 !important;
+                color: #334155 !important;
                 line-height: 1.5 !important;
-                margin-top: 10px !important;
+                margin-top: 12px !important;
             }
             .wc-stripe-elements-field, 
             .wc-stripe-card-element,
@@ -1614,12 +1634,9 @@ function fixflip_enable_stripe_gateway_options() {
 }
 
 /**
- * 1. CSL REHAB LOAN DRAW ADVANCEMENT PAYMENT GATEWAY CLASS
+ * 1. CSL REHAB LOAN DRAW ADVANCEMENT PAYMENT GATEWAY
  */
-add_action( 'plugins_loaded', 'fixflip_init_csl_draw_gateway_class' );
-function fixflip_init_csl_draw_gateway_class() {
-    if ( ! class_exists( 'WC_Payment_Gateway' ) ) return;
-
+if ( class_exists( 'WC_Payment_Gateway' ) ) {
     class WC_Gateway_CSL_Draw_Advance extends WC_Payment_Gateway {
         public function __construct() {
             $this->id                 = 'csl_draw_advance';
@@ -1627,30 +1644,34 @@ function fixflip_init_csl_draw_gateway_class() {
             $this->has_fields         = false;
             $this->method_title       = 'Center Street Lending Draw Advance';
             $this->method_description = 'Allow borrowers to fund materials & freight directly from their active CSL rehab loan draw.';
-            $this->title              = '🏦 Center Street Lending (CSL) Draw Advance <span style="font-size: 10px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
+            $this->title              = 'Center Street Lending (CSL) Draw Advancement';
             $this->description        = 'No upfront card payment today. Your material and freight invoice will be funded 100% from your active Center Street Lending rehab loan draw budget upon verification.';
             $this->order_button_text  = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT &rarr;';
-            
-            $this->init_form_fields();
-            $this->init_settings();
-            
-            $this->enabled = 'yes';
-            
-            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+            $this->enabled            = 'yes';
+        }
+
+        public function get_title() {
+            return '🏦 Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
+        }
+
+        public function get_description() {
+            return 'No upfront card payment today. Your material and freight invoice will be funded 100% from your active Center Street Lending rehab loan draw budget upon verification.';
+        }
+
+        public function payment_fields() {
+            echo '<div class="csl-draw-info-box" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 16px; margin-top: 8px;">';
+            echo '<div style="font-size: 13.5px; font-weight: 800; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">';
+            echo '<span style="font-size: 16px;">✅</span> 100% Rehab Draw Financing (CSL Borrowers)';
+            echo '</div>';
+            echo '<p style="font-size: 12.5px; color: #15803d; margin: 0; line-height: 1.4;">Zero out-of-pocket payment required today. Our lending team will verify your active loan number or property address and process payment directly through your construction escrow draw.</p>';
+            echo '</div>';
         }
 
         public function process_payment( $order_id ) {
             $order = wc_get_order( $order_id );
-            
-            // Mark as on-hold / processing for CSL Draw review
             $order->update_status( 'processing', __( 'CSL Draw Advancement requested by borrower.', 'fixflip' ) );
-            
-            // Reduce stock
             wc_reduce_stock_levels( $order_id );
-            
-            // Empty cart
             WC()->cart->empty_cart();
-            
             return array(
                 'result'   => 'success',
                 'redirect' => $this->get_return_url( $order )
@@ -1661,8 +1682,21 @@ function fixflip_init_csl_draw_gateway_class() {
 
 add_filter( 'woocommerce_payment_gateways', 'fixflip_register_csl_draw_gateway' );
 function fixflip_register_csl_draw_gateway( $gateways ) {
-    $gateways[] = 'WC_Gateway_CSL_Draw_Advance';
+    if ( class_exists( 'WC_Gateway_CSL_Draw_Advance' ) ) {
+        $gateways[] = 'WC_Gateway_CSL_Draw_Advance';
+    }
     return $gateways;
+}
+
+add_filter( 'woocommerce_gateway_title', 'fixflip_custom_all_gateway_titles', 99, 2 );
+function fixflip_custom_all_gateway_titles( $title, $gateway_id ) {
+    if ( 'csl_draw_advance' === $gateway_id ) {
+        return '🏦 Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
+    }
+    if ( 'stripe' === $gateway_id || 'stripe_cc' === $gateway_id ) {
+        return '💳 Credit Card / Debit Card / Apple Pay <span style="font-size: 10.5px; font-weight: 900; background: #007bff; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">Instant Pay</span>';
+    }
+    return $title;
 }
 
 /**
@@ -1686,7 +1720,7 @@ function fixflip_checkout_payment_button_morpher() {
     if ( is_checkout() ) {
         ?>
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        (function() {
             function updateCheckoutButton() {
                 const btn = document.getElementById('place_order');
                 if (!btn) return;
@@ -1707,22 +1741,36 @@ function fixflip_checkout_payment_button_morpher() {
                 }
             }
 
-            document.body.addEventListener('change', function(e) {
-                if (e.target && e.target.name === 'payment_method') {
-                    updateCheckoutButton();
-                }
-            });
-
-            if (typeof jQuery !== 'undefined') {
-                jQuery(document.body).on('updated_checkout payment_method_selected', function() {
-                    updateCheckoutButton();
+            document.addEventListener('DOMContentLoaded', function() {
+                updateCheckoutButton();
+                document.body.addEventListener('change', function(e) {
+                    if (e.target && e.target.name === 'payment_method') {
+                        updateCheckoutButton();
+                    }
                 });
-            }
+                document.body.addEventListener('click', function(e) {
+                    const li = e.target.closest('.wc_payment_method');
+                    if (li) {
+                        const radio = li.querySelector('input[name="payment_method"]');
+                        if (radio && !radio.checked) {
+                            radio.checked = true;
+                            if (typeof jQuery !== 'undefined') {
+                                jQuery(radio).trigger('change');
+                            }
+                        }
+                        updateCheckoutButton();
+                    }
+                });
 
-            updateCheckoutButton();
-            setTimeout(updateCheckoutButton, 400);
-            setTimeout(updateCheckoutButton, 1000);
-        });
+                if (typeof jQuery !== 'undefined') {
+                    jQuery(document.body).on('updated_checkout payment_method_selected', function() {
+                        updateCheckoutButton();
+                    });
+                }
+
+                setInterval(updateCheckoutButton, 300);
+            });
+        })();
         </script>
         <?php
     }
