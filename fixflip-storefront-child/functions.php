@@ -1585,6 +1585,17 @@ function fixflip_checkout_dropdown_styles() {
                 background: #0056b3 !important;
                 box-shadow: 0 6px 20px rgba(0,123,255,0.4) !important;
             }
+            /* Clean Thank You / Order Received Page Container */
+            .woocommerce-order {
+                max-width: 960px !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+            }
+            .woocommerce-order > ul.woocommerce-order-overview,
+            .woocommerce-order > .woocommerce-order-details,
+            .woocommerce-order > .woocommerce-customer-details {
+                display: none !important;
+            }
         </style>';
     }
 }
