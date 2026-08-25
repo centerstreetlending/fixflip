@@ -562,19 +562,40 @@ function fixflip_save_custom_product_fields( $post_id ) {
     update_post_meta( $post_id, 'custom_coverage', $coverage );
 }
 
-// 3. Save Calculated Sqft to Cart Item Data
+// 3. Save Calculated Sqft & Sample Flag to Cart Item Data
 add_filter( 'woocommerce_add_cart_item_data', 'fixflip_add_cart_item_data', 10, 3 );
 function fixflip_add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
-    if ( isset( $_POST['calculated_sqft'] ) && !empty( $_POST['calculated_sqft'] ) ) {
+    if ( isset( $_POST['is_sample'] ) && $_POST['is_sample'] === '1' ) {
+        $cart_item_data['is_sample'] = true;
+        $cart_item_data['unique_key'] = md5( $product_id . '_sample_' . microtime() );
+    } elseif ( isset( $_POST['calculated_sqft'] ) && !empty( $_POST['calculated_sqft'] ) ) {
         $cart_item_data['calculated_sqft'] = sanitize_text_field( $_POST['calculated_sqft'] );
     }
     return $cart_item_data;
 }
 
-// 4. Display Calculated Sqft in Cart and Checkout
+// 4. Force $5.00 Price for Samples
+add_action( 'woocommerce_before_calculate_totals', 'fixflip_calculate_sample_and_custom_prices', 99, 1 );
+function fixflip_calculate_sample_and_custom_prices( $cart ) {
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
+
+    foreach ( $cart->get_cart() as $cart_item ) {
+        if ( ! empty( $cart_item['is_sample'] ) ) {
+            $cart_item['data']->set_price( 5.00 );
+        }
+    }
+}
+
+// 5. Display Calculated Sqft & Sample Info in Cart and Checkout
 add_filter( 'woocommerce_get_item_data', 'fixflip_display_cart_item_data', 10, 2 );
 function fixflip_display_cart_item_data( $item_data, $cart_item ) {
-    if ( isset( $cart_item['calculated_sqft'] ) ) {
+    if ( ! empty( $cart_item['is_sample'] ) ) {
+        $item_data[] = array(
+            'key'     => __( 'Item Type', 'fixflip' ),
+            'value'   => 'Sample Swatch ($5.00)',
+            'display' => ''
+        );
+    } elseif ( isset( $cart_item['calculated_sqft'] ) ) {
         $item_data[] = array(
             'key'     => __( 'Project Coverage', 'fixflip' ),
             'value'   => wc_clean( $cart_item['calculated_sqft'] ) . ' sqft',
@@ -584,10 +605,12 @@ function fixflip_display_cart_item_data( $item_data, $cart_item ) {
     return $item_data;
 }
 
-// 5. Save Calculated Sqft to Order Line Items
+// 6. Save Calculated Sqft & Sample Info to Order Line Items
 add_action( 'woocommerce_checkout_create_order_line_item', 'fixflip_save_order_line_item_data', 10, 4 );
 function fixflip_save_order_line_item_data( $item, $cart_item_key, $values, $order ) {
-    if ( isset( $values['calculated_sqft'] ) ) {
+    if ( ! empty( $values['is_sample'] ) ) {
+        $item->add_meta_data( 'Order Type', 'Sample Swatch ($5.00)', true );
+    } elseif ( isset( $values['calculated_sqft'] ) ) {
         $item->add_meta_data( 'Project Coverage', $values['calculated_sqft'] . ' sqft', true );
     }
 }
@@ -851,9 +874,12 @@ function fixflip_checkout_product_image( $name, $cart_item, $cart_item_key ) {
     return '<div style="display: inline-flex; align-items: center; gap: 12px; vertical-align: middle;">' . $thumbnail . '<span style="font-size: 15px; font-weight: 800; color: #0f172a; line-height: 1.3;">' . esc_html($raw_title) . '</span></div>';
 }
 
-// 14. Format Checkout Line Item Quantity (1 item • X boxes)
+// 14. Format Checkout Line Item Quantity (1 item • X boxes / Samples)
 add_filter( 'woocommerce_checkout_cart_item_quantity', 'fixflip_checkout_custom_qty', 10, 3 );
 function fixflip_checkout_custom_qty( $qty_html, $cart_item, $cart_item_key ) {
+    if ( ! empty( $cart_item['is_sample'] ) ) {
+        return ' <span class="product-quantity" style="font-weight: 700; color: #0284c7; font-size: 13px;">&times; 1 item (' . $cart_item['quantity'] . ' Sample Swatch &bull; $5.00 ea)</span>';
+    }
     $boxes = isset($cart_item['quantity']) ? (int) $cart_item['quantity'] : 1;
     $product_id = isset($cart_item['product_id']) ? $cart_item['product_id'] : 0;
     $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
@@ -899,7 +925,7 @@ function fixflip_output_cart_drawer_items_html() {
         echo '<div style="text-align: center; padding: 48px 16px; color: #64748b;">';
         echo '<svg viewBox="0 0 24 24" style="width:48px;height:48px;stroke:#94a3b8;stroke-width:1.5;fill:none;margin-bottom:12px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>';
         echo '<h4 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">Your cart is currently empty</h4>';
-        echo '<p style="font-size: 13px; color: #64748b; margin: 0;">Add flooring products to calculate your total and order samples.</p>';
+        echo '<p style="font-size: 13px; color: #64748b; margin: 0;">Add flooring products or order sample swatches ($5.00 ea).</p>';
         echo '</div>';
         return;
     }
@@ -912,19 +938,27 @@ function fixflip_output_cart_drawer_items_html() {
             $thumbnail     = $_product->get_image('thumbnail', array('style' => 'width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;'));
             $subtotal      = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
             $remove_url    = wc_get_cart_remove_url( $cart_item_key );
+            $is_sample     = ! empty( $cart_item['is_sample'] );
 
-            $boxes = (int) $cart_item['quantity'];
-            $coverage = (float) get_post_meta( $_product->get_id(), 'custom_coverage', true );
-            if ( empty($coverage) ) {
-                $coverage = 27.73;
+            if ( $is_sample ) {
+                $item_badge = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">SAMPLE</span>';
+                $line_desc  = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample ($5.00 ea)';
+            } else {
+                $item_badge = '';
+                $boxes = (int) $cart_item['quantity'];
+                $coverage = (float) get_post_meta( $_product->get_id(), 'custom_coverage', true );
+                if ( empty($coverage) ) {
+                    $coverage = 27.73;
+                }
+                $total_sqft = round($boxes * $coverage, 1);
+                $line_desc  = '1 item &bull; ' . $boxes . ' boxes (' . number_format($total_sqft, 1) . ' sq ft)';
             }
-            $total_sqft = round($boxes * $coverage, 1);
 
             echo '<div style="display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">';
             echo '<div style="flex-shrink:0;">' . $thumbnail . '</div>';
             echo '<div style="flex: 1;">';
-            echo '<div style="font-size: 14px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 4px;">' . esc_html($product_name) . '</div>';
-            echo '<div style="font-size: 12px; color: #007bff; font-weight: 700; margin-bottom: 2px;">1 item &bull; ' . $boxes . ' boxes (' . number_format($total_sqft, 1) . ' sq ft)</div>';
+            echo '<div style="font-size: 14px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 4px;">' . esc_html($product_name) . $item_badge . '</div>';
+            echo '<div style="font-size: 12px; color: #007bff; font-weight: 700; margin-bottom: 2px;">' . $line_desc . '</div>';
             echo '<div style="font-size: 13px; color: #0f172a; font-weight: 800;">' . $subtotal . '</div>';
             echo '</div>';
             echo '<a href="' . esc_url($remove_url) . '" style="color: #ef4444; font-size: 20px; font-weight: 700; text-decoration: none; padding: 4px;" title="Remove Item">&times;</a>';
@@ -1154,9 +1188,15 @@ add_action( 'wp_ajax_nopriv_fixflip_ajax_add_to_cart', 'fixflip_ajax_add_to_cart
 function fixflip_ajax_add_to_cart_handler() {
     $product_id = isset($_POST['add-to-cart']) ? absint($_POST['add-to-cart']) : (isset($_POST['product_id']) ? absint($_POST['product_id']) : 0);
     $quantity   = isset($_POST['quantity']) ? absint($_POST['quantity']) : 1;
+    $is_sample  = (isset($_POST['is_sample']) && $_POST['is_sample'] === '1') || (isset($_REQUEST['is_sample']) && $_REQUEST['is_sample'] == '1');
 
     if ( $product_id ) {
-        WC()->cart->add_to_cart( $product_id, $quantity );
+        $cart_item_data = array();
+        if ( $is_sample ) {
+            $cart_item_data['is_sample'] = true;
+            $cart_item_data['unique_key'] = md5( $product_id . '_sample_' . microtime() );
+        }
+        WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $cart_item_data );
         ob_start();
         fixflip_output_cart_drawer_items_html();
         $drawer_html = ob_get_clean();
@@ -1178,26 +1218,43 @@ add_filter( 'woocommerce_cart_needs_shipping', '__return_true', 999 );
 add_filter( 'woocommerce_shipping_cost_requires_address', '__return_false', 999 );
 
 /**
- * Custom WooCommerce Freight Shipping Calculator: $450 Base + $0.40/sqft
+ * Custom WooCommerce Freight Shipping Calculator: $450 Base + $0.40/sqft (Free for Samples)
  */
 add_filter( 'woocommerce_package_rates', 'fixflip_custom_freight_shipping_calculator', 10, 2 );
 function fixflip_custom_freight_shipping_calculator( $rates, $package ) {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return $rates;
 
     $total_sqft = 0;
+    $has_bulk   = false;
 
     if ( isset( $package['contents'] ) && is_array( $package['contents'] ) ) {
         foreach ( $package['contents'] as $item ) {
-            $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
-            $qty_boxes  = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
-            
-            $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
-            if ( empty( $coverage ) ) {
-                $coverage = 27.73; // Default SPC box coverage
-            }
+            if ( empty( $item['is_sample'] ) ) {
+                $has_bulk   = true;
+                $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
+                $qty_boxes  = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
+                
+                $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
+                if ( empty( $coverage ) ) {
+                    $coverage = 27.73; // Default SPC box coverage
+                }
 
-            $total_sqft += ($qty_boxes * $coverage);
+                $total_sqft += ($qty_boxes * $coverage);
+            }
         }
+    }
+
+    if ( ! $has_bulk ) {
+        // Order only contains sample swatches -> Free Swatch Sample Shipping
+        $rate_id = 'fixflip_sample_shipping';
+        $custom_rate = new WC_Shipping_Rate(
+            $rate_id,
+            'Standard Swatch Sample Shipping (USPS / FedEx)',
+            0.00,
+            array(),
+            'fixflip_sample_shipping'
+        );
+        return array( $rate_id => $custom_rate );
     }
 
     $freight_cost = 450.00 + ($total_sqft * 0.40);
@@ -1533,6 +1590,20 @@ add_action('woocommerce_before_checkout_process', 'fixflip_enforce_minimum_order
 
 function fixflip_enforce_minimum_order_amount() {
     if ( is_cart() || is_checkout() ) {
+        // Exclude orders that only contain sample swatches
+        $has_bulk = false;
+        if ( WC()->cart ) {
+            foreach ( WC()->cart->get_cart() as $cart_item ) {
+                if ( empty( $cart_item['is_sample'] ) ) {
+                    $has_bulk = true;
+                    break;
+                }
+            }
+        }
+        if ( ! $has_bulk ) {
+            return; // Swatch samples do not require $2,000 pallet minimum
+        }
+
         $minimum = 2000;
         $cart_subtotal = (float) WC()->cart->get_subtotal();
 

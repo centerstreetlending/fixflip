@@ -420,6 +420,14 @@ $main_image_url = $thumbs[0] ?? $default_plank;
                             <span id="fd-btn-subtotal">$<?php echo number_format($box_price, 2); ?></span>
                             <span style="font-size: 18px; margin-left: 4px;">&rarr;</span>
                         </button>
+
+                        <!-- Secondary CTA: ORDER A SAMPLE ($5.00) -->
+                        <button type="button" onclick="window.fdSubmitAddSample(event)" id="fd-main-sample-btn" style="width: 100%; height: 50px; padding: 0 20px; background: #ffffff; color: #0f172a; font-size: 14.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border: 2px solid #0f172a; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;" onmouseover="this.style.background='#0f172a'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#0f172a';">
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                            <span>ORDER A SAMPLE SWATCH</span>
+                            <span style="opacity: 0.5;">&bull;</span>
+                            <span style="color: #16a34a; font-weight: 900;">$5.00</span>
+                        </button>
                     </div>
                 </form>
 
@@ -471,6 +479,54 @@ $main_image_url = $thumbs[0] ?? $default_plank;
                             btn.disabled = false;
                         }
                         document.querySelector('form.cart').submit();
+                    });
+                };
+
+                window.fdSubmitAddSample = function(e) {
+                    if (e) e.preventDefault();
+                    const sampleBtn = document.getElementById('fd-main-sample-btn');
+                    const productId = '<?php echo esc_js($product->get_id()); ?>';
+
+                    if (sampleBtn) {
+                        sampleBtn.style.opacity = '0.6';
+                        sampleBtn.disabled = true;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('action', 'fixflip_ajax_add_to_cart');
+                    formData.append('add-to-cart', productId);
+                    formData.append('quantity', '1');
+                    formData.append('is_sample', '1');
+
+                    fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (sampleBtn) {
+                            sampleBtn.style.opacity = '1';
+                            sampleBtn.disabled = false;
+                        }
+                        if (data && data.success) {
+                            const itemsContainer = document.getElementById('fd-cart-drawer-items');
+                            if (itemsContainer && data.data.drawer_html) {
+                                itemsContainer.innerHTML = data.data.drawer_html;
+                            }
+                            const badges = document.querySelectorAll('.cart-badge, .cart-contents .count, #site-header-cart-icon .count, .cart-wrapper .count');
+                            badges.forEach(b => b.textContent = data.data.cart_count || '1');
+                            if (typeof window.fdOpenCartDrawer === 'function') {
+                                window.fdOpenCartDrawer();
+                            }
+                        } else {
+                            document.querySelector('form.cart').submit();
+                        }
+                    })
+                    .catch(err => {
+                        if (sampleBtn) {
+                            sampleBtn.style.opacity = '1';
+                            sampleBtn.disabled = false;
+                        }
                     });
                 };
                 </script>
