@@ -1593,10 +1593,27 @@ function fixflip_checkout_dropdown_styles() {
             }
             .woocommerce-order > ul.woocommerce-order-overview,
             .woocommerce-order > .woocommerce-order-details,
-            .woocommerce-order > .woocommerce-customer-details {
+            .woocommerce-order > .woocommerce-customer-details,
+            p.woocommerce-thankyou-order-received,
+            .woocommerce-notice--success.woocommerce-thankyou-order-received {
                 display: none !important;
             }
         </style>';
+    }
+}
+
+/**
+ * Custom Thank You / Order Received Output Handler
+ */
+add_action( 'woocommerce_thankyou', 'fixflip_render_custom_thankyou_page', 1, 1 );
+function fixflip_render_custom_thankyou_page( $order_id ) {
+    if ( ! $order_id ) return;
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) return;
+    
+    $template = get_stylesheet_directory() . '/woocommerce/checkout/thankyou.php';
+    if ( file_exists( $template ) ) {
+        include $template;
     }
 }
 /**
