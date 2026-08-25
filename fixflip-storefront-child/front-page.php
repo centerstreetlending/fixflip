@@ -43,7 +43,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +164,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +190,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -255,7 +255,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -281,7 +281,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +307,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>
@@ -333,7 +333,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div style="margin-top: 14px;">
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <span style="display: block; width: 100%; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 9px 6px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">SELECT SQ FT &amp; BUY &rarr;</span>
-                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; .00</span>
+                                    <span style="display: block; width: 100%; background: #f8fafc; color: #007bff; border: 1.5px solid #cbd5e1; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 6px; text-align: center;">ORDER SAMPLE &bull; $5.00</span>
                                 </div>
                             </div>
                         </div>

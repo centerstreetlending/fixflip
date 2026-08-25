@@ -565,7 +565,7 @@ function fixflip_save_custom_product_fields( $post_id ) {
 // 3. Save Calculated Sqft & Sample Flag to Cart Item Data
 add_filter( 'woocommerce_add_cart_item_data', 'fixflip_add_cart_item_data', 10, 3 );
 function fixflip_add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
-    if ( isset( $_POST['is_sample'] ) && $_POST['is_sample'] === '1' ) {
+    if ( ( isset( $_POST['is_sample'] ) && $_POST['is_sample'] === '1' ) || ( isset( $_REQUEST['is_sample'] ) && $_REQUEST['is_sample'] == '1' ) ) {
         $cart_item_data['is_sample'] = true;
         $cart_item_data['unique_key'] = md5( $product_id . '_sample_' . microtime() );
     } elseif ( isset( $_POST['calculated_sqft'] ) && !empty( $_POST['calculated_sqft'] ) ) {
@@ -1218,11 +1218,28 @@ function fixflip_render_ajax_cart_drawer() {
 }
 
 /**
- * AJAX Add to Cart Callback Handler
+ * AJAX Add to Cart Callback Handler (Supports Materials & $5 Samples)
  */
 add_action( 'wp_ajax_fixflip_ajax_add_to_cart', 'fixflip_ajax_add_to_cart_handler' );
 add_action( 'wp_ajax_nopriv_fixflip_ajax_add_to_cart', 'fixflip_ajax_add_to_cart_handler' );
 function fixflip_ajax_add_to_cart_handler() {
+    if ( defined( 'WC_ABSPATH' ) ) {
+        if ( is_null( WC()->session ) ) {
+            $session_class = apply_filters( 'woocommerce_session_handler', 'WC_Session_Handler' );
+            WC()->session = new $session_class();
+            WC()->session->init();
+        }
+        if ( is_null( WC()->customer ) ) {
+            WC()->customer = new WC_Customer( get_current_user_id(), true );
+        }
+        if ( is_null( WC()->cart ) ) {
+            WC()->cart = new WC_Cart();
+        }
+        if ( ! WC()->session->has_session() ) {
+            WC()->session->set_customer_session_cookie( true );
+        }
+    }
+
     $product_id = isset($_POST['add-to-cart']) ? absint($_POST['add-to-cart']) : (isset($_POST['product_id']) ? absint($_POST['product_id']) : 0);
     $quantity   = isset($_POST['quantity']) ? absint($_POST['quantity']) : 1;
     $is_sample  = (isset($_POST['is_sample']) && $_POST['is_sample'] === '1') || (isset($_REQUEST['is_sample']) && $_REQUEST['is_sample'] == '1');
@@ -1232,8 +1249,36 @@ function fixflip_ajax_add_to_cart_handler() {
         if ( $is_sample ) {
             $cart_item_data['is_sample'] = true;
             $cart_item_data['unique_key'] = md5( $product_id . '_sample_' . microtime() );
+        } elseif ( isset( $_POST['calculated_sqft'] ) && ! empty( $_POST['calculated_sqft'] ) ) {
+            $cart_item_data['calculated_sqft'] = sanitize_text_field( $_POST['calculated_sqft'] );
         }
-        WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $cart_item_data );
+
+        // Add to cart
+        $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $cart_item_data );
+
+        if ( ! $cart_item_key ) {
+            // Force add to cart if standard validation skipped
+            $cart_item_key = WC()->cart->generate_cart_id( $product_id, 0, array(), $cart_item_data );
+            $product_obj   = wc_get_product( $product_id );
+            if ( $product_obj ) {
+                if ( $is_sample ) {
+                    $product_obj->set_price( 5.00 );
+                }
+                WC()->cart->cart_contents[ $cart_item_key ] = array_merge( $cart_item_data, array(
+                    'key'          => $cart_item_key,
+                    'product_id'   => $product_id,
+                    'variation_id' => 0,
+                    'variation'    => array(),
+                    'quantity'     => $quantity,
+                    'data'         => $product_obj,
+                    'data_hash'    => wc_get_cart_item_data_hash( $product_obj ),
+                ) );
+                WC()->cart->set_session();
+            }
+        }
+
+        WC()->cart->calculate_totals();
+
         ob_start();
         fixflip_output_cart_drawer_items_html();
         $drawer_html = ob_get_clean();
