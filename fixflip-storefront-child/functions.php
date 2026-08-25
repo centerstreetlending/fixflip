@@ -1543,12 +1543,36 @@ function fixflip_clear_stale_notices_on_checkout() {
  */
 add_action('init', 'fixflip_enable_stripe_gateway_options');
 function fixflip_enable_stripe_gateway_options() {
+    // 1. Ensure WooCommerce Stripe plugin is active in WordPress
+    $active_plugins = (array) get_option( 'active_plugins', array() );
+    $stripe_plugin  = 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php';
+    if ( ! in_array( $stripe_plugin, $active_plugins ) ) {
+        $active_plugins[] = $stripe_plugin;
+        update_option( 'active_plugins', array_unique($active_plugins) );
+    }
+
+    // 2. Configure Stripe gateway options
     $stripe_settings = get_option('woocommerce_stripe_settings', array());
+    $updated = false;
+
     if (empty($stripe_settings['enabled']) || $stripe_settings['enabled'] !== 'yes') {
         $stripe_settings['enabled'] = 'yes';
-        $stripe_settings['title']   = 'Credit Card / Debit Card / Apple Pay (Stripe)';
-        $stripe_settings['description'] = 'Pay securely using Credit Card, Debit Card, Apple Pay, or Google Pay.';
-        $stripe_settings['testmode'] = 'yes';
+        $updated = true;
+    }
+    if (empty($stripe_settings['title'])) {
+        $stripe_settings['title'] = 'Credit Card / Debit Card / Apple Pay';
+        $updated = true;
+    }
+    if (empty($stripe_settings['description'])) {
+        $stripe_settings['description'] = 'Pay securely using Visa, MasterCard, Amex, Discover, Apple Pay, or Google Pay.';
+        $updated = true;
+    }
+    if (!isset($stripe_settings['payment_request'])) {
+        $stripe_settings['payment_request'] = 'yes'; // Enable Apple Pay / Google Pay
+        $updated = true;
+    }
+
+    if ($updated) {
         update_option('woocommerce_stripe_settings', $stripe_settings);
     }
 }
