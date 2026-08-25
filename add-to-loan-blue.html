@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add to Loan | FixFlip Materials Market | Blue Theme</title>
+  <style>
+    :root {
+      --ink: #141414;
+      --muted: #5f6f82;
+      --line: #d7e0ea;
+      --paper: #f6f9fc;
+      --white: #ffffff;
+      --signal: #2f80ed;
+      --forest: #12365f;
+      --clay: #5d7fa6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.4;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: center;
+      min-height: 78px;
+      padding: 0 clamp(18px, 4vw, 54px);
+      border-bottom: 1px solid rgba(20, 20, 20, .1);
+      background: rgba(246, 249, 252, .94);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 188px;
+    }
+
+    .brand img {
+      width: 138px;
+      height: auto;
+      display: block;
+    }
+
+    .brand span {
+      width: 9px;
+      height: 9px;
+      background: var(--signal);
+      border-radius: 999px;
+      box-shadow: 18px 0 0 var(--forest), 36px 0 0 var(--clay);
+    }
+
+    .back {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(360px, .62fr);
+      min-height: calc(100vh - 78px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(54px, 7vw, 104px) clamp(22px, 5vw, 74px);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 48px;
+      height: 5px;
+      background: var(--signal);
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(48px, 8vw, 112px);
+      line-height: .86;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .copy > p:not(.eyebrow) {
+      max-width: 650px;
+      margin: 28px 0 0;
+      color: #26384a;
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .loan-entry {
+      width: min(520px, 100%);
+      margin-top: 32px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .loan-entry label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .loan-entry input {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid rgba(20, 20, 20, .3);
+      border-radius: 4px;
+      background: #fffdf6;
+      padding: 0 15px;
+      color: var(--ink);
+      font: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .loan-entry input::placeholder {
+      color: rgba(20, 20, 20, .42);
+    }
+
+    .loan-entry span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .primary,
+    .secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 4px;
+      border: 1px solid var(--ink);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .primary {
+      background: var(--signal);
+      box-shadow: 8px 8px 0 var(--ink);
+    }
+
+    .secondary { background: transparent; }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(28px, 4vw, 54px);
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .loan-card {
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .loan-head {
+      padding: 24px;
+      background: var(--signal);
+      color: var(--ink);
+    }
+
+    .loan-head span {
+      display: block;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .loan-head strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: .9;
+    }
+
+    .loan-number-card {
+      padding: 18px 24px;
+      border-top: 1px solid rgba(20, 20, 20, .16);
+      background: rgba(20, 20, 20, .08);
+      color: var(--ink);
+    }
+
+    .loan-number-card label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .loan-number-card input {
+      width: 100%;
+      min-height: 50px;
+      border: 1px solid rgba(20, 20, 20, .3);
+      border-radius: 4px;
+      background: var(--white);
+      color: var(--ink);
+      padding: 0 14px;
+      font: inherit;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .loan-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      padding: 18px 24px;
+      border-top: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .loan-row span {
+      color: rgba(255, 255, 255, .7);
+      font-size: 13px;
+    }
+
+    .loan-row strong,
+    .loan-row b {
+      display: block;
+      color: var(--white);
+    }
+
+    .notice {
+      margin-top: 22px;
+      padding: 18px 24px;
+      border-left: 6px solid var(--signal);
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .78);
+      font-size: 14px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin: clamp(44px, 6vw, 76px) clamp(22px, 5vw, 74px);
+    }
+
+    .step {
+      min-height: 190px;
+      padding: 22px;
+      background: var(--white);
+    }
+
+    .step b {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 32px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--signal);
+    }
+
+    .step h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .topbar,
+      .hero,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .back {
+        justify-self: start;
+        margin-bottom: 16px;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 16px; }
+      .brand img { width: 116px; }
+      .copy { padding: 42px 18px 48px; }
+      h1 { font-size: clamp(46px, 14vw, 72px); }
+      .steps { margin: 42px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="fixflip-materials-landing-blue.html">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtgAAACJCAMAAAAhQL9MAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAABkYWFMSkk1MzMtLCxBPz9cWllUUlEPEA9QTk0lJCRhXl5YVlY7OjkaGhpFREQFBwiCt9ByAAAAEHRSTlMAH6/n789Xh/6c9jxw3PvAchUu8QAADoJJREFUeNrtnd2W3CoOhQFjEJi/93/aOTNrJTlrut2yJUCU432buKq6SmJL4jNWj5M2m7W7U69ePUke2v+06/e7ePUchfZL8Xi/jVcncmmEtDpXOpVTF+Sg/Rb49wd89a1MG6JNnUnndq6kUOnS/q1dSSu2EQJ1qgDnV42wsK2dy2DuCu2+orV7TU6xZFtX4fHm2w/S97/mqJWoUpsd2NDOFVR36faDPHYtR7YyDBkaXaQvuLZzFYrDQFKSqm2IrDrT0X6Qm5y5iEN4vvUHTUzHMTpIFpEVJte+UVWC2toQVVKwwOTMhRlZnykrl1/KSA1x+di0YkrE8mgevyPr/MzM3eYUujasb6SusXpHHdt3Ku62wW6tlf1QXB1iljfLuwryflOy3qY1eseKDKFPRA8kCISERqYIIpaHdxvIyjC1d0zzsn47VjDSRDNSjjNm0h7PtmjvuNEsTyuqhkyxQusoMOq6XBsjTbKInRVJ5kZcI5b/qZZXJveOEbl2b11lNeEXFjBS2hC28jcnHPSrSttsy8uEqdKozM2Tsx6cuqh9lpHyh6L4D2sIcU1Y5IQtL7ZzmclTHzM968OqRmq4Q1gNSDrdGazwa5Hw9N7xQN5vdtaHDzRSyyz5LCGuCcGwsOUpsoZMsUyTiuw03UgLcwjrgNl7qtx1EzrOtrw6bXuGP8XKbYSCHNpXqEANKh25ubyzBgnylrchU6WZveMuk/We2IjxlWkWoXlxXUjOmsXQPprHl2loH3+K1cYInJSRmt5o3xECDvcm0m5DWJFmj7Re7lDd5Rjvl9ogRSm0L3UGag5orVhbWmNX6IR0ELQ8ebTPCKB9uKqQkRKHoixjsQrXAb3tu4yyPPnekT/F2towOZGUKsShKGekVjSt88SjQdLy5NG+yHi/0obJiqTURgNqiPxcsVeHdpGwLbyq5a2P9vGznv7eMLsC2gkdwQEozOirY7hqXg7tiwJoX/8plm9NaMk+ljLSnTDha6HHTkNeDe3LH4H2Fca1fCUBRl73HIrme95ACom81m1h0SHZOQ/t2wahfSV9K19z5CU/nlJOTR6KuvuogiV7qkkpYqAvrgMJT67k0b7CeD+grUg6bHRsA08pO/1wnttoSAN9PaXgy2+iM/twEj9ot+QBaB/r2iPzkBHE5AWGoqMKbA3f2Rg7svexFa882ucZ7xc4fe6xjbp5zqsVhqIbwYzw/MhK9YlsS/jeWTKTPJa/HYRPwLhnowExpWYbqb9NYkRiAGaluJEtb3nro32W2ec6oO4+5qWM9ED+PyOw8/lKkzndnhtU8T4f7TOqQ2QHSmGwKfmh6IGlrCa97X5qW+CG9sJ86aegfa7HbXc7LaXEz8rSsSGqpK8HHBLZfrd2D5pXGMTZlgeTbwuDCVm/kTYf01JGWglEKBykVQfS+a+31fzLJzL66nF0xbs+2se/lr41XmgpJT0U9Q1XIhZq4dq6FFgVKF2PR/tqH9ydsM5bJT0U1dAlsHVpjR7ZmlNFciWP9qlRJ777PvQknlLyRhopDHam93fhUv+dGOdGD9DxQWhf6tPnEu4F1EsZaSaAh1Fffk9wBolspIUWsDx5tM8MQvtKp1P103KcAx5CudM5bvb3V2AJkV0ZVSRL66N925xN2YoENsFIRdE+3XDZGy6Rv8mUjEe2YfTCA2QfgvaZPibVEiGlhM/KMg1XOW7EArRGiOyDcW70AE1uVrUE2sefScNKRmop552Av/nbRHsS2ScWZhi98AC5pdA+/rX8wBbgHHjbGUe7pqzvvGfUavshsisS14Re+LloX+SsYsMCGy8MhNG+0C6qpBvz/aRU/SEAt57bMy/ah1/LD2wCLSuL9uV2WfX6EhePBOcPf8jIzIXQC0+0PD96O0gg6/HAJhQGsmdlxXZd8WAd+hH1tyZRHAsQejza5zhY4KjAxlNKGu1rdwQBoUTwxDjS/iXcWYDQ09G+xlnFun0IRygMRNE+1+5p09jtYIQXZAFCs4mE7YNOfN+6nUhESCnZoWhqNwWp6/Ftmd8LD9C2FNrHv5a/pU5IKdnHYJqGCW8LdsmHnOgX7TtX6uXz9u4FRhrtq/zTk0KjCgL/NrfHo30H49puf3QmpJQs2rexH0jsGlXg+B6ZZ1te/CC0L/b6EK0SdjyFHoOJJwFUAxdavtqIim7R+8VVXQntm5X1EVmAxW+ew6GY8yTYnVJph9/jZR3xHtJQ41r3+Hvc09G+Ompr5xaVrwk7nrJD0W9LA19r9eq/0hn/7B4aQVn3KAxAvWgf+7PiO9Dxbkp5abTPoSVvxUsJbfuN+QiW92y0T/Oznr9g7wLPVONZRMJNLwDSQ1LKkbDw/eIq/GVoHz5ESJNvnuNDMebCQcEO8G1DF9sNge92nO/T0b7cN+tprA98HNqnKvKTYTvmkAi7NNF1Kwz009E+MyXrdblfN9rWW64jFJOxl8VayLbrXwkF7ZJK7dgLF0sQVgc9Be3ThEKEjPbxBT1ROHvRPWq70ENuaEoeKTn5B/L6B6F9/HoAd9sy5+mEtudQtFwtHgNcsEsD978ggWfQH38H2pcZmYWXQ6b1Vu05FEU87yJybZEekhAVApa3Itq3D38AFB6ioAWMlInCHchqehW6Bo8tP9FCTIogUcuTR/vGbyVl2kpaBI0UrwXSHd/SuV3pIQt9SjbJ8l60749cbKQFW480Uv5QNNwbY9VG7SEDAxDqLf85aB8M3pTVtaGqAkbKHorWm92+v/TqAWi2OMny9OegfXZoO6DPm310365KGileIea7v5gr7UIPeUTSlGyO5ZUHoX2FUZ67HRjwg229lXqed2Vvlwo6IlvlXxI611oTAxDqre3xaB9uTNrvhVcgwEgj5Q9FI6Epypdg1FR4PIyA5T0M7UsnMnWL7argwFNK3kj309Vp6zanKH96SMJLC1jeymhfmZP1hNorSBopXi5p2tDCw6UVMQChLBW0PNyQ6uJo37xo2yWNFB+KppN/YbWQzR6//MqyqSHX3/KehPYNVtQiRsofinrqeFbHa7j1kchxLW958mhfwq4dK3ATU0r3POWu0qdYGbuhkSR5y0uExV4K7QttrPxEziF2Pe9qvzvF0rV6xBuQE1TF0b70JLRvqMJMziF3HYrauytR/tfyngBdGflq3bUY2mdZaN9IhakpZTho39m3ut8b9OVr/Iw9FEEClrcs2hcke8cwl3NIXYeiN3+w9H/NsrbYyXwEyVreMW17hv8o7SQW11rWSPGf9B7I4eBLBZ0JZ1/Lon3mQWifQFwvifadfb58f8QH/lpjXpJCJWh58mhfZqF9owRudkoZDtp3FtiesHoiLSSh4VqfZg/LoX2DZDUjpYqbDdSc+qAmzKUut5AtHoP+npAI0s9B+3QbIzAKE6x04rs9++8bYSMBaSGJPaT8ie9Otnfko3182YN7nK/8UNQiDovco463kHgPOf2BvC/a96NK4BcG8kPReBmA0PAjExIaqYeUtLz10b5tPtoHVROqUuEn27uTPIg3d7ZJLWSrswGh55/aBzJhLW+k+Djg8sqXUdrpiMyDKAWeQS+P9h0LoX0x9CoM5IeitrUGmreLEPXFg/vAjAeEcL1o37eC3fUrDOQfg3ls1jousAEOCUNCDyn/DHp5tC9OA3rL7snfkryRekWVg4vjvEB4qO9alrf9dbeFwWbcmMJAfiiK76RjCkgKENfZ1N/yXrTvj+JW/TGwMJAfivKJBK/wFhLvIeWfQf8YtM+eq/4jk5IWKAwEHoPJLOWqunz2OxhJy/sctK9xrg1qoNLQ0dGsZ7aHu5Dj3rr1kEXO8tZH+zIxCfmqBCOVGYryh6UOSQVSD6nHWZ482ocXqwITI4nCQGYHX0PDlNM/+jJFQbRL9MK4YCG0z2PXzkjC9Y009huI4Blz4JdFJ4v2rX9b2CE0Mfo4tI+iTLylR+eGyvAAoRftIxS6AodoCg1F+XfSZjJSafVqaN9O8FipYnXjJaF8YSC4g+85hwUFaJjAL2t58mhfZV1L0yPQPv5Oetuxy1HtWp3Lv2gf8VqvRqqtxMjbEY1j4nee0UnQ7PJoH565AoXuU9A+NmOj8afn4TJUy3s+2ic/MVqfkfcDdtKhz2M2rP4Emt18ENq3qZHaPxvtC0g01lq9whWgoQK3nOXJo31GoNCVYuRnmpMjHOxIbiFBC9DssmgfnrkSN4M+H+3TQJiH0FvIvDzNbj/ptjD1on1IMBJej9ZC6tVp9n01tE9se8Z8MtqHhqLrvIGZVrc8sFRttGL1RfsGbGcYDOa76zge8MCWtzxoQzSkWH3RPsJ2hm/dh/+uIIG9KtrHV5mO9h1qoPRSnEPut5NeRtwQDMtaHl95BJ5nHoH28Y009Gsc7ZBD8Za1PL4Mu1gVy/r1j791fVb+YgH8gHa66GXRPr7SkBPfX7Tvbu+YCUsBt4V069LsfFGnWPKF7vqMvKXnB17Q8FvIsC7NzpdlF6siWU9LR0m0T2CnFqnf88KWx9fOmWKRrn3Rvq86gPC5mS1k1AvT7HyF2Whffh7axx9sWgzm48usi/YNkZt94rsR6B2Fjr8t7AKq9ExBQNxEyvLGaMQU6yBcK3i/uPwOfpoyGnURyXIhyxsi+6J9C+zguzmjUW2RglCGZh+iyipWRbN+/eNvEzs9/KAWJC9ueXz5EZlrCZkkSdrK7+A7+O6XSf095silwZZWtzy+jtlon3/RvmuRrRA92fL4ghftWxXtUyLaBCxvhOyIzDVTOKT1j781ihHZRQnoOWhfHTHFyi/ah1gEEtk5WxuUgEROfB8iPwvtk9+e2ZbfwXeFMFV7AM0+s3fUL9onsIOvI2FlfKDl8QUjMjcRVrEnon07CcLDP+nzLY8vK4f2zU5/mG4RnoqXaiUhHO17eu+YWffYDZWxuX4ru42JlmS3eiJPTM7klJyyPVXWaoC8HaHtOKcKTrVrlEg41di26D8VHAdNTpBuRQAAAABJRU5ErkJggg==" alt="FixFlip">
+      <span aria-hidden="true"></span>
+    </a>
+    <div></div>
+    <a class="back" href="contractor-login-blue.html">GC Login</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="copy">
+        <p class="eyebrow">Material financing preview</p>
+        <h1>Add materials to the loan.</h1>
+        <p>Bundle approved products into the project budget, keep draw requests clean, and show exactly which materials are tied to the rehab loan.</p>
+        <div class="loan-entry">
+          <label for="loan-number">Input loan number</label>
+          <input id="loan-number" name="loan-number" type="text" inputmode="numeric" placeholder="Example: 104827">
+          <span>Use the project loan number before submitting materials for review.</span>
+        </div>
+        <div class="actions">
+          <a class="primary" href="#">Add to Loan</a>
+          <a class="secondary" href="fixflip-materials-landing-blue.html#bundles">Review Bundle</a>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <div class="loan-card">
+          <div class="loan-head">
+            <span>Current material request</span>
+            <strong>$684</strong>
+          </div>
+          <div class="loan-number-card">
+            <label for="summary-loan-number">Loan number</label>
+            <input id="summary-loan-number" name="summary-loan-number" type="text" inputmode="numeric" placeholder="Input loan number">
+          </div>
+          <div class="loan-row"><div><strong>Bath bundle</strong><span>Tile, hardware, paint, fixtures</span></div><b>$684</b></div>
+          <div class="loan-row"><div><strong>Estimated loan impact</strong><span>Materials line item</span></div><b>+ $684</b></div>
+          <div class="loan-row"><div><strong>Status</strong><span>Ready for lender review</span></div><b>Draft</b></div>
+        </div>
+        <p class="notice">This is a sample concept screen for a developer handoff, not a live financing application.</p>
+      </aside>
+    </section>
+
+    <section class="steps" aria-label="Add to loan steps">
+      <article class="step">
+        <b>1</b>
+        <h2>Select materials</h2>
+        <p>Pick products or project bundles from the shopping page.</p>
+      </article>
+      <article class="step">
+        <b>2</b>
+        <h2>Attach to budget</h2>
+        <p>Map the material cart to the rehab scope or draw category.</p>
+      </article>
+      <article class="step">
+        <b>3</b>
+        <h2>Send for review</h2>
+        <p>Share the material request with the lender or project manager.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

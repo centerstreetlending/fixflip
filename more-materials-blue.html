@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>More Materials | FixFlip Materials Market | Blue Theme</title>
+  <style>
+    :root {
+      --ink: #141414;
+      --muted: #5f6f82;
+      --line: #d7e0ea;
+      --paper: #f6f9fc;
+      --white: #ffffff;
+      --signal: #2f80ed;
+      --forest: #12365f;
+      --clay: #5d7fa6;
+      --blue: #1e5d9e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.4;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: center;
+      min-height: 78px;
+      padding: 0 clamp(18px, 4vw, 54px);
+      border-bottom: 1px solid rgba(20, 20, 20, .1);
+      background: rgba(246, 249, 252, .94);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 188px;
+    }
+
+    .brand img {
+      width: 138px;
+      height: auto;
+      display: block;
+    }
+
+    .brand span {
+      width: 9px;
+      height: 9px;
+      background: var(--signal);
+      border-radius: 999px;
+      box-shadow: 18px 0 0 var(--forest), 36px 0 0 var(--clay);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: clamp(16px, 2.2vw, 34px);
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .nav a {
+      padding: 29px 0;
+      border-bottom: 3px solid transparent;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      border-color: var(--signal);
+      outline: 0;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .85fr) minmax(360px, .68fr);
+      min-height: calc(88vh - 78px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(54px, 7vw, 104px) clamp(22px, 5vw, 74px);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 48px;
+      height: 5px;
+      background: var(--signal);
+    }
+
+    h1 {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(48px, 8vw, 112px);
+      line-height: .86;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .copy > p:not(.eyebrow) {
+      max-width: 660px;
+      margin: 28px 0 0;
+      color: #26384a;
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 36px;
+    }
+
+    .primary,
+    .secondary,
+    .mini-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 4px;
+      border: 1px solid var(--ink);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .primary {
+      background: var(--signal);
+      box-shadow: 8px 8px 0 var(--ink);
+    }
+
+    .secondary { background: transparent; }
+
+    .visual {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .visual-tile {
+      position: relative;
+      min-height: 250px;
+      padding: 22px;
+      overflow: hidden;
+      border-left: 1px solid rgba(255, 255, 255, .14);
+      border-bottom: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .visual-tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--texture);
+      opacity: .95;
+      transition: transform .45s ease;
+    }
+
+    .visual-tile:hover::before { transform: scale(1.08); }
+
+    .visual-tile span,
+    .visual-tile strong {
+      position: relative;
+      z-index: 1;
+      display: block;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, .34);
+    }
+
+    .visual-tile span {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .visual-tile strong {
+      margin-top: 8px;
+      font-size: clamp(28px, 3vw, 46px);
+      line-height: .92;
+      text-transform: uppercase;
+    }
+
+    .section {
+      padding: clamp(54px, 7vw, 96px) clamp(22px, 5vw, 74px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(280px, .45fr);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 76px);
+      line-height: .92;
+      text-transform: uppercase;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .material-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .material-card {
+      min-height: 330px;
+      display: grid;
+      grid-template-rows: 132px auto;
+      background: var(--white);
+    }
+
+    .swatch {
+      background: var(--swatch);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .material-info {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .material-info h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .material-info p {
+      margin: 11px 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .material-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .mini-action {
+      min-height: 42px;
+      padding: 0 10px;
+      font-size: 11px;
+    }
+
+    .mini-action.cart {
+      background: var(--signal);
+      color: var(--ink);
+    }
+
+    .mini-action.loan {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--forest);
+      color: var(--white);
+    }
+
+    .strip div {
+      min-height: 118px;
+      padding: 22px;
+      border-left: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .strip strong {
+      display: block;
+      color: var(--signal);
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .strip span {
+      display: block;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, .76);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 1060px) {
+      .hero,
+      .section-head {
+        grid-template-columns: 1fr;
+      }
+
+      .material-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+
+      .brand { min-width: 0; }
+      .brand img { width: 116px; }
+      .nav { display: none; }
+      .back { justify-self: start; }
+      .copy { padding: 42px 18px 48px; }
+      h1 { font-size: clamp(46px, 14vw, 72px); }
+      .visual,
+      .material-grid,
+      .material-actions,
+      .strip {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-tile { min-height: 170px; }
+      .section { padding: 48px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="fixflip-materials-landing-blue.html">
+      <img src="data:image/png;base64,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" alt="FixFlip">
+      <span aria-hidden="true"></span>
+    </a>
+    <nav class="nav" aria-label="Material pages">
+      <a href="fixflip-materials-landing-blue.html#categories">Core Materials</a>
+      <a href="#wood">Wood</a>
+      <a href="#marble">Marble</a>
+      <a href="#appliances">Appliances</a>
+      <a href="contractor-login-blue.html">GC Login</a>
+    </nav>
+    <a class="back" href="fixflip-materials-landing-blue.html">Back to Market</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="copy">
+        <p class="eyebrow">Expanded material catalog</p>
+        <h1>More materials, one project cart.</h1>
+        <p>Explore wood, marble slabs, appliances, plumbing, lighting, turf, and finish accessories in the same cart-to-loan workflow.</p>
+        <div class="actions">
+          <a class="primary" href="#materials">Shop More Materials</a>
+          <a class="secondary" href="add-to-loan-blue.html">Add to Loan</a>
+        </div>
+      </div>
+      <div class="visual" aria-label="Material texture preview">
+        <div class="visual-tile" id="wood" style="--texture: repeating-linear-gradient(90deg, #7c4e2d 0 14px, #b27a45 14px 28px, #5b341f 28px 42px)"><span>Wood</span><strong>Framing + finish lumber</strong></div>
+        <div class="visual-tile" id="marble" style="--texture: linear-gradient(135deg, #f6f4ed, #d0cec8 40%, #8f918f 41%, #fbfaf3 60%, #b9b7b2)"><span>Marble</span><strong>Slabs + vanity tops</strong></div>
+        <div class="visual-tile" id="appliances" style="--texture: linear-gradient(135deg, #202529, #7d878c 48%, #e8ebe7 49%, #c7cac6)"><span>Appliances</span><strong>Kitchen packages</strong></div>
+        <div class="visual-tile" style="--texture: radial-gradient(circle at 30% 30%, #fff 0 14%, #cfd5d4 15% 18%, #294f76 19% 100%)"><span>Tile</span><strong>Bath + backsplash</strong></div>
+      </div>
+    </section>
+
+    <section class="section" id="materials">
+      <div class="section-head">
+        <h2>Category expansion.</h2>
+        <p>Inspired by marketplace-style browsing: surfaces, slabs, flooring, appliances, plumbing, lighting, turf, and accessory packs.</p>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <div class="swatch" style="--swatch: repeating-linear-gradient(90deg, #9a6337 0 16px, #d49a5f 16px 32px, #6d4024 32px 48px)"></div>
+          <div class="material-info">
+            <h3>Wood</h3>
+            <p>Framing lumber, stair treads, trim boards, shelving, and finish-grade panels.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: linear-gradient(135deg, #fbfaf5 0 22%, #aeb1ad 23% 25%, #f0eee8 26% 62%, #777b79 63% 65%, #f8f5ef 66%)"></div>
+          <div class="material-info">
+            <h3>Marble</h3>
+            <p>Natural stone slabs, thresholds, shower curbs, vanity tops, and fireplace surrounds.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: linear-gradient(90deg, #1d2226, #7e878d 40%, #e9ece8 41%, #c2c7c2 100%)"></div>
+          <div class="material-info">
+            <h3>Appliances</h3>
+            <p>Stainless kitchen sets, laundry pairs, range hoods, microwaves, and rental-ready packages.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: repeating-linear-gradient(45deg, #ebe7dd 0 22px, #c8bda8 22px 44px)"></div>
+          <div class="material-info">
+            <h3>Flooring</h3>
+            <p>LVP, engineered wood, underlayment, transitions, adhesives, and stair noses.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: radial-gradient(circle at 28% 32%, #fff 0 12%, #cfd5d4 13% 16%, #68787f 17% 100%)"></div>
+          <div class="material-info">
+            <h3>Tile</h3>
+            <p>Backsplash, shower walls, floor tile, grout, mortar, spacers, and edge trim.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: linear-gradient(135deg, #0d363f, #7a9891 50%, #ece8dc 51%)"></div>
+          <div class="material-info">
+            <h3>Plumbing</h3>
+            <p>Faucets, sinks, vanities, toilets, garbage disposals, valves, and supply lines.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: linear-gradient(135deg, #141414 0 34%, #2f80ed 35% 52%, #f8f6eb 53%)"></div>
+          <div class="material-info">
+            <h3>Lighting</h3>
+            <p>Flush mounts, vanity lights, exterior fixtures, recessed kits, fans, and bulbs.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+        <article class="material-card">
+          <div class="swatch" style="--swatch: repeating-linear-gradient(90deg, #1c5d39 0 9px, #2f8554 9px 18px, #88b86f 18px 27px)"></div>
+          <div class="material-info">
+            <h3>Turf + Exterior</h3>
+            <p>Turf, pavers, mailbox kits, house numbers, exterior lights, and curb-appeal packs.</p>
+            <div class="material-actions"><a class="mini-action cart" href="#">Add to cart</a><a class="mini-action loan" href="add-to-loan-blue.html">Add to loan</a></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="strip" aria-label="Catalog stats">
+      <div><strong>8</strong><span>Expanded categories</span></div>
+      <div><strong>2</strong><span>Add methods: cart or loan</span></div>
+      <div><strong>1</strong><span>Project-ready material flow</span></div>
+    </section>
+  </main>
+</body>
+</html>
