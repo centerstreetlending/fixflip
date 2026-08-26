@@ -2097,25 +2097,21 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
         '00135' => array(
             '/images/hero_00135.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/0294W_00135_ROOM.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/CA303_00135_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/0294W_00135_1TO1.webp'
         ),
         '01102' => array(
             '/images/hero_01102.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/0353W_01102_ROOM2.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/CA303_01102_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/0353W_01102_1TO1.webp'
         ),
         '07087' => array(
             '/images/hero_07087.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/0353W_07087_ROOM2.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/CA303_07087_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/0353W_07087_1TO1.webp'
         ),
         '07091' => array(
             '/images/hero_07091.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/0353W_07091_ROOM2.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/CA303_07091_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/0353W_07091_1TO1.webp'
         ),
         '01015' => array(
