@@ -72,6 +72,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     Account &amp; Order
                 </h4>
                 <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.1; font-size: 13.5px;">
+                    <li><a href="/how-it-works/" style="color: #38bdf8; text-decoration: none; font-weight: 700;">How It Works &rarr;</a></li>
                     <li><a href="/cart/" style="color: #cbd5e1; text-decoration: none;">View Cart</a></li>
                     <li><a href="/checkout/" style="color: #cbd5e1; text-decoration: none;">Checkout</a></li>
                     <li><a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" style="color: #cbd5e1; text-decoration: none;">My Account</a></li>

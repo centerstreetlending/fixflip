@@ -763,7 +763,7 @@ function fixflip_add_csl_draw_email_callout($order, $sent_to_admin, $plain_text,
     if ( $order ) {
         $loan_number = get_post_meta($order->get_id(), 'Loan Number', true);
         echo '<div class="csl-loan-callout" style="background: #e0f2fe; border: 1.5px solid #0284c7; padding: 16px 20px; margin-bottom: 24px;">';
-        echo '<h3 style="color: #0369a1; margin: 0 0 4px 0; font-size: 14px; font-weight: 800; text-transform: uppercase;">🛡️ Center Street Lending Active Draw</h3>';
+        echo '<h3 style="color: #0369a1; margin: 0 0 4px 0; font-size: 14px; font-weight: 800; text-transform: uppercase;">Center Street Lending Active Draw</h3>';
         if ($loan_number) {
             echo '<p style="color: #0c4a6e; margin: 0; font-size: 13.5px; font-weight: 600;"><strong>Active Loan Number:</strong> ' . esc_html($loan_number) . ' &bull; <em>100% Draw Financed ($0 Out-of-Pocket Cash Today)</em></p>';
         } else {
@@ -1013,7 +1013,7 @@ function fixflip_output_cart_drawer_items_html() {
         echo '<div style="margin-bottom: 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 12px 14px; border-radius: 4px;">';
         if ($subtotal_val >= $min_target) {
             echo '<div style="font-size: 11px; font-weight: 900; color: #16a34a; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">';
-            echo '<span>✅ MINIMUM ORDER REACHED ($2,000+)</span>';
+            echo '<span>MINIMUM ORDER REACHED ($2,000+)</span>';
             echo '</div>';
             echo '<div style="height: 6px; background: #dcfce7; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
             echo '<div style="width: 100%; height: 100%; background: #16a34a;"></div>';
@@ -1032,7 +1032,6 @@ function fixflip_output_cart_drawer_items_html() {
         echo '</div>';
     } else {
         echo '<div style="margin-bottom: 16px; background: #f0fdf4; border: 1.5px solid #86efac; padding: 10px 12px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">';
-        echo '<span style="font-size: 16px;">📦</span>';
         echo '<div style="font-size: 11.5px; font-weight: 700; color: #166534;">Sample Swatch Order &bull; Free Courier Shipping Included</div>';
         echo '</div>';
     }
@@ -1045,10 +1044,10 @@ function fixflip_output_cart_drawer_items_html() {
 
     echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
     if ($has_bulk) {
-        echo '<span>🚚 Direct Jobsite Freight:</span>';
+        echo '<span>Direct Jobsite Freight:</span>';
         echo '<span style="color: #007bff; font-weight: 800;">$' . number_format($freight_cost, 2) . '</span>';
     } else {
-        echo '<span>📦 Sample Courier Shipping:</span>';
+        echo '<span>Sample Courier Shipping:</span>';
         echo '<span style="color: #16a34a; font-weight: 800;">FREE</span>';
     }
     echo '</div>';
@@ -1337,9 +1336,9 @@ function fixflip_add_guaranteed_freight_fee( $cart ) {
 
         if ( $has_bulk ) {
             $freight_cost = 450.00 + ($total_sqft * 0.40);
-            $cart->add_fee( '🚚 Direct Jobsite Freight Delivery (Liftgate & Power Pallet Jack)', $freight_cost, false );
+            $cart->add_fee( 'Direct Jobsite Freight Delivery (Liftgate & Power Pallet Jack)', $freight_cost, false );
         } else {
-            $cart->add_fee( '📦 Standard Sample Courier Shipping (USPS / FedEx)', 0.00, false );
+            $cart->add_fee( 'Standard Sample Courier Shipping (USPS / FedEx)', 0.00, false );
         }
     }
 }
@@ -1779,7 +1778,7 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function get_title() {
-            return '🏦 Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
+            return 'Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
         }
 
         public function get_description() {
@@ -1790,7 +1789,7 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
             ?>
             <div class="csl-draw-info-box" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 18px; margin-top: 8px;">
                 <div style="font-size: 13.5px; font-weight: 800; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                    <span style="font-size: 16px;">✅</span> 100% Construction Draw Financing (CSL Borrowers)
+                    100% Construction Draw Financing (CSL Borrowers)
                 </div>
                 <p style="font-size: 12.5px; color: #15803d; margin: 0 0 14px 0; line-height: 1.4;">
                     Zero out-of-pocket payment required today. Our lending team will verify your active loan number or property address and process payment directly through your construction escrow draw.
@@ -1858,10 +1857,10 @@ add_filter( 'woocommerce_terms_is_checked_default', '__return_true', 999 );
 add_filter( 'woocommerce_gateway_title', 'fixflip_custom_all_gateway_titles', 99, 2 );
 function fixflip_custom_all_gateway_titles( $title, $gateway_id ) {
     if ( 'csl_draw_advance' === $gateway_id ) {
-        return '🏦 Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
+        return 'Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
     }
     if ( 'stripe' === $gateway_id || 'stripe_cc' === $gateway_id ) {
-        return '💳 Credit Card / Debit Card / Apple Pay <span style="font-size: 10.5px; font-weight: 900; background: #007bff; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">Instant Pay</span>';
+        return 'Credit Card / Debit Card / Apple Pay <span style="font-size: 10.5px; font-weight: 900; background: #007bff; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">Instant Pay</span>';
     }
     return $title;
 }
@@ -2148,6 +2147,24 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
         return $urls;
     }
     return array( $theme_dir . '/images/hero_' . $sku . '.webp?v=' . time() );
+}
+
+/**
+ * Route /how-it-works/ and /how-fixflip-works/ directly to page-how-it-works.php
+ */
+add_filter( 'template_include', 'fixflip_route_how_it_works_template', 99 );
+function fixflip_route_how_it_works_template( $template ) {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    $path = trim(parse_url($request_uri, PHP_URL_PATH), '/');
+    
+    if ( $path === 'how-it-works' || $path === 'how-fixflip-works' ) {
+        $custom_template = get_stylesheet_directory() . '/page-how-it-works.php';
+        if ( file_exists( $custom_template ) ) {
+            status_header(200);
+            return $custom_template;
+        }
+    }
+    return $template;
 }
 
 

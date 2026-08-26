@@ -137,7 +137,7 @@ $main_image_url = $thumbs[0];
                 <!-- Additional Unique Gallery Images Strip Below 2x2 Grid -->
                 <div style="margin-top: 16px; padding: 14px 16px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
                     <div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>📸 MORE UNIQUE JOBSITE &amp; ROOM VIEWS</span>
+                        <span>MORE UNIQUE JOBSITE &amp; ROOM VIEWS</span>
                         <span style="font-size: 10px; color: #64748b; font-weight: 700;"><?php echo count($thumbs); ?> UNIQUE PHOTOS</span>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
@@ -366,7 +366,7 @@ $main_image_url = $thumbs[0];
                     </div>
                     
                     <div style="padding-top: 8px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #475569;">
-                        <span style="font-weight: 700; color: #007bff;">⚡ Scheduled 1–3 Hour Delivery Window</span>
+                        <span style="font-weight: 700; color: #007bff;">Scheduled 1–3 Hour Delivery Window</span>
                         <span style="font-style: italic; color: #64748b;">Delivered directly to house curb</span>
                     </div>
                 </div>

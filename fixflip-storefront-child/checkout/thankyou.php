@@ -105,7 +105,7 @@ foreach ( $order->get_items() as $item_id => $item ) {
                 <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 8px;">
                     <span style="color: #64748b;">Payment Method:</span>
                     <strong style="color: #007bff; font-weight: 800;">
-                        <?php echo $is_csl_draw ? "🏦 CSL Draw Advance" : "💳 Credit / Debit Card (Stripe)"; ?>
+                        <?php echo $is_csl_draw ? "CSL Draw Advance" : "Credit / Debit Card (Stripe)"; ?>
                     </strong>
                 </div>
                 <?php if ( ! empty( $loan_number ) ) : ?>

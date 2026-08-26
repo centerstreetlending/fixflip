@@ -480,7 +480,7 @@
       <div style="background: #0f172a; color: #ffffff; padding: 10px 32px; font-size: 13px; font-weight: 800; letter-spacing: 0.8px; box-sizing: border-box; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
         <span style="background: #007bff; color: #ffffff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 0px; letter-spacing: 0.5px; text-transform: uppercase;">CENTER STREET LENDING BORROWERS</span>
         <span>Add Flooring &amp; Materials Directly to Your Active Rehab Loan</span>
-        <a href="/#csl-borrowers-banner" style="color: #60a5fa; text-decoration: underline; margin-left: 6px; font-weight: 800;">Roll Into Loan &rarr;</a>
+        <a href="/how-it-works/" style="color: #60a5fa; text-decoration: underline; margin-left: 6px; font-weight: 800;">Roll Into Loan &rarr;</a>
       </div>
       
       <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT BAR SCROLLS AWAY) -->
@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           <!-- 3. PRO FINANCING & DRAWS NAV ITEM -->
           <div class="nav-item" style="position: relative;">
-            <a href="/#how-fixflip-works" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+            <a href="/how-it-works/" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
               <span class="desktop-nav-txt">PRO FINANCING &amp; DRAWS</span>
               <span class="mobile-nav-txt">PRO FINANCING</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -741,9 +741,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <!-- CLEAN TEXT DROPDOWN MENU -->
             <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 270px; background: #ffffff; border: 1.5px solid #007bff; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
-              <a href="/#how-fixflip-works" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">⚡ How 5-Step Lender Draws Work</a>
-              <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">🛒 Review Active Cart ($2k Min)</a>
-              <a href="/checkout/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-top: 1px solid #f1f5f9;">💳 Submit Order for CSL Draw</a>
+              <a href="/how-it-works/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">How FixFlip Works &rarr;</a>
+              <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Review Active Cart ($2k Min)</a>
+              <a href="/checkout/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-top: 1px solid #f1f5f9;">Submit Order for CSL Draw &rarr;</a>
             </div>
           </div>
 
