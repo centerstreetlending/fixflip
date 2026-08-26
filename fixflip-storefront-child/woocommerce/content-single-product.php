@@ -153,11 +153,24 @@ $main_image_url = $thumbs[0];
         </div>
 
         <!-- LIGHTBOX POPUP MODAL -->
-        <div id="fd-lightbox-modal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.92); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; padding: 40px;">
-            <button type="button" onclick="window.fdCloseLightbox()" style="position: absolute; top: 24px; right: 28px; background: none; border: none; color: #ffffff; font-size: 36px; font-weight: 300; cursor: pointer;">&times;</button>
-            <button type="button" onclick="window.fdNavLightbox(-1)" style="position: absolute; left: 24px; top: 50%; transform: translateY(-50%); background: #ffffff; border: none; width: 44px; height: 44px; font-size: 20px; font-weight: 800; cursor: pointer; color: #0f172a;">&larr;</button>
-            <img id="fd-lightbox-img" src="" alt="Full Screen View" style="max-width: 90vw; max-height: 85vh; object-fit: contain; border: 2px solid #ffffff;">
-            <button type="button" onclick="window.fdNavLightbox(1)" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); background: #ffffff; border: none; width: 44px; height: 44px; font-size: 20px; font-weight: 800; cursor: pointer; color: #0f172a;">&rarr;</button>
+        <div id="fd-lightbox-modal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; padding: 40px;">
+            <!-- Close Button -->
+            <button type="button" onclick="window.fdCloseLightbox()" style="position: absolute; top: 24px; right: 28px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 44px; height: 44px; color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+                <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: #ffffff; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            
+            <!-- Left Arrow Button -->
+            <button type="button" onclick="window.fdNavLightbox(-1)" style="position: absolute; left: 32px; top: 50%; transform: translateY(-50%); background: #ffffff; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; color: #0f172a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.35); transition: all 0.2s ease; z-index: 100000;" onmouseover="this.style.transform='translateY(-50%) scale(1.1)'; this.style.background='#f8fafc';" onmouseout="this.style.transform='translateY(-50%) scale(1)'; this.style.background='#ffffff';">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; stroke: #0f172a; stroke-width: 2.8; fill: none; stroke-linecap: round; stroke-linejoin: round;"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            
+            <!-- Main Photo -->
+            <img id="fd-lightbox-img" src="" alt="Full Screen View" style="max-width: 88vw; max-height: 85vh; object-fit: contain; border-radius: 4px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            
+            <!-- Right Arrow Button -->
+            <button type="button" onclick="window.fdNavLightbox(1)" style="position: absolute; right: 32px; top: 50%; transform: translateY(-50%); background: #ffffff; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; color: #0f172a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.35); transition: all 0.2s ease; z-index: 100000;" onmouseover="this.style.transform='translateY(-50%) scale(1.1)'; this.style.background='#f8fafc';" onmouseout="this.style.transform='translateY(-50%) scale(1)'; this.style.background='#ffffff';">
+                <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; stroke: #0f172a; stroke-width: 2.8; fill: none; stroke-linecap: round; stroke-linejoin: round;"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
         </div>
 
         <script>
