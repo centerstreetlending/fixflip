@@ -9,10 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Fix & Flip Hammer & Saw Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url( home_url( '/favicon.png?v=' . time() ) ); ?>">
+  <link rel="icon" type="image/png" sizes="192x192" href="<?php echo esc_url( home_url( '/favicon.png?v=' . time() ) ); ?>">
   <link rel="icon" type="image/svg+xml" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.svg?v=<?php echo time(); ?>">
-  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.png?v=<?php echo time(); ?>">
-  <link rel="shortcut icon" href="<?php echo get_stylesheet_directory_uri(); ?>/favicon.ico?v=<?php echo time(); ?>">
-  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo get_stylesheet_directory_uri(); ?>/apple-touch-icon.png?v=<?php echo time(); ?>">
+  <link rel="shortcut icon" href="<?php echo esc_url( home_url( '/favicon.ico?v=' . time() ) ); ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo esc_url( home_url( '/apple-touch-icon.png?v=' . time() ) ); ?>">
   <?php wp_head(); ?>
   
   <style>

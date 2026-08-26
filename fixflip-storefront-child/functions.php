@@ -2225,6 +2225,25 @@ function fixflip_route_how_it_works_template( $template ) {
     return $template;
 }
 
+/**
+ * Force FixFlip Hammer & Saw Favicon across all WordPress core hooks
+ */
+add_filter( 'get_site_icon_url', function() {
+    return home_url( '/favicon.png?v=' . time() );
+}, 99 );
+
+add_filter( 'site_icon_meta_tags', function( $meta_tags ) {
+    $png = esc_url( home_url( '/favicon.png?v=' . time() ) );
+    $ico = esc_url( home_url( '/favicon.ico?v=' . time() ) );
+    $apple = esc_url( home_url( '/apple-touch-icon.png?v=' . time() ) );
+    return array(
+        sprintf( '<link rel="icon" type="image/png" sizes="32x32" href="%s" />', $png ),
+        sprintf( '<link rel="icon" type="image/png" sizes="192x192" href="%s" />', $png ),
+        sprintf( '<link rel="shortcut icon" href="%s" />', $ico ),
+        sprintf( '<link rel="apple-touch-icon" href="%s" />', $apple ),
+    );
+}, 99 );
+
 
 
 
