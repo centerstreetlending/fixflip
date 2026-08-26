@@ -90,7 +90,7 @@ $main_image_url = $thumbs[0];
     }
     ?>
 
-    <!-- Dynamic Pro Breadcrumbs -->
+    <!-- Dynamic Pro Breadcrumbs & Responsive Overrides -->
     <style>
         .fd-breadcrumbs a {
             color: #007bff !important;
@@ -100,6 +100,78 @@ $main_image_url = $thumbs[0];
         }
         .fd-breadcrumbs a:hover {
             color: #0056b3 !important;
+        }
+        .fd-main-product-layout {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 48px;
+            align-items: start;
+        }
+        .fd-gallery-grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .fd-related-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .fd-single-product-container {
+                padding: 16px 12px !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
+            }
+            .fd-main-product-layout {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+                width: 100% !important;
+            }
+            .fd-left-gallery {
+                width: 100% !important;
+            }
+            .fd-gallery-grid-2x2 {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+                width: 100% !important;
+            }
+            .fd-gallery-box {
+                border-radius: 4px !important;
+            }
+            .fd-right-details {
+                width: 100% !important;
+            }
+            .fd-right-details h1 {
+                font-size: 23px !important;
+                line-height: 1.2 !important;
+                margin-bottom: 8px !important;
+            }
+            .fd-right-details span[style*="font-size: 42px"] {
+                font-size: 32px !important;
+            }
+            .fd-related-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .fd-home-card h3 {
+                font-size: 14px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+        }
+        @media (max-width: 600px) {
+            .fd-single-product-container {
+                padding: 12px 10px !important;
+            }
+            .fd-related-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
         }
     </style>
     <div class="fd-breadcrumbs" style="font-size: 14px; font-weight: 400; color: #64748b; margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
@@ -117,7 +189,7 @@ $main_image_url = $thumbs[0];
     </div>
 
     <!-- MAIN 2-COLUMN GRID -->
-    <div class="fd-main-product-layout" style="display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: start;">
+    <div class="fd-main-product-layout">
         
         <!-- LEFT COLUMN: Top 2x2 Grid Gallery (Max 4 Unique Main Boxes) + Extra Views Strip Below (If > 4 Unique Images) -->
         <div class="fd-left-gallery">
@@ -125,7 +197,7 @@ $main_image_url = $thumbs[0];
             $main_4_thumbs = array_slice($thumbs, 0, 4);
             $extra_thumbs  = array_slice($thumbs, 4);
             ?>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <div class="fd-gallery-grid-2x2">
                 <?php foreach ( $main_4_thumbs as $idx => $t_url ) : ?>
                     <div class="fd-gallery-box" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #e2e8f0; border-radius: 0px; background: #f8fafc; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $idx; ?>)">
                         <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $idx + 1; ?>" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s ease; display: block;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
@@ -521,7 +593,7 @@ $main_image_url = $thumbs[0];
         <a href="/shop/" style="font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">View All Catalog Products &rarr;</a>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+    <div class="fd-related-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
         <?php
         $related_args = array(
             'post_type'      => 'product',

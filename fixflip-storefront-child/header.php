@@ -219,6 +219,39 @@
         .fd-archive-main-col {
             width: 100% !important;
         }
+        .fd-single-product-container {
+            padding: 16px 12px !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+        }
+        .fd-main-product-layout {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+            width: 100% !important;
+        }
+        .fd-left-gallery {
+            width: 100% !important;
+        }
+        .fd-gallery-grid-2x2 {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+        .fd-right-details {
+            width: 100% !important;
+        }
+        .fd-right-details h1 {
+            font-size: 23px !important;
+            line-height: 1.2 !important;
+            margin-bottom: 8px !important;
+        }
+        .fd-related-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+        }
     }
 
     /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
