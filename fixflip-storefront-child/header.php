@@ -104,8 +104,21 @@
         }
     }
 
-    /* MOBILE HEADER & SWIPEABLE TABS */
+    .desktop-nav-txt {
+        display: inline !important;
+    }
+    .mobile-nav-txt {
+        display: none !important;
+    }
+
+    /* MOBILE HEADER & 3-SEGMENTED NAV TABS */
     @media (max-width: 768px) {
+        .desktop-nav-txt {
+            display: none !important;
+        }
+        .mobile-nav-txt {
+            display: inline !important;
+        }
         .top-header-wrapper > div:first-child {
             padding: 8px 12px !important;
             font-size: 11px !important;
@@ -137,32 +150,39 @@
             display: none !important;
         }
         .mega-menu-wrapper {
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: none !important;
-            padding: 6px 8px !important;
-        }
-        .mega-menu-wrapper::-webkit-scrollbar {
-            display: none !important;
+            padding: 6px 10px !important;
+            background: #ffffff !important;
+            border-bottom: 1px solid #eaebed !important;
         }
         .mega-menu-container {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            justify-content: flex-start !important;
-            gap: 8px !important;
-            width: max-content !important;
-            min-width: 100% !important;
-            padding: 0 4px !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1.15fr 1.25fr !important;
+            gap: 6px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+        .mega-menu-container .nav-item {
+            width: 100% !important;
         }
         .mega-menu-link {
-            white-space: nowrap !important;
-            font-size: 11.5px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            padding: 8px 4px !important;
+            font-size: 11px !important;
             font-weight: 800 !important;
-            padding: 7px 12px !important;
+            letter-spacing: 0.2px !important;
+            border-radius: 6px !important;
             background: #f8fafc !important;
             border: 1px solid #e2e8f0 !important;
-            border-radius: 20px !important;
-            color: #0f172a !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+            box-sizing: border-box !important;
+        }
+        .mega-menu-link svg {
+            display: none !important;
         }
         .fd-footer-grid {
             grid-template-columns: 1fr !important;
@@ -671,7 +691,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <!-- 1. VINYL FLOORING NAV ITEM -->
           <div class="nav-item" style="position: relative;">
             <a href="/category/spc/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-              VINYL FLOORING
+              <span class="desktop-nav-txt">VINYL FLOORING</span>
+              <span class="mobile-nav-txt">VINYL</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
@@ -688,7 +709,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <!-- 2. ENGINEERED HARDWOOD NAV ITEM -->
           <div class="nav-item" style="position: relative;">
             <a href="/category/hardwood-flooring/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-              ENGINEERED HARDWOOD
+              <span class="desktop-nav-txt">ENGINEERED HARDWOOD</span>
+              <span class="mobile-nav-txt">HARDWOOD</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
@@ -712,7 +734,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <!-- 3. PRO FINANCING & DRAWS NAV ITEM -->
           <div class="nav-item" style="position: relative;">
             <a href="/#how-fixflip-works" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-              PRO FINANCING &amp; DRAWS
+              <span class="desktop-nav-txt">PRO FINANCING &amp; DRAWS</span>
+              <span class="mobile-nav-txt">PRO FINANCING</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
