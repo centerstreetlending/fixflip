@@ -2146,6 +2146,63 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
 }
 
 /**
+ * Auto-create 'how-it-works' Page in WordPress DB if not exists
+ */
+add_action( 'init', 'fixflip_ensure_how_it_works_page' );
+function fixflip_ensure_how_it_works_page() {
+    $page = get_page_by_path( 'how-it-works' );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( array(
+            'post_title'     => 'How It Works',
+            'post_name'      => 'how-it-works',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+            'ping_status'    => 'closed',
+            'page_template'  => 'page-how-it-works.php'
+        ) );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-how-it-works.php' );
+        }
+    }
+}
+
+/**
+ * Reset 404 flags and set proper page title for How It Works
+ */
+add_action( 'wp', 'fixflip_clear_404_on_how_it_works', 1 );
+function fixflip_clear_404_on_how_it_works() {
+    global $wp_query;
+    $path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+    if ( $path === 'how-it-works' || $path === 'how-fixflip-works' ) {
+        if ( isset($wp_query) ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+            status_header( 200 );
+        }
+    }
+}
+
+add_filter( 'pre_get_document_title', 'fixflip_how_it_works_doc_title', 99 );
+function fixflip_how_it_works_doc_title( $title ) {
+    $path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+    if ( $path === 'how-it-works' || $path === 'how-fixflip-works' ) {
+        return 'How It Works – FixFlip.com';
+    }
+    return $title;
+}
+
+add_filter( 'document_title_parts', 'fixflip_how_it_works_page_title', 99 );
+function fixflip_how_it_works_page_title( $title_parts ) {
+    $path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+    if ( $path === 'how-it-works' || $path === 'how-fixflip-works' ) {
+        $title_parts['title'] = 'How It Works';
+        $title_parts['site']  = 'FixFlip.com';
+    }
+    return $title_parts;
+}
+
+/**
  * Route /how-it-works/ and /how-fixflip-works/ directly to page-how-it-works.php
  */
 add_filter( 'template_include', 'fixflip_route_how_it_works_template', 99 );
@@ -2154,9 +2211,14 @@ function fixflip_route_how_it_works_template( $template ) {
     $path = trim(parse_url($request_uri, PHP_URL_PATH), '/');
     
     if ( $path === 'how-it-works' || $path === 'how-fixflip-works' ) {
+        global $wp_query;
+        if ( isset($wp_query) ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+        status_header(200);
         $custom_template = get_stylesheet_directory() . '/page-how-it-works.php';
         if ( file_exists( $custom_template ) ) {
-            status_header(200);
             return $custom_template;
         }
     }
