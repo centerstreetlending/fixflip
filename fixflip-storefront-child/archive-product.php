@@ -185,7 +185,7 @@ $theme_uri = get_stylesheet_directory_uri();
             <?php get_template_part('sidebar-shop'); ?>
 
             <div style="flex: 1; min-width: 0;">
-                <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                <div class="fd-responsive-4-grid">
                     <?php
                     // Query products dynamically matching active category context
                     $tax_query = array();
