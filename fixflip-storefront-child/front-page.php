@@ -28,7 +28,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/zion-oak-spc-vinyl-plank/" data-price="3.56" data-cat="spc" data-collection="branching-out" data-size="7x48" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56103.webp" alt="Zion Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56103.webp?v=<?php echo time(); ?>" alt="Zion Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -54,7 +54,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/riverside-oak-spc-vinyl-plank/" data-price="3.56" data-cat="spc" data-collection="branching-out" data-size="7x48" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56140.webp" alt="Riverside Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56140.webp?v=<?php echo time(); ?>" alt="Riverside Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -80,7 +80,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/prairie-oak-spc-vinyl-plank/" data-price="3.56" data-cat="spc" data-collection="branching-out" data-size="7x48" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56240.webp" alt="Prairie Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56240.webp?v=<?php echo time(); ?>" alt="Prairie Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -106,7 +106,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/smokey-oak-spc-vinyl-plank/" data-price="3.56" data-cat="spc" data-collection="branching-out" data-size="7x48" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56516.webp" alt="Smokey Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56516.webp?v=<?php echo time(); ?>" alt="Smokey Oak SPC Vinyl Plank" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -149,7 +149,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/exquisite-oak-engineered-hardwood/" data-price="5.97" data-cat="hardwood-better" data-size="7.5x75" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp" alt="Exquisite Oak Engineered Hardwood" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp?v=<?php echo time(); ?>" alt="Exquisite Oak Engineered Hardwood" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -175,7 +175,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/sophisticated-oak-engineered-hardwood/" data-price="5.97" data-cat="hardwood-better" data-size="7.5x75" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp" alt="Sophisticated Oak Engineered Hardwood" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Sophisticated Oak Engineered Hardwood" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -201,7 +201,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/cultivated-oak-engineered-hardwood/" data-price="5.97" data-cat="hardwood-better" data-size="7.5x75" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_05014.webp" alt="Cultivated Oak Engineered Hardwood" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_05014.webp?v=<?php echo time(); ?>" alt="Cultivated Oak Engineered Hardwood" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -240,7 +240,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/rustic-natural-red-oak/" data-price="5.12" data-cat="hardwood" data-collection="oak-traditions" data-size="5in" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_00135.webp" alt="Rustic Natural Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_00135.webp?v=<?php echo time(); ?>" alt="Rustic Natural Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -266,7 +266,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/biscuit-red-oak/" data-price="5.12" data-cat="hardwood" data-collection="oak-traditions" data-size="5in" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp" alt="Biscuit Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp?v=<?php echo time(); ?>" alt="Biscuit Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -292,7 +292,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/flax-seed-red-oak/" data-price="5.12" data-cat="hardwood" data-collection="oak-traditions" data-size="5in" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_07087.webp" alt="Flax Seed Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_07087.webp?v=<?php echo time(); ?>" alt="Flax Seed Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
@@ -318,7 +318,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
                     <a href="/product/kona-red-oak/" data-price="5.12" data-cat="hardwood" data-collection="oak-traditions" data-size="5in" data-instock="1" data-financing="1" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_07091.webp" alt="Kona Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_07091.webp?v=<?php echo time(); ?>" alt="Kona Red Oak" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                         </div>
                         <div style="padding: 18px 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
