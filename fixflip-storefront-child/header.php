@@ -649,7 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <header class="header-tier-1">
         <!-- Logo Group -->
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" style="display: flex; text-decoration: none; align-items: center; flex-shrink: 0; position: relative; z-index: 10;">
-          <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 25px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
+          <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 25px; width: auto; object-fit: contain; display: block;">
         </a>
         
         <!-- Search & Partner Group -->
