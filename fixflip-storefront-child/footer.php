@@ -16,13 +16,17 @@ $theme_uri = get_stylesheet_directory_uri();
             
             <!-- COLUMN 1: BRANDING & CSL INTEGRATION -->
             <div>
-                <div style="margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;">
                     <a href="/" style="display: inline-block; text-decoration: none;">
-                        <img src="<?php echo $theme_uri; ?>/FixFlip-dotCOM_Black.png" alt="FixFlip.com" style="height: 34px; width: auto; display: block; filter: brightness(0) invert(1);">
+                        <img src="<?php echo $theme_uri; ?>/FixFlip-dotCOM_Black.png" alt="FixFlip.com" style="height: 30px; width: auto; display: block; filter: brightness(0) invert(1);">
+                    </a>
+                    <span style="color: #475569; font-size: 16px; font-weight: 300;">|</span>
+                    <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-block; text-decoration: none; background: #ffffff; padding: 6px 12px; border-radius: 4px;">
+                        <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 18px; width: auto; display: block;">
                     </a>
                 </div>
                 <div style="font-size: 11px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
-                    In Partnership with Center Street Lending
+                    Exclusive Material Financing Partner
                 </div>
                 <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.55; margin: 0 0 16px 0; max-width: 360px;">
                     Wholesale rehab flooring for real estate investors and contractors. Financed directly through your active Center Street Lending rehab loan.
@@ -57,14 +61,19 @@ $theme_uri = get_stylesheet_directory_uri();
             <!-- COLUMN 4: CONTACT & SUPPORT -->
             <div>
                 <h4 style="font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0;">
-                    Order Desk
+                    Order Desk &amp; Financing
                 </h4>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6;">
-                    <p style="margin: 0 0 8px 0;">
-                        <strong style="color: #ffffff;">Center Street Lending</strong>
-                    </p>
-                    <p style="margin: 0; color: #cbd5e1;">
+                    <div style="margin-bottom: 10px;">
+                        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-block; background: #ffffff; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
+                            <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 16px; width: auto; display: block;">
+                        </a>
+                    </div>
+                    <p style="margin: 0 0 6px 0; color: #cbd5e1; font-weight: 600;">
                         Rehab Material Procurement &amp; Draw Approvals
+                    </p>
+                    <p style="margin: 0; color: #94a3b8; font-size: 12.5px;">
+                        Email: <a href="mailto:sscouig@centerstreetlending.com" style="color: #38bdf8; text-decoration: underline;">sscouig@centerstreetlending.com</a>
                     </p>
                 </div>
             </div>

@@ -611,4 +611,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         </div>
       </nav>
+
+      <!-- 4. LENDER PARTNER BAR AT BOTTOM OF HEADER -->
+      <div class="header-partner-bar" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 7px 16px; font-family: Inter, system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 11.5px; color: #475569; z-index: 9998; position: relative;">
+        <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b;">Official Materials Financing Partner:</span>
+        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
+          <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 16px; width: auto; object-fit: contain; display: block;">
+        </a>
+        <span style="color: #cbd5e1; font-weight: 900;">•</span>
+        <span style="color: #16a34a; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 0.5px;">
+          <span style="display: inline-block; width: 6px; height: 6px; background: #16a34a; border-radius: 50%;"></span>
+          100% Construction Draw Eligible
+        </span>
+      </div>
       </div><!-- End fd-sticky-header-inner -->
