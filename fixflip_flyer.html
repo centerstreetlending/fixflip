@@ -17,7 +17,7 @@
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: #1e293b;
+    color: #000000;
     background-color: #ffffff;
     width: 8.5in;
     height: 11in;
@@ -49,7 +49,7 @@
   .partner-divider {
     display: flex;
     flex-direction: column;
-    border-left: 2px solid #cbd5e1;
+    border-left: 2px solid #000000;
     padding-left: 12px;
     justify-content: center;
   }
@@ -58,13 +58,14 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    color: #64748b;
+    color: #475569;
     margin-bottom: 2px;
   }
   .logo-csl {
     height: 18px;
     width: auto;
     display: block;
+    filter: grayscale(100%) brightness(20%) contrast(150%);
   }
   .header-headline {
     text-align: right;
@@ -72,7 +73,7 @@
   .headline-top {
     font-size: 20px;
     font-weight: 900;
-    color: #1e293b;
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: -0.3px;
     line-height: 1.1;
@@ -80,7 +81,7 @@
   .headline-bot {
     font-size: 20px;
     font-weight: 900;
-    color: #0284c7;
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: -0.3px;
     line-height: 1.1;
@@ -88,15 +89,15 @@
   .headline-sub {
     font-size: 13px;
     font-weight: 700;
-    color: #334155;
+    color: #475569;
     margin-top: 4px;
     letter-spacing: -0.1px;
   }
 
-  /* SOLID BAR DIVIDER */
-  .blue-bar {
-    height: 6px;
-    background: #0284c7;
+  /* SOLID BLACK BAR DIVIDER */
+  .black-bar {
+    height: 5px;
+    background: #000000;
     width: 100%;
     margin-bottom: 20px;
   }
@@ -112,11 +113,11 @@
   .intro-text {
     font-size: 11px;
     line-height: 1.55;
-    color: #334155;
+    color: #1e293b;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }}
+  }
   .intro-text p {
     margin-bottom: 8px;
   }
@@ -124,8 +125,9 @@
     margin-bottom: 0;
   }
   .stats-card {
-    background: #f0f7fc;
-    border-radius: 2px;
+    background: #f8fafc;
+    border: 1.5px solid #000000;
+    border-radius: 0px;
     padding: 16px 18px;
     display: flex;
     flex-direction: column;
@@ -136,9 +138,11 @@
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    color: #1e293b;
+    color: #000000;
     text-align: center;
     margin-bottom: 12px;
+    border-bottom: 1.5px solid #000000;
+    padding-bottom: 6px;
   }
   .stats-grid {
     display: grid;
@@ -155,14 +159,14 @@
   .stat-num {
     font-size: 25px;
     font-weight: 900;
-    color: #0284c7;
+    color: #000000;
     line-height: 1;
     letter-spacing: -0.5px;
   }
   .stat-lbl {
     font-size: 9.5px;
     font-weight: 800;
-    color: #1e293b;
+    color: #475569;
     text-transform: uppercase;
     letter-spacing: 0.4px;
     margin-top: 3px;
@@ -173,6 +177,7 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 14px;
+    border-top: 1.5px solid #000000;
   }
   .product-row {
     display: grid;
@@ -180,17 +185,17 @@
     gap: 18px;
     padding: 12px 14px;
     align-items: center;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #cbd5e1;
   }
   .product-row.is-tinted {
-    background: #f0f7fc;
-    border-radius: 2px;
-    border-bottom: none;
+    background: #f8fafc;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
   }
   .product-left h4 {
     font-size: 13px;
     font-weight: 900;
-    color: #0284c7;
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: 0.2px;
     margin-bottom: 3px;
@@ -209,7 +214,7 @@
   .stat-col-header {
     font-size: 8px;
     font-weight: 800;
-    color: #0284c7;
+    color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.3px;
     margin-bottom: 2px;
@@ -217,7 +222,7 @@
   .stat-col-val {
     font-size: 12.5px;
     font-weight: 900;
-    color: #1e293b;
+    color: #000000;
     line-height: 1.1;
   }
   .stat-col-sub {
@@ -230,7 +235,7 @@
   .serving-strip {
     font-size: 11px;
     font-weight: 700;
-    color: #1e293b;
+    color: #000000;
     margin: 8px 0 14px 0;
     line-height: 1.4;
   }
@@ -245,7 +250,7 @@
 
   /* FOOTER CTA & CONTACT */
   .flyer-footer {
-    border-top: 1px solid #cbd5e1;
+    border-top: 2px solid #000000;
     padding-top: 14px;
     display: grid;
     grid-template-columns: 1.25fr 0.95fr;
@@ -259,7 +264,7 @@
   .footer-cta-1 {
     font-size: 18px;
     font-weight: 900;
-    color: #1e293b;
+    color: #000000;
     text-transform: uppercase;
     line-height: 1.1;
     letter-spacing: -0.3px;
@@ -267,7 +272,7 @@
   .footer-cta-2 {
     font-size: 18px;
     font-weight: 900;
-    color: #0284c7;
+    color: #000000;
     text-transform: uppercase;
     line-height: 1.1;
     letter-spacing: -0.3px;
@@ -297,18 +302,18 @@
   .contact-lbl {
     font-size: 7.5px;
     font-weight: 800;
-    color: #0284c7;
+    color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   .contact-val {
     font-size: 11.5px;
     font-weight: 800;
-    color: #1e293b;
+    color: #000000;
     text-decoration: none;
   }
   .qr-box {
-    border: 1.5px solid #0284c7;
+    border: 2px solid #000000;
     padding: 4px;
     background: #ffffff;
     display: flex;
@@ -342,8 +347,8 @@
       </div>
     </header>
 
-    <!-- ACCENT BAR -->
-    <div class="blue-bar"></div>
+    <!-- SOLID BLACK ACCENT BAR -->
+    <div class="black-bar"></div>
 
     <!-- INTRO SECTION (2-COL) -->
     <section class="intro-grid">
@@ -396,12 +401,12 @@
           </div>
           <div>
             <div class="stat-col-header">RETAIL VALUE</div>
-            <div class="stat-col-val" style="text-decoration: line-through; color: #94a3b8;">$4.81</div>
+            <div class="stat-col-val" style="text-decoration: line-through; color: #64748b;">$4.81</div>
             <div class="stat-col-sub">/ sq ft</div>
           </div>
           <div>
             <div class="stat-col-header">SAVINGS</div>
-            <div class="stat-col-val" style="color: #16a34a;">25% OFF</div>
+            <div class="stat-col-val" style="color: #000000; font-weight: 900;">25% OFF</div>
             <div class="stat-col-sub">Instant Pro Rate</div>
           </div>
           <div>
@@ -426,12 +431,12 @@
           </div>
           <div>
             <div class="stat-col-header">RETAIL VALUE</div>
-            <div class="stat-col-val" style="text-decoration: line-through; color: #94a3b8;">$6.91</div>
+            <div class="stat-col-val" style="text-decoration: line-through; color: #64748b;">$6.91</div>
             <div class="stat-col-sub">/ sq ft</div>
           </div>
           <div>
             <div class="stat-col-header">SAVINGS</div>
-            <div class="stat-col-val" style="color: #16a34a;">25% OFF</div>
+            <div class="stat-col-val" style="color: #000000; font-weight: 900;">25% OFF</div>
             <div class="stat-col-sub">Instant Pro Rate</div>
           </div>
           <div>
@@ -456,12 +461,12 @@
           </div>
           <div>
             <div class="stat-col-header">RETAIL VALUE</div>
-            <div class="stat-col-val" style="text-decoration: line-through; color: #94a3b8;">$8.06</div>
+            <div class="stat-col-val" style="text-decoration: line-through; color: #64748b;">$8.06</div>
             <div class="stat-col-sub">/ sq ft</div>
           </div>
           <div>
             <div class="stat-col-header">SAVINGS</div>
-            <div class="stat-col-val" style="color: #16a34a;">25% OFF</div>
+            <div class="stat-col-val" style="color: #000000; font-weight: 900;">25% OFF</div>
             <div class="stat-col-sub">Instant Pro Rate</div>
           </div>
           <div>
