@@ -537,10 +537,12 @@ $main_image_url = $thumbs[0];
                 $rel_price = (float)($product->get_price() ?: 3.56);
                 
                 $title_lower = strtolower(get_the_title());
-                if ( in_array($rel_sku, array('56103', '56140', '56240', '56516')) || strpos($title_lower, 'spc') !== false || strpos($title_lower, 'vinyl') !== false ) {
+                $rel_sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $rel_product ) : ( $rel_product->get_sku() ?: '56103' );
+
+                if ( in_array($rel_sku, array('56103', '56140', '56240', '56516')) ) {
                     $rel_price = 3.56;
                     $rel_reg   = 4.81;
-                } elseif ( in_array($rel_sku, array('01015', '02012', '05014')) || strpos($title_lower, 'exquisite') !== false || strpos($title_lower, 'sophisticated') !== false || strpos($title_lower, 'cultivated') !== false ) {
+                } elseif ( in_array($rel_sku, array('01015', '02012', '05014')) ) {
                     $rel_price = 5.97;
                     $rel_reg   = 8.06;
                 } else {
@@ -548,23 +550,20 @@ $main_image_url = $thumbs[0];
                     $rel_reg   = 6.91;
                 }
 
-                $rel_img = $theme_dir . '/images/product_' . $rel_sku . '_plank.jpg';
-                if ( ! file_exists( get_stylesheet_directory() . '/images/product_' . $rel_sku . '_plank.jpg' ) ) {
-                    $rel_img = $theme_dir . '/images/oak_single_plank.jpg';
-                }
+                $rel_img = $theme_dir . '/images/hero_' . $rel_sku . '.webp?v=' . time();
                 ?>
-                <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
+                <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
                     <a href="<?php echo esc_url( get_permalink() ); ?>" style="text-decoration: none; color: inherit; display: block;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
                             <img src="<?php echo esc_url( $rel_img ); ?>" alt="<?php the_title_attribute(); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">PRO RATE DISCOUNT</span>
                         </div>
-                        <div style="padding: 20px;">
-                            <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;"><?php echo esc_html( preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303)\s*/i', '', get_the_title())) ); ?></h3>
+                        <div style="padding: 16px 14px;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;"><?php echo esc_html( preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303)\s*/i', '', get_the_title())) ); ?></h3>
                             <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
-                                <span style="font-size: 15px; font-weight: 600; color: #94a3b8; text-decoration: line-through;">$<?php echo number_format($rel_reg, 2); ?></span>
-                                <span style="font-size: 24px; font-weight: 900; color: #0f172a;">$<?php echo number_format($rel_price, 2); ?></span>
-                                <span style="font-size: 13px; font-weight: 700; color: #64748b;">/ sq ft</span>
+                                <span style="font-size: 14px; font-weight: 600; color: #94a3b8; text-decoration: line-through;">$<?php echo number_format($rel_reg, 2); ?></span>
+                                <span style="font-size: 22px; font-weight: 900; color: #0f172a;">$<?php echo number_format($rel_price, 2); ?></span>
+                                <span style="font-size: 12.5px; font-weight: 700; color: #64748b;">/ sq ft</span>
                             </div>
                         </div>
                     </a>

@@ -213,15 +213,14 @@ $theme_uri = get_stylesheet_directory_uri();
                     if ( $products_query->have_posts() ) :
                         while ( $products_query->have_posts() ) : $products_query->the_post();
                             global $product;
-                            $sku   = $product->get_sku() ?: '100872985';
+                            $sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
                             $price = (float)($product->get_price() ?: 2.55);
 
-                            // Compute regular retail price and FixFlip Online price by SKU/Title
-                            $title_lower = strtolower(get_the_title());
-                            if ( in_array($sku, array('56103', '56140', '56240', '56516')) || strpos($title_lower, 'spc') !== false || strpos($title_lower, 'vinyl') !== false ) {
+                            // Compute regular retail price and FixFlip Online price by SKU
+                            if ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
                                 $price = 3.56;
                                 $reg_price = 4.81;
-                            } elseif ( in_array($sku, array('01015', '02012', '05014')) || strpos($title_lower, 'exquisite') !== false || strpos($title_lower, 'sophisticated') !== false || strpos($title_lower, 'cultivated') !== false ) {
+                            } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
                                 $price = 5.97;
                                 $reg_price = 8.06;
                             } else {
@@ -229,23 +228,20 @@ $theme_uri = get_stylesheet_directory_uri();
                                 $reg_price = 6.91;
                             }
 
-                            $plank_img = $theme_uri . '/images/product_' . $sku . '_plank.jpg';
-                            if ( ! file_exists( get_stylesheet_directory() . '/images/product_' . $sku . '_plank.jpg' ) ) {
-                                $plank_img = $theme_uri . '/images/oak_single_plank.jpg';
-                            }
+                            $hero_img = $theme_uri . '/images/hero_' . $sku . '.webp?v=' . time();
                             ?>
-                            <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
+                            <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
                                 <a href="<?php echo esc_url( get_permalink() ); ?>" data-price="<?php echo $price; ?>" style="text-decoration: none; color: inherit; display: block;">
                                     <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
-                                        <img src="<?php echo esc_url( $plank_img ); ?>" alt="<?php the_title_attribute(); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php the_title_attribute(); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                                         <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
                                     </div>
-                                    <div style="padding: 20px;">
-                                        <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;"><?php echo esc_html( preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303)\s*/i', '', get_the_title())) ); ?></h3>
+                                    <div style="padding: 16px 14px;">
+                                        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;"><?php echo esc_html( preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303)\s*/i', '', get_the_title())) ); ?></h3>
                                         <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
-                                            <span style="font-size: 15px; font-weight: 600; color: #94a3b8; text-decoration: line-through;">$<?php echo number_format($reg_price, 2); ?></span>
-                                            <span style="font-size: 24px; font-weight: 900; color: #0f172a;">$<?php echo number_format($price, 2); ?></span>
-                                            <span style="font-size: 13px; font-weight: 700; color: #64748b;">/ sq ft</span>
+                                            <span style="font-size: 14px; font-weight: 600; color: #94a3b8; text-decoration: line-through;">$<?php echo number_format($reg_price, 2); ?></span>
+                                            <span style="font-size: 22px; font-weight: 900; color: #0f172a;">$<?php echo number_format($price, 2); ?></span>
+                                            <span style="font-size: 12.5px; font-weight: 700; color: #64748b;">/ sq ft</span>
                                         </div>
                                     </div>
                                 </a>
