@@ -569,14 +569,14 @@ $theme_uri = get_stylesheet_directory_uri();
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Upfront Cash Required</strong></td>
-                            <td>100% Cash / Credit Card out of pocket</td>
-                            <td class="ff-col"><strong>$0 Cash Today</strong> (100% Loan Draw Financed)</td>
+                            <td><strong>Material Financing</strong></td>
+                            <td>100% upfront out-of-pocket cash / high credit card rates</td>
+                            <td class="ff-col"><strong>100% CSL Loan Integrated</strong> ($0 cash today)</td>
                         </tr>
                         <tr>
-                            <td><strong>Financing Rate &amp; Terms</strong></td>
-                            <td>24% - 32% APR supplier retail cards</td>
-                            <td class="ff-col"><strong>Same interest rate</strong> as your existing rehab loan</td>
+                            <td><strong>Material Pricing</strong></td>
+                            <td>Standard retail markups</td>
+                            <td class="ff-col"><strong>25% Wholesale Pro Discount</strong> pre-negotiated</td>
                         </tr>
                         <tr>
                             <td><strong>Draw Reimbursement Hassle</strong></td>
@@ -586,7 +586,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         <tr>
                             <td><strong>Jobsite Delivery</strong></td>
                             <td>Customer responsible for truck rental or high fees</td>
-                            <td class="ff-col"><strong>Direct Liftgate Freight</strong> straight to project curb in 2–5 days</td>
+                            <td class="ff-col"><strong>Direct Liftgate Freight</strong> straight to project curb within 1 week</td>
                         </tr>
                         <tr>
                             <td><strong>Inventory Assurance</strong></td>
@@ -620,7 +620,7 @@ $theme_uri = get_stylesheet_directory_uri();
 
                 <div class="fd-faq-card">
                     <h4>How quickly do materials arrive on site?</h4>
-                    <p>All catalog SKUs are in stock and ready to ship. Once draw verification is complete, materials are dispatched via commercial liftgate freight and arrive at your project curb in 2 to 5 business days.</p>
+                    <p>All catalog SKUs are in stock and ready to ship. Once draw verification is complete, materials are dispatched via commercial liftgate freight and arrive at your project curb in approx. 1 week.</p>
                 </div>
 
             </div>
