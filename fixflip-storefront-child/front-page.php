@@ -2,6 +2,66 @@
 get_header(); 
 $theme_uri = get_stylesheet_directory_uri();
 ?>
+<style>
+.fd-responsive-4-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.fd-responsive-3-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+@media (max-width: 992px) {
+    .fd-responsive-4-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+    .fd-responsive-3-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+}
+@media (max-width: 600px) {
+    .fd-responsive-4-grid,
+    .fd-responsive-3-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    .fd-home-card {
+        border-radius: 4px !important;
+    }
+    .fd-home-card div[style*="padding: 18px 16px"] {
+        padding: 10px 8px 12px !important;
+    }
+    .fd-home-card h3 {
+        font-size: 14px !important;
+        margin: 0 0 4px 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .fd-home-card span[style*="font-size: 22px"] {
+        font-size: 17px !important;
+    }
+    .fd-home-card span[style*="font-size: 14px"] {
+        font-size: 12px !important;
+    }
+    .fd-home-card span[style*="SELECT SQ FT"] {
+        font-size: 9.5px !important;
+        padding: 7px 4px !important;
+        letter-spacing: 0.3px !important;
+        white-space: nowrap !important;
+    }
+    .fd-home-card span[style*="ORDER SAMPLE"] {
+        font-size: 9px !important;
+        padding: 5px 4px !important;
+        letter-spacing: 0.2px !important;
+        white-space: nowrap !important;
+    }
+}
+</style>
 <div id="primary" class="content-area" style="background: #f5f5f5; padding-bottom: 60px;">
     <main id="main" class="site-main" role="main" style="max-width: 1240px; margin: 0 auto; padding: 24px 20px;">
 
@@ -22,7 +82,7 @@ $theme_uri = get_stylesheet_directory_uri();
             </div>
 
             <!-- PRODUCTS GRID (4 Columns) -->
-            <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+            <div class="fd-responsive-4-grid">
                 
                 <!-- Product 1: Zion Oak -->
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
@@ -143,7 +203,7 @@ $theme_uri = get_stylesheet_directory_uri();
             </div>
 
             <!-- BETTER TIER PRODUCTS GRID (3 Columns) -->
-            <div class="fd-responsive-3-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
+            <div class="fd-responsive-3-grid" style="margin-bottom: 40px;">
                 
                 <!-- Product 5: Exquisite Oak -->
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
@@ -234,7 +294,7 @@ $theme_uri = get_stylesheet_directory_uri();
             </div>
 
             <!-- GOOD TIER PRODUCTS GRID (4 Columns) -->
-            <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+            <div class="fd-responsive-4-grid">
 
                 <!-- Product 8: Rustic Natural -->
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
