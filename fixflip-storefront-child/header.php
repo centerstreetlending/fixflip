@@ -58,8 +58,50 @@
         transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
-    #fd-cart-drawer-panel.is-open {
-        right: 0 !important;
+    /* CRITICAL MOBILE RESPONSIVE ENGINE */
+    @media (max-width: 900px) {
+        .fd-responsive-4-grid,
+        .fd-responsive-3-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+        }
+        .fd-home-card {
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            border-radius: 4px !important;
+            overflow: hidden !important;
+        }
+        .fd-home-card div[style*="padding: 18px 16px"] {
+            padding: 12px 10px !important;
+        }
+        .fd-home-card h3 {
+            font-size: 15px !important;
+            line-height: 1.2 !important;
+            margin: 0 0 4px 0 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        .fd-home-card span[style*="font-size: 22px"] {
+            font-size: 18px !important;
+        }
+        .fd-home-card span[style*="font-size: 14px"] {
+            font-size: 12px !important;
+        }
+        .fd-home-card span[style*="SELECT SQ FT"] {
+            font-size: 10.5px !important;
+            padding: 8px 4px !important;
+            letter-spacing: 0.3px !important;
+            white-space: nowrap !important;
+        }
+        .fd-home-card span[style*="ORDER SAMPLE"] {
+            font-size: 9.5px !important;
+            padding: 5px 4px !important;
+            letter-spacing: 0.2px !important;
+            white-space: nowrap !important;
+        }
     }
 
     /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
