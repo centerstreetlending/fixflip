@@ -1065,9 +1065,18 @@ $theme_uri = get_stylesheet_directory_uri();
 
                 <!-- Output Card -->
                 <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 24px; box-sizing: border-box;">
-                    <div style="font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">ESTIMATED LOAN ADVANCE</div>
-                    <div id="fd-hp-calc-total" style="font-size: 36px; font-weight: 900; color: #0f172a; line-height: 1; margin-bottom: 12px;">$5,874.00</div>
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">YOUR PRO RATE ADVANCE</span>
+                        <span id="fd-hp-calc-reg" style="font-size: 14px; font-weight: 700; color: #94a3b8; text-decoration: line-through;">$7,832.00</span>
+                    </div>
+                    <div id="fd-hp-calc-total" style="font-size: 36px; font-weight: 900; color: #0f172a; line-height: 1; margin-bottom: 10px;">$5,874.00</div>
                     
+                    <!-- Pro Savings Badge (25% Savings) -->
+                    <div style="background: #dcfce7; border: 1px solid #86efac; padding: 6px 10px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase;">25% PRO SAVINGS:</span>
+                        <strong id="fd-hp-calc-savings" style="font-size: 13px; font-weight: 900; color: #166534;">You Save $1,958.00</strong>
+                    </div>
+
                     <div style="font-size: 13px; color: #475569; line-height: 1.6; padding: 12px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; margin-bottom: 16px;">
                         <div style="display: flex; justify-content: space-between;">
                             <span>Coverage (+10% waste):</span>
@@ -1549,6 +1558,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateEstimator() {
         const baseSqft = parseFloat(sqftInput ? sqftInput.value : 1500) || 0;
         const pricePerSqft = parseFloat(tierSelect ? tierSelect.value : 3.56) || 3.56;
+        let regPricePerSqft = 4.81;
+        if (Math.abs(pricePerSqft - 5.12) < 0.05) regPricePerSqft = 6.91;
+        if (Math.abs(pricePerSqft - 5.97) < 0.05) regPricePerSqft = 8.06;
+
         const coveragePerBox = 15.5;
 
         // 10% contingency
@@ -1556,9 +1569,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const boxesNeeded = Math.ceil(totalCov / coveragePerBox);
         const actualSqft = boxesNeeded * coveragePerBox;
         const totalPrice = actualSqft * pricePerSqft;
+        const totalRegPrice = actualSqft * regPricePerSqft;
+        const totalSavings = totalRegPrice - totalPrice;
+
+        const regDisplay = document.getElementById('fd-hp-calc-reg');
+        const savingsDisplay = document.getElementById('fd-hp-calc-savings');
 
         if (totalDisplay) {
             totalDisplay.textContent = '$' + totalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        if (regDisplay) {
+            regDisplay.textContent = '$' + totalRegPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        if (savingsDisplay) {
+            savingsDisplay.textContent = 'You Save $' + totalSavings.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
         if (covDisplay) {
             covDisplay.textContent = totalCov.toFixed(1) + ' sq ft';

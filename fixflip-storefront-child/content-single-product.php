@@ -392,23 +392,43 @@ $main_image_url = $thumbs[0];
                         <span>Exact calculation:</span>
                         <strong id="fd-bk-exact-boxes" style="font-style: normal; color: #0f172a;">0 boxes</strong>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span>Rounding up to whole boxes:</span>
                         <strong id="fd-bk-whole-boxes" style="font-style: normal; color: #0f172a;">0 boxes</strong>
                     </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px; color: #94a3b8; text-decoration: line-through; border-top: 1px dashed #cbd5e1; padding-top: 8px;">
+                        <span>Regular Retail Value:</span>
+                        <strong id="fd-bk-reg-subtotal" style="font-style: normal;">$0.00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #16a34a; font-weight: 800;">
+                        <span>Your 25% Pro Savings:</span>
+                        <strong id="fd-bk-savings" style="font-style: normal;">-$0.00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: 900; color: #0f172a; border-top: 1.5px solid #0f172a; padding-top: 6px; font-size: 14px;">
+                        <span>Your Pro Rate Price:</span>
+                        <strong id="fd-bk-subtotal-val" style="font-style: normal; color: #0f172a;">$0.00</strong>
+                    </div>
                 </div>
-
-
 
                 <!-- SINGLE AUTHORITATIVE ORDER SUMMARY CARD -->
                 <div id="fd-selected-config-summary" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 0px; padding: 18px 20px; margin-bottom: 14px; box-sizing: border-box; width: 100%;">
                     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
                         <span style="font-size: 11px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 1.2px;">ORDER SUMMARY</span>
-                        <span id="fd-live-subtotal" style="font-size: 28px; font-weight: 900; color: #0f172a; line-height: 1;">$0.00</span>
+                        <div style="text-align: right;">
+                            <span id="fd-live-reg-subtotal" style="font-size: 15px; font-weight: 700; color: #94a3b8; text-decoration: line-through; margin-right: 8px; display: none;">$0.00</span>
+                            <span id="fd-live-subtotal" style="font-size: 28px; font-weight: 900; color: #0f172a; line-height: 1;">$0.00</span>
+                        </div>
                     </div>
                     <div style="font-size: 16px; font-weight: 900; color: #0f172a; line-height: 1.3; text-transform: uppercase; letter-spacing: -0.2px; margin-bottom: 8px;">
                         <span id="fd-summary-title"><?php echo esc_html($title); ?></span>
                     </div>
+
+                    <!-- PRO SAVINGS CALLOUT BADGE -->
+                    <div id="fd-summary-savings-row" style="display: none; justify-content: space-between; align-items: center; background: #dcfce7; border: 1px solid #86efac; padding: 8px 12px; margin-bottom: 10px; border-radius: 2px;">
+                        <span style="font-size: 11.5px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">PRO DISCOUNT (25% OFF):</span>
+                        <strong id="fd-live-savings" style="font-size: 13.5px; font-weight: 900; color: #166534;">You Save $0.00</strong>
+                    </div>
+
                     <div style="font-size: 14px; font-weight: 800; color: #007bff; padding-top: 8px; border-top: 1.5px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
                         <span>Quantity: <span id="fd-summary-qty-desc">0 boxes (0.0 sqft)</span></span>
                     </div>
@@ -794,10 +814,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const summaryQtyDesc = document.getElementById('fd-summary-qty-desc');
     const summaryTotalVal = document.getElementById('fd-summary-total-val');
+    const liveRegSubtotal = document.getElementById('fd-live-reg-subtotal');
+    const summarySavingsRow = document.getElementById('fd-summary-savings-row');
+    const liveSavings = document.getElementById('fd-live-savings');
+    const bkRegSubtotal = document.getElementById('fd-bk-reg-subtotal');
+    const bkSavings = document.getElementById('fd-bk-savings');
 
     const sqftPerBox = <?php echo (float)$coverage; ?>;
     const pricePerSqft = <?php echo (float)$price; ?>;
+    const regPricePerSqft = <?php echo (float)$reg_price; ?>;
     const pricePerBox = sqftPerBox * pricePerSqft;
+    const regPricePerBox = sqftPerBox * regPricePerSqft;
 
     function calculateValues(skipBoxOverride) {
         let baseSqft = parseFloat(sqftInput.value) || 0;
@@ -824,7 +851,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let totalPrice = wholeBoxes * pricePerBox;
+        let totalRegPrice = wholeBoxes * regPricePerBox;
+        let totalSavings = totalRegPrice - totalPrice;
+
         let formattedTotal = '$' + totalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        let formattedRegTotal = '$' + totalRegPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        let formattedSavings = '$' + totalSavings.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        // Savings Callout Updates
+        if (totalSavings > 0 && wholeBoxes > 0) {
+            if (liveRegSubtotal) {
+                liveRegSubtotal.textContent = formattedRegTotal;
+                liveRegSubtotal.style.display = 'inline';
+            }
+            if (summarySavingsRow) {
+                summarySavingsRow.style.display = 'flex';
+            }
+            if (liveSavings) {
+                liveSavings.textContent = 'You Save ' + formattedSavings + ' (25% Pro Rate)';
+            }
+            if (bkRegSubtotal) bkRegSubtotal.textContent = formattedRegTotal;
+            if (bkSavings) bkSavings.textContent = '- ' + formattedSavings;
+        } else {
+            if (liveRegSubtotal) liveRegSubtotal.style.display = 'none';
+            if (summarySavingsRow) summarySavingsRow.style.display = 'none';
+            if (bkRegSubtotal) bkRegSubtotal.textContent = '$0.00';
+            if (bkSavings) bkSavings.textContent = '- $0.00';
+        }
 
         // Itemized breakdown updates
         if (bkBase) bkBase.textContent = baseSqft.toFixed(1) + ' sqft';
