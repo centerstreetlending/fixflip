@@ -81,8 +81,8 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
             </div>
 
-            <!-- PRODUCTS GRID (4 Columns) -->
-            <div class="fd-responsive-4-grid">
+            <!-- PRODUCTS GRID (4 Columns on Desktop, 2 on Mobile) -->
+            <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
                 
                 <!-- Product 1: Zion Oak -->
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
@@ -202,8 +202,8 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
             </div>
 
-            <!-- BETTER TIER PRODUCTS GRID (3 Columns) -->
-            <div class="fd-responsive-3-grid" style="margin-bottom: 40px;">
+            <!-- BETTER TIER PRODUCTS GRID (3 Columns on Desktop, 2 on Mobile) -->
+            <div class="fd-responsive-3-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 40px;">
                 
                 <!-- Product 5: Exquisite Oak -->
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">
@@ -293,8 +293,8 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
             </div>
 
-            <!-- GOOD TIER PRODUCTS GRID (4 Columns) -->
-            <div class="fd-responsive-4-grid">
+            <!-- GOOD TIER PRODUCTS GRID (4 Columns on Desktop, 2 on Mobile) -->
+            <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
 
                 <!-- Product 8: Rustic Natural -->
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03); transition: transform 0.2s, border-color 0.2s;">

@@ -104,6 +104,68 @@
         }
     }
 
+    /* MOBILE HEADER & SWIPEABLE TABS */
+    @media (max-width: 768px) {
+        .top-header-wrapper > div:first-child {
+            padding: 8px 12px !important;
+            font-size: 11px !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            line-height: 1.3 !important;
+            text-align: center !important;
+            justify-content: center !important;
+        }
+        .top-header-wrapper > div:first-child span:first-child {
+            font-size: 8.5px !important;
+            padding: 2px 6px !important;
+        }
+        .header-tier-1 {
+            flex-wrap: wrap !important;
+            padding: 10px 12px !important;
+            gap: 10px !important;
+        }
+        .header-tier-1 .logo img {
+            height: 22px !important;
+        }
+        .header-tier-1 .search-group {
+            order: 3 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 4px 0 0 0 !important;
+        }
+        .header-tier-1 .partner-badge {
+            display: none !important;
+        }
+        .mega-menu-wrapper {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            padding: 6px 8px !important;
+        }
+        .mega-menu-wrapper::-webkit-scrollbar {
+            display: none !important;
+        }
+        .mega-menu-container {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+            gap: 8px !important;
+            width: max-content !important;
+            min-width: 100% !important;
+            padding: 0 4px !important;
+        }
+        .mega-menu-link {
+            white-space: nowrap !important;
+            font-size: 11.5px !important;
+            font-weight: 800 !important;
+            padding: 7px 12px !important;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 20px !important;
+            color: #0f172a !important;
+        }
+    }
+
     /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
     html, body, .site, .site-content, .site-shell, #page, #content, .content-area, .site-main, .col-full {
         background-color: #f9f9f9 !important;
