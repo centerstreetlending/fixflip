@@ -614,8 +614,8 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <div class="fd-faq-card">
-                    <h4>What is the minimum order size?</h4>
-                    <p>Bulk wholesale flooring orders require a minimum subtotal of $2,000.00 (~400 sq ft). Sample swatches ($5.00) have no minimum and include free priority courier shipping.</p>
+                    <h4>When does the $2,000 order minimum apply?</h4>
+                    <p>The $2,000.00 minimum order amount is <strong>only applicable if you are integrating the material spending into your Center Street Lending rehab loan advance</strong>. Direct cash/card purchases and sample swatches ($5.00) have no loan minimum.</p>
                 </div>
 
                 <div class="fd-faq-card">

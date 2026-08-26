@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <!-- CLEAN TEXT DROPDOWN MENU -->
             <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 270px; background: #ffffff; border: 1.5px solid #007bff; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
               <a href="/how-it-works/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">How FixFlip Works &rarr;</a>
-              <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Review Active Cart ($2k Min)</a>
+              <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Review Active Cart &rarr;</a>
               <a href="/checkout/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-top: 1px solid #f1f5f9;">Submit Order for CSL Draw &rarr;</a>
             </div>
           </div>

@@ -896,8 +896,8 @@ $theme_uri = get_stylesheet_directory_uri();
                         <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                     </div>
                     <div>
-                        <div class="fd-trust-title">$2,000 Order Minimum</div>
-                        <div class="fd-trust-desc">Built specifically for full house rehabs</div>
+                        <div class="fd-trust-title">$2,000 Loan Advance Min</div>
+                        <div class="fd-trust-desc">Only applicable if integrating into loan</div>
                     </div>
                 </div>
             </div>
@@ -1471,11 +1471,11 @@ $theme_uri = get_stylesheet_directory_uri();
 
             <div class="fd-faq-item">
                 <div class="fd-faq-question" onclick="window.fdToggleFaq(this)">
-                    <span>What is the minimum order size?</span>
+                    <span>When does the $2,000 order minimum apply?</span>
                     <span style="font-size: 18px; font-weight: 900; color: #007bff;">+</span>
                 </div>
                 <div class="fd-faq-answer">
-                    Because FixFlip is designed specifically for full-house renovations, flips, and commercial builds, the minimum order size is $2,000 (roughly 1 full pallet). For smaller needs or color matching, physical sample swatches can be ordered individually for $5.00 each.
+                    The $2,000 order minimum is <strong>only applicable if you are integrating the material spending into your rehab loan advance</strong>. For direct purchases or physical color matching, sample swatches can be ordered individually for $5.00 with no minimum requirement.
                 </div>
             </div>
 

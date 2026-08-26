@@ -1021,13 +1021,13 @@ function fixflip_output_cart_drawer_items_html() {
             echo '<div style="font-size: 11px; color: #475569; font-weight: 600;">Eligible for 100% CSL Draw Financing &amp; Direct Jobsite Delivery!</div>';
         } else {
             echo '<div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between;">';
-            echo '<span>$2,000 MINIMUM ORDER REQUIREMENT</span>';
+            echo '<span>$2,000 LOAN ADVANCE REQUIREMENT</span>';
             echo '<span>' . $percent . '%</span>';
             echo '</div>';
             echo '<div style="height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
             echo '<div style="width: ' . $percent . '%; height: 100%; background: #007bff;"></div>';
             echo '</div>';
-            echo '<div style="font-size: 11.5px; color: #dc2626; font-weight: 700;">Add $' . $needed . ' more to reach minimum order subtotal ($2,000.00).</div>';
+            echo '<div style="font-size: 11.5px; color: #0f172a; font-weight: 600;">Add $' . $needed . ' more to integrate into your rehab loan advance ($2,000.00 min).</div>';
         }
         echo '</div>';
     } else {
@@ -1975,7 +1975,7 @@ function fixflip_enforce_minimum_order_amount() {
             
             wc_add_notice( 
                 sprintf( 
-                    '<strong>Wholesale Order Requirement:</strong> FixFlip material orders require a minimum subtotal of <strong>$2,000.00</strong> to qualify for 100%% CSL draw financing and direct jobsite delivery.<br>Current order subtotal: <strong>$%s</strong> &bull; Please add <strong>$%s</strong> more in materials to complete your order.',
+                    '<strong>Loan Advance Integration:</strong> The <strong>$2,000.00 minimum order amount</strong> is only applicable if you are integrating material spending into your Center Street Lending rehab loan.<br>Current order subtotal: <strong>$%s</strong> &bull; Please add <strong>$%s</strong> more to qualify for 100%% loan draw integration.',
                     $current,
                     $difference
                 ), 
