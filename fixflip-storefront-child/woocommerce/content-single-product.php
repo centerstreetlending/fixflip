@@ -52,60 +52,13 @@ $unit  = $product->get_meta('custom_unit') ?: 'sqft';
 $coverage = (float)($product->get_meta('custom_coverage') ?: 15.5);
 $box_price = $price * $coverage;
 
-$main_image_id = $product->get_image_id();
-$default_plank = $theme_dir . '/images/product_' . $sku . '_plank.jpg';
-if ( ! file_exists( get_stylesheet_directory() . '/images/product_' . $sku . '_plank.jpg' ) ) {
-    $default_plank = $theme_dir . '/images/oak_single_plank.jpg';
+// Gallery Thumbnails via Curated High-Definition SKU Mapping
+if ( function_exists('fixflip_get_curated_product_images') ) {
+    $thumbs = fixflip_get_curated_product_images( $sku );
+} else {
+    $thumbs = array( $theme_dir . '/images/hero_' . $sku . '.webp' );
 }
-$main_image_url = wp_get_attachment_image_url( $main_image_id, 'full' ) ?: $default_plank;
-
-// Gallery Thumbnails
-$gallery_ids = $product->get_gallery_image_ids();
-$thumbs = array( $main_image_url );
-if ( ! empty( $gallery_ids ) ) {
-    foreach ( $gallery_ids as $gid ) {
-        $url = wp_get_attachment_image_url( $gid, 'full' );
-        if ( $url ) $thumbs[] = $url;
-    }
-}
-if ( count($thumbs) < 2 ) {
-    $t1 = $theme_dir . '/images/product_' . $sku . '_plank.jpg';
-    $t2 = $theme_dir . '/images/product_' . $sku . '_room.jpg';
-    $t3 = $theme_dir . '/images/product_' . $sku . '_img1.jpg';
-    $t4 = $theme_dir . '/images/product_' . $sku . '_img2.jpg';
-    $t5 = $theme_dir . '/images/product_' . $sku . '_img3.jpg';
-    $t6 = $theme_dir . '/images/product_' . $sku . '_img4.jpg';
-    
-    $thumbs = array( $t1, $t2, $t3, $t4, $t5, $t6 );
-}
-
-// Deduplicate $thumbs array by MD5 hash of local image files
-$unique_thumbs = array();
-$seen_hashes   = array();
-$theme_root    = get_stylesheet_directory();
-$theme_base_url = get_stylesheet_directory_uri();
-
-foreach ( $thumbs as $t_url ) {
-    $webp_url = preg_replace( '/\.(jpg|jpeg)$/i', '.webp', $t_url );
-    $local_webp = str_replace( $theme_base_url, $theme_root, $webp_url );
-    if ( file_exists( $local_webp ) ) {
-        $t_url = $webp_url;
-    }
-    $local_path = str_replace( $theme_base_url, $theme_root, $t_url );
-    if ( file_exists( $local_path ) ) {
-        $h = md5_file( $local_path );
-        if ( ! isset( $seen_hashes[ $h ] ) ) {
-            $seen_hashes[ $h ] = true;
-            $unique_thumbs[]   = $t_url;
-        }
-    } else {
-        if ( ! in_array( $t_url, $unique_thumbs ) ) {
-            $unique_thumbs[] = $t_url;
-        }
-    }
-}
-$thumbs = $unique_thumbs;
-$main_image_url = $thumbs[0] ?? $default_plank;
+$main_image_url = $thumbs[0];
 ?>
 
 <div id="product-<?php the_ID(); ?>" class="fd-single-product-container" style="max-width: 1320px; margin: 0 auto; padding: 24px; font-family: 'Roboto', system-ui, -apple-system, sans-serif; color: #0f172a;">
