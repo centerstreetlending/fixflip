@@ -23,13 +23,13 @@ function fixflip_enqueue_styles() {
     // Dequeue unused Storefront parent Google Fonts
     wp_dequeue_style( 'storefront-fonts' );
     
-    // Enqueue primary Google Font (Roboto) with display=swap for instant text render
-    wp_enqueue_style( 'fixflip-roboto', 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap', array(), null );
+    // Enqueue primary Google Font (Inter) with display=swap for crisp, proportional typography
+    wp_enqueue_style( 'fixflip-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap', array(), null );
     
     wp_enqueue_style( 'fixflip-child-style',
         get_stylesheet_directory_uri() . '/style.css',
-        array( $parent_style, 'fixflip-roboto' ),
-        '2.1.' . time() // Instant cache buster
+        array( $parent_style, 'fixflip-inter' ),
+        '2.2.' . time() // Instant cache buster
     );
 
     // Dequeue heavy block library stylesheets on standard pages
