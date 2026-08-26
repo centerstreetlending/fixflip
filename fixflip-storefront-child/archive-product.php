@@ -9,6 +9,124 @@ get_header();
 $theme_uri = get_stylesheet_directory_uri();
 ?>
 
+<style>
+.fd-archive-container {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+.fd-sidebar-filter {
+    width: 260px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+    position: sticky;
+    top: 20px;
+    align-self: start;
+}
+.fd-mobile-filter-toggle-btn {
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.fd-sidebar-filter-body {
+    display: block;
+}
+.fd-archive-main-col {
+    flex: 1;
+    min-width: 0;
+}
+.fd-responsive-4-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+@media (max-width: 1024px) {
+    .fd-responsive-4-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+}
+@media (max-width: 900px) {
+    .fd-archive-container {
+        flex-direction: column !important;
+        gap: 16px !important;
+        width: 100% !important;
+    }
+    .fd-sidebar-filter {
+        width: 100% !important;
+        position: static !important;
+        padding: 12px !important;
+        box-sizing: border-box !important;
+        border-radius: 6px !important;
+        margin-bottom: 8px !important;
+    }
+    .fd-sidebar-header {
+        display: none !important;
+    }
+    .fd-mobile-filter-toggle-btn {
+        display: flex !important;
+    }
+    .fd-sidebar-filter-body {
+        display: none;
+        padding-top: 16px;
+    }
+    .fd-sidebar-filter-body.is-open {
+        display: block !important;
+    }
+    .fd-archive-main-col {
+        width: 100% !important;
+    }
+    .fd-responsive-4-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .fd-home-card {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    .fd-hero-banner {
+        padding: 20px 16px !important;
+    }
+    .fd-hero-banner h1 {
+        font-size: 22px !important;
+    }
+    .fd-subcat-banner {
+        padding: 14px 16px !important;
+    }
+}
+@media (max-width: 600px) {
+    .fd-responsive-4-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    .fd-home-card h3 {
+        font-size: 14px !important;
+        margin: 0 0 4px 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .fd-home-card span[style*="font-size: 22px"] {
+        font-size: 17px !important;
+    }
+}
+</style>
+
 <div id="primary" class="content-area" style="background: #f5f5f5; padding-bottom: 60px;">
     <main id="main" class="site-main" role="main" style="max-width: 1320px; margin: 0 auto; padding: 24px 16px;">
 
@@ -181,11 +299,11 @@ $theme_uri = get_stylesheet_directory_uri();
         <?php endif; ?>
 
         <!-- 2-COLUMN CATALOG CONTAINER WITH FILTER SIDEBAR -->
-        <div style="display: flex; gap: 32px; align-items: flex-start;">
+        <div class="fd-archive-container">
             <?php get_template_part('sidebar-shop'); ?>
 
-            <div style="flex: 1; min-width: 0;">
-                <div class="fd-responsive-4-grid">
+            <div class="fd-archive-main-col">
+                <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
                     <?php
                     // Query products dynamically matching active category context
                     $tax_query = array();
@@ -265,6 +383,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxPriceLbl = document.getElementById('fd-lbl-max-price');
     const resetBtn = document.getElementById('fd-reset-filters-btn');
     const cards = document.querySelectorAll('.fd-home-card');
+
+    const mobileToggle = document.getElementById('fd-mobile-filter-toggle-btn');
+    const filterBody = document.getElementById('fd-sidebar-filter-body');
+    const chevron = document.getElementById('fd-filter-chevron');
+
+    if (mobileToggle && filterBody) {
+        mobileToggle.addEventListener('click', function() {
+            filterBody.classList.toggle('is-open');
+            if (filterBody.classList.contains('is-open')) {
+                chevron.innerHTML = '&uarr; Hide';
+            } else {
+                chevron.innerHTML = '&darr; Show';
+            }
+        });
+    }
 
     function applyFilters() {
         const maxPrice = parseFloat(priceSlider ? priceSlider.value : 6.00);

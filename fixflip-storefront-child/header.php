@@ -189,6 +189,35 @@
             gap: 28px !important;
             padding: 36px 20px 24px !important;
         }
+        .fd-archive-container {
+            flex-direction: column !important;
+            gap: 16px !important;
+            width: 100% !important;
+        }
+        .fd-sidebar-filter {
+            width: 100% !important;
+            position: static !important;
+            padding: 12px !important;
+            box-sizing: border-box !important;
+            border-radius: 6px !important;
+            margin-bottom: 8px !important;
+        }
+        .fd-sidebar-header {
+            display: none !important;
+        }
+        .fd-mobile-filter-toggle-btn {
+            display: flex !important;
+        }
+        .fd-sidebar-filter-body {
+            display: none;
+            padding-top: 16px;
+        }
+        .fd-sidebar-filter-body.is-open {
+            display: block !important;
+        }
+        .fd-archive-main-col {
+            width: 100% !important;
+        }
     }
 
     /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
