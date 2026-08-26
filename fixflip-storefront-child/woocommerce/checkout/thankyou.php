@@ -208,9 +208,9 @@ foreach ( $order->get_items() as $item_id => $item ) {
     <!-- SUPPORT & NEXT STEPS -->
     <div style="background: #0f172a; color: #ffffff; border-radius: 8px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
         <div>
-            <h4 style="font-size: 17px; font-weight: 900; margin: 0 0 6px 0; letter-spacing: 0.5px;">Need Assistance or Custom Delivery Instructions?</h4>
-            <p style="font-size: 13.5px; color: #94a3b8; margin: 0; line-height: 1.5;">
-                Contact Center Street Lending materials desk directly at <a href="mailto:sscouig@centerstreetlending.com" style="color: #60a5fa; text-decoration: underline; font-weight: 700;">sscouig@centerstreetlending.com</a> or call your loan coordinator.
+            <h4 style="font-size: 17px; font-weight: 900; color: #ffffff !important; margin: 0 0 6px 0; letter-spacing: 0.5px;">Need Assistance or Custom Delivery Instructions?</h4>
+            <p style="font-size: 13.5px; color: #e2e8f0 !important; margin: 0; line-height: 1.5;">
+                Contact Center Street Lending materials desk directly at <a href="mailto:sscouig@centerstreetlending.com" style="color: #38bdf8 !important; text-decoration: underline; font-weight: 800;">sscouig@centerstreetlending.com</a> or call your loan coordinator.
             </p>
         </div>
         <div>

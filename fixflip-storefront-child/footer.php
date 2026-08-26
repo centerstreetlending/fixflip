@@ -21,8 +21,8 @@ $theme_uri = get_stylesheet_directory_uri();
                         <img src="<?php echo $theme_uri; ?>/FixFlip-dotCOM_Black.png" alt="FixFlip.com" style="height: 30px; width: auto; display: block; filter: brightness(0) invert(1);">
                     </a>
                     <span style="color: #475569; font-size: 16px; font-weight: 300;">|</span>
-                    <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-block; text-decoration: none; background: #ffffff; padding: 6px 12px; border-radius: 4px;">
-                        <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 18px; width: auto; display: block;">
+                    <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
+                        <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo_white.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 20px; width: auto; display: block;">
                     </a>
                 </div>
                 <div style="font-size: 11px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
@@ -64,9 +64,9 @@ $theme_uri = get_stylesheet_directory_uri();
                     Order Desk &amp; Financing
                 </h4>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6;">
-                    <div style="margin-bottom: 10px;">
-                        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-block; background: #ffffff; padding: 6px 12px; border-radius: 4px; text-decoration: none;">
-                            <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 16px; width: auto; display: block;">
+                    <div style="margin-bottom: 12px;">
+                        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
+                            <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo_white.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 18px; width: auto; display: block;">
                         </a>
                     </div>
                     <p style="margin: 0 0 6px 0; color: #cbd5e1; font-weight: 600;">
