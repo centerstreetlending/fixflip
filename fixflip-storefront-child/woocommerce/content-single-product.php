@@ -443,11 +443,11 @@ $main_image_url = $thumbs[0];
                             </div>
                             <div>
                                 <div style="display: flex; align-items: center; gap: 6px;">
-                                    <span style="font-size: 12px; font-weight: 900; color: #0f172a; letter-spacing: 0.3px; text-transform: uppercase;">DIRECT TO HOUSE / JOBSITE DELIVERY</span>
+                                    <span style="font-size: 12px; font-weight: 900; color: #0f172a; letter-spacing: 0.3px; text-transform: uppercase;">1-WEEK DIRECT JOBSITE DELIVERY</span>
                                     <span style="font-size: 9.5px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 0px; text-transform: uppercase;">FULL PRO SERVICE</span>
                                 </div>
                                 <div style="font-size: 12px; color: #334155; font-weight: 600; margin-top: 2px;">
-                                    Truck arrives equipped with <strong>liftgate &amp; power pallet jack</strong>
+                                    Delivered within 1 week equipped with <strong>liftgate &amp; power pallet jack</strong>
                                 </div>
                             </div>
                         </div>
@@ -458,7 +458,7 @@ $main_image_url = $thumbs[0];
                     </div>
                     
                     <div style="padding-top: 8px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #475569;">
-                        <span style="font-weight: 700; color: #007bff;">Scheduled 1–3 Hour Delivery Window</span>
+                        <span style="font-weight: 700; color: #007bff;">1-Week Direct Delivery Window</span>
                         <span style="font-style: italic; color: #64748b;">Delivered directly to house curb</span>
                     </div>
                 </div>
@@ -674,7 +674,7 @@ $main_image_url = $thumbs[0];
         <button type="button" id="fd-close-policy-x" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #64748b; font-size: 24px; cursor: pointer;">&times;</button>
         <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 16px; border-bottom: 2px solid #007bff; padding-bottom: 8px;">Flat Rate Freight Shipping &amp; Delivery Policy</h3>
         <div style="font-size: 14px; line-height: 1.6; color: #475569; margin-bottom: 24px; max-height: 60vh; overflow-y: auto;">
-            <p style="margin-bottom: 12px;"><strong>Curbside Freight Delivery ($149 Flat Rate):</strong> Orders are shipped via liftgate-equipped freight truck directly to your jobsite or residential curb.</p>
+            <p style="margin-bottom: 12px;"><strong>1-Week Direct Jobsite Delivery:</strong> Orders are shipped via liftgate-equipped freight truck directly to your jobsite or residential curb within 1 week.</p>
             <p style="margin-bottom: 12px;"><strong>Unloading &amp; Inspection:</strong> The driver will lower the pallet to curbside. You or your contractor must inspect the shipment for pallet count and visual damage prior to signing the delivery receipt.</p>
             <p style="margin-bottom: 12px;"><strong>Pro Loan Integration:</strong> Freight shipping costs can be rolled 100% into your active Center Street Lending rehab loan at checkout.</p>
         </div>

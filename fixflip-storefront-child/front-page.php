@@ -876,8 +876,8 @@ $theme_uri = get_stylesheet_directory_uri();
                         <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                     </div>
                     <div>
-                        <div class="fd-trust-title">Direct Jobsite Freight</div>
-                        <div class="fd-trust-desc">Liftgate &amp; power pallet jack to curb</div>
+                        <div class="fd-trust-title">1-Week Jobsite Delivery</div>
+                        <div class="fd-trust-desc">Direct liftgate freight straight to curb</div>
                     </div>
                 </div>
 
@@ -1016,7 +1016,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-step-card">
                     <div class="fd-step-number">03</div>
                     <h3 class="fd-step-title">We Deliver Direct</h3>
-                    <p class="fd-step-text">Freight truck delivers directly to your house curb equipped with liftgate &amp; pallet jack.</p>
+                    <p class="fd-step-text">Freight truck delivers directly to your house curb within 1 week equipped with liftgate &amp; pallet jack.</p>
                 </div>
 
                 <!-- Step 4 -->
@@ -1433,10 +1433,10 @@ $theme_uri = get_stylesheet_directory_uri();
 
                 <div class="fd-pillar-card">
                     <div class="fd-pillar-icon">
-                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                     </div>
-                    <h3 class="fd-pillar-title">Jobsite Liftgate Freight</h3>
-                    <p class="fd-pillar-desc">Full pallet orders delivered directly to your jobsite curb with liftgate and power pallet jack service included.</p>
+                    <h3 class="fd-pillar-title">1-Week Jobsite Freight</h3>
+                    <p class="fd-pillar-desc">Full pallet orders delivered directly to your jobsite curb within 1 week with liftgate and power pallet jack service included.</p>
                 </div>
 
                 <div class="fd-pillar-card">
@@ -1474,7 +1474,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span style="font-size: 18px; font-weight: 900; color: #007bff;">+</span>
                 </div>
                 <div class="fd-faq-answer">
-                    Orders are shipped via dedicated freight carrier directly to your residential or commercial jobsite. Trucks arrive equipped with a hydraulic liftgate and power pallet jack to unload pallets directly onto the curbside or driveway.
+                    Orders are shipped via dedicated freight carrier directly to your residential or commercial jobsite within 1 week. Trucks arrive equipped with a hydraulic liftgate and power pallet jack to unload pallets directly onto the curbside or driveway.
                 </div>
             </div>
 
