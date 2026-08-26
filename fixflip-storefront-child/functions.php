@@ -622,22 +622,38 @@ function fixflip_save_order_line_item_data( $item, $cart_item_key, $values, $ord
 // 1. Customize Checkout Fields
 add_filter( 'woocommerce_checkout_fields' , 'fixflip_custom_checkout_fields' );
 function fixflip_custom_checkout_fields( $fields ) {
-    // Remove unwanted billing fields
+    // Clean up unnecessary fields
     unset($fields['billing']['billing_company']);
-    unset($fields['billing']['billing_phone']);
+    unset($fields['shipping']['shipping_company']);
     unset($fields['order']['order_comments']);
     
-    // Add custom CSL loan field
-    $fields['billing']['loan_number'] = array(
-        'type'        => 'text',
-        'label'       => __('Center Street Lending (CSL) Active Loan # or Property Address', 'fixflip'),
-        'placeholder' => _x('Required for Draw Advance &bull; e.g. CSL-98241 or 123 Main St, Los Angeles, CA', 'placeholder', 'fixflip'),
-        'required'    => false, // Conditionally enforced for CSL Draw
-        'class'       => array('form-row-wide'),
-        'clear'       => true,
-        'priority'    => 1, // Put it at the top
-    );
-    
+    // Billing Field Labels (Standard Cardholder Info)
+    if ( isset($fields['billing']['billing_first_name']) ) {
+        $fields['billing']['billing_first_name']['label'] = __('First Name', 'fixflip');
+    }
+    if ( isset($fields['billing']['billing_last_name']) ) {
+        $fields['billing']['billing_last_name']['label'] = __('Last Name', 'fixflip');
+    }
+    if ( isset($fields['billing']['billing_address_1']) ) {
+        $fields['billing']['billing_address_1']['label'] = __('Billing Street Address (Cardholder Address)', 'fixflip');
+    }
+    if ( isset($fields['billing']['billing_phone']) ) {
+        $fields['billing']['billing_phone']['label'] = __('Phone Number', 'fixflip');
+        $fields['billing']['billing_phone']['required'] = false;
+    }
+
+    // Shipping / Jobsite Field Labels
+    if ( isset($fields['shipping']['shipping_first_name']) ) {
+        $fields['shipping']['shipping_first_name']['label'] = __('Jobsite Contact First Name', 'fixflip');
+    }
+    if ( isset($fields['shipping']['shipping_last_name']) ) {
+        $fields['shipping']['shipping_last_name']['label'] = __('Jobsite Contact Last Name', 'fixflip');
+    }
+    if ( isset($fields['shipping']['shipping_address_1']) ) {
+        $fields['shipping']['shipping_address_1']['label'] = __('Jobsite / Delivery Street Address', 'fixflip');
+        $fields['shipping']['shipping_address_1']['placeholder'] = _x('e.g. 742 Evergreen Terrace', 'placeholder', 'fixflip');
+    }
+
     return $fields;
 }
 
@@ -1329,10 +1345,12 @@ function fixflip_add_guaranteed_freight_fee( $cart ) {
 }
 
 /**
- * Disable standard WooCommerce shipping rates package to prevent duplicate shipping rows
+ * Disable standard WooCommerce shipping rates package to prevent duplicate shipping rows,
+ * but enable separate shipping / jobsite delivery address on checkout
  */
 add_filter( 'woocommerce_cart_needs_shipping', '__return_false', 999 );
-add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false', 999 );
+add_filter( 'woocommerce_cart_needs_shipping_address', '__return_true', 999 );
+add_filter( 'woocommerce_ship_to_different_address_checked', '__return_false' );
 
 /**
  * Disable selectWoo / Select2 on Checkout for Clean Native HTML State Dropdowns
@@ -1493,6 +1511,44 @@ function fixflip_checkout_dropdown_styles() {
                 text-align: right !important;
                 font-size: 15px !important;
             }
+            /* Separate Jobsite Shipping Address Form */
+            #ship-to-different-address {
+                font-size: 15px !important;
+                font-weight: 800 !important;
+                color: #0f172a !important;
+                margin-top: 24px !important;
+                margin-bottom: 12px !important;
+                background: #f8fafc !important;
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 6px !important;
+                padding: 14px 18px !important;
+                cursor: pointer !important;
+            }
+            #ship-to-different-address label {
+                cursor: pointer !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+                font-size: 14.5px !important;
+                font-weight: 800 !important;
+                color: #0f172a !important;
+                margin: 0 !important;
+            }
+            #ship-to-different-address input[type="checkbox"] {
+                width: 18px !important;
+                height: 18px !important;
+                accent-color: #007bff !important;
+                cursor: pointer !important;
+            }
+            .shipping_address {
+                background: #ffffff !important;
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 6px !important;
+                padding: 20px !important;
+                margin-top: 12px !important;
+                margin-bottom: 24px !important;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.03) !important;
+            }
             /* Sleek Dual Payment Gateway Cards */
             #payment {
                 background: #ffffff !important;
@@ -1645,8 +1701,7 @@ add_action('woocommerce_before_checkout_form', 'fixflip_checkout_clean_header_ti
 function fixflip_checkout_clean_header_title() {
     ?>
     <div class="fd-checkout-header-block" style="text-align: center; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 2px solid #e2e8f0;">
-        <h1 style="font-size: 36px; font-weight: 900; color: #0f172a; margin: 0 0 8px 0; letter-spacing: -0.5px;">Checkout <span style="color: #dc2626; font-weight: 800;">( Test Mode )</span></h1>
-        <p style="font-size: 15px; color: #dc2626; font-weight: 700; margin: 0 auto; max-width: 680px; line-height: 1.5;">All orders are in test mode only. No real orders will be delivered.</p>
+        <h1 style="font-size: 36px; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px;">Checkout</h1>
     </div>
     <?php
 }
@@ -1714,7 +1769,7 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         public function __construct() {
             $this->id                 = 'csl_draw_advance';
             $this->icon               = '';
-            $this->has_fields         = false;
+            $this->has_fields         = true;
             $this->method_title       = 'Center Street Lending Draw Advance';
             $this->method_description = 'Allow borrowers to fund materials & freight directly from their active CSL rehab loan draw.';
             $this->title              = 'Center Street Lending (CSL) Draw Advancement';
@@ -1732,12 +1787,22 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function payment_fields() {
-            echo '<div class="csl-draw-info-box" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 16px; margin-top: 8px;">';
-            echo '<div style="font-size: 13.5px; font-weight: 800; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">';
-            echo '<span style="font-size: 16px;">✅</span> 100% Rehab Draw Financing (CSL Borrowers)';
-            echo '</div>';
-            echo '<p style="font-size: 12.5px; color: #15803d; margin: 0; line-height: 1.4;">Zero out-of-pocket payment required today. Our lending team will verify your active loan number or property address and process payment directly through your construction escrow draw.</p>';
-            echo '</div>';
+            ?>
+            <div class="csl-draw-info-box" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 18px; margin-top: 8px;">
+                <div style="font-size: 13.5px; font-weight: 800; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 16px;">✅</span> 100% Construction Draw Financing (CSL Borrowers)
+                </div>
+                <p style="font-size: 12.5px; color: #15803d; margin: 0 0 14px 0; line-height: 1.4;">
+                    Zero out-of-pocket payment required today. Our lending team will verify your active loan number or property address and process payment directly through your construction escrow draw.
+                </p>
+                <div style="margin-top: 10px;">
+                    <label for="csl_loan_number" style="display: block; font-size: 12.5px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Center Street Lending Active Loan # or Flip Property Address <span style="color: #dc2626;">*</span>
+                    </label>
+                    <input type="text" name="loan_number" id="csl_loan_number" placeholder="e.g. CSL-98241 or 123 Main St, Los Angeles, CA" style="width: 100% !important; height: 46px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 4px !important; padding: 0 14px !important; font-size: 14px !important; font-weight: 600 !important; color: #0f172a !important; box-sizing: border-box !important; background: #ffffff !important;">
+                </div>
+            </div>
+            <?php
         }
 
         public function process_payment( $order_id ) {
