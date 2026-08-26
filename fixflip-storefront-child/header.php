@@ -148,7 +148,24 @@
             margin: 4px 0 0 0 !important;
         }
         .header-tier-1 .partner-badge {
-            display: none !important;
+            display: flex !important;
+        }
+        .header-tier-1 .partner-badge img {
+            height: 12px !important;
+        }
+        .header-tier-1 .partner-badge span {
+            font-size: 7.5px !important;
+        }
+        .header-partner-bar {
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            padding: 6px 10px !important;
+            gap: 6px 10px !important;
+            font-size: 11px !important;
+            text-align: center !important;
+        }
+        .header-partner-bar img {
+            height: 14px !important;
         }
         .mega-menu-wrapper {
             padding: 6px 10px !important;
@@ -681,21 +698,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
       <header class="header-tier-1">
-        <!-- Logo Group -->
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" style="display: flex; text-decoration: none; align-items: center; flex-shrink: 0; position: relative; z-index: 10;">
-          <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 25px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
-        </a>
-        
-        <!-- Search & Partner Group -->
-        <div class="search-group" style="display: flex; align-items: center; gap: 14px; flex: 1; max-width: 540px; margin: 0 16px; position: relative; z-index: 10;">
-          <div class="search-container" style="flex: 1; max-width: 360px; min-width: 180px;">
-            <?php get_product_search_form(); ?>
-          </div>
+        <!-- Logo & Partner Group -->
+        <div class="logo-partner-group" style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; position: relative; z-index: 10;">
+          <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo" style="display: flex; text-decoration: none; align-items: center; flex-shrink: 0;">
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 25px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
+          </a>
           
-          <!-- Partner Badge (Flush against Search Bar) -->
-          <div class="partner-badge" style="display: flex; flex-direction: column; text-align: left; font-size: 9px; color: #64748b; white-space: nowrap; flex-shrink: 0; line-height: 1.1;">
-            <span style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">In partnership with</span>
-            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 15px; width: auto; object-fit: contain; display: block;">
+          <!-- Partner Badge -->
+          <div class="partner-badge" style="display: flex; flex-direction: column; text-align: left; font-size: 8.5px; color: #64748b; white-space: nowrap; flex-shrink: 0; line-height: 1.1; border-left: 1px solid #cbd5e1; padding-left: 8px;">
+            <span style="font-size: 7.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; color: #64748b;">In partnership with</span>
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 14px; width: auto; object-fit: contain; display: block;">
+          </div>
+        </div>
+        
+        <!-- Search Group -->
+        <div class="search-group" style="display: flex; align-items: center; flex: 1; max-width: 480px; margin: 0 16px; position: relative; z-index: 10;">
+          <div class="search-container" style="width: 100%;">
+            <?php get_product_search_form(); ?>
           </div>
         </div>
         
