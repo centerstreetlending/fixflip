@@ -2023,9 +2023,47 @@ function fixflip_add_loan_number_to_order_email( $order, $sent_to_admin, $plain_
 }
 
 /**
+ * Smart SKU Resolver for FixFlip Products (handles WC_Product, Post ID, Slug, or Title)
+ */
+function fixflip_resolve_sku( $input = '' ) {
+    if ( is_a( $input, 'WC_Product' ) ) {
+        $slug = $input->get_slug();
+        $title = $input->get_name();
+        $sku = $input->get_sku();
+        $text = strtolower( $slug . ' ' . $title . ' ' . $sku );
+    } elseif ( is_numeric( $input ) && intval( $input ) > 0 ) {
+        $post = get_post( $input );
+        $text = strtolower( ( $post ? $post->post_name . ' ' . $post->post_title : '' ) );
+    } else {
+        $text = strtolower( strval( $input ) );
+        if ( empty( $text ) ) {
+            global $post;
+            if ( $post ) {
+                $text = strtolower( $post->post_name . ' ' . $post->post_title );
+            }
+        }
+    }
+
+    if ( strpos( $text, '56103' ) !== false || strpos( $text, 'zion' ) !== false ) return '56103';
+    if ( strpos( $text, '56140' ) !== false || strpos( $text, 'riverside' ) !== false ) return '56140';
+    if ( strpos( $text, '56240' ) !== false || strpos( $text, 'prairie' ) !== false ) return '56240';
+    if ( strpos( $text, '56516' ) !== false || strpos( $text, 'smokey' ) !== false || strpos( $text, 'smoky' ) !== false ) return '56516';
+    if ( strpos( $text, '00135' ) !== false || strpos( $text, 'rustic' ) !== false ) return '00135';
+    if ( strpos( $text, '01102' ) !== false || strpos( $text, 'biscuit' ) !== false ) return '01102';
+    if ( strpos( $text, '07087' ) !== false || strpos( $text, 'flax' ) !== false ) return '07087';
+    if ( strpos( $text, '07091' ) !== false || strpos( $text, 'kona' ) !== false ) return '07091';
+    if ( strpos( $text, '01015' ) !== false || strpos( $text, 'exquisite' ) !== false ) return '01015';
+    if ( strpos( $text, '02012' ) !== false || strpos( $text, 'sophisticated' ) !== false ) return '02012';
+    if ( strpos( $text, '05014' ) !== false || strpos( $text, 'cultivated' ) !== false ) return '05014';
+    
+    return '56103';
+}
+
+/**
  * Return Curated High-Definition Photo Galleries for All 11 Wholesale SKUs
  */
-function fixflip_get_curated_product_images( $sku ) {
+function fixflip_get_curated_product_images( $sku_or_product = '' ) {
+    $sku = fixflip_resolve_sku( $sku_or_product );
     $theme_dir = get_stylesheet_directory_uri();
     
     $sku_galleries = array(
@@ -2060,21 +2098,25 @@ function fixflip_get_curated_product_images( $sku ) {
         '00135' => array(
             '/images/hero_00135.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/0294W_00135_ROOM.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/CA303_00135_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/0294W_00135_1TO1.webp'
         ),
         '01102' => array(
             '/images/hero_01102.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/0353W_01102_ROOM2.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/CA303_01102_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/0353W_01102_1TO1.webp'
         ),
         '07087' => array(
             '/images/hero_07087.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/0353W_07087_ROOM2.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/CA303_07087_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/0353W_07087_1TO1.webp'
         ),
         '07091' => array(
             '/images/hero_07091.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/0353W_07091_ROOM2.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/CA303_07091_MAIN.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/0353W_07091_1TO1.webp'
         ),
         '01015' => array(
@@ -2101,11 +2143,11 @@ function fixflip_get_curated_product_images( $sku ) {
     if ( isset( $sku_galleries[ $sku ] ) ) {
         $urls = array();
         foreach ( $sku_galleries[ $sku ] as $rel_path ) {
-            $urls[] = $theme_dir . $rel_path;
+            $urls[] = $theme_dir . $rel_path . '?v=' . time();
         }
         return $urls;
     }
-    return array( $theme_dir . '/images/hero_56103.webp' );
+    return array( $theme_dir . '/images/hero_' . $sku . '.webp?v=' . time() );
 }
 
 

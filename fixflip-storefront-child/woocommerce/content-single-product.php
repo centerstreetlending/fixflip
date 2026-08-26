@@ -36,12 +36,13 @@ $brand = preg_replace('/^(4308V|CA308|CA303)\s*/i', '', $raw_brand);
 $title = preg_replace('/^(4308V|CA308|CA303)\s*/i', '', $raw_title);
 $title = preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', $title);
 $title = trim($title);
-$sku   = $product->get_sku() ?: '100872985';
+
+$sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
 $title_lower = strtolower(get_the_title());
-if ( in_array($sku, array('56103', '56140', '56240', '56516')) || strpos($title_lower, 'spc') !== false || strpos($title_lower, 'vinyl') !== false ) {
+if ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
     $price = 3.56;
     $reg_price = 4.81;
-} elseif ( in_array($sku, array('01015', '02012', '05014')) || strpos($title_lower, 'exquisite') !== false || strpos($title_lower, 'sophisticated') !== false || strpos($title_lower, 'cultivated') !== false ) {
+} elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
     $price = 5.97;
     $reg_price = 8.06;
 } else {
