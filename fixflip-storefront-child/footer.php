@@ -8,11 +8,31 @@ $theme_uri = get_stylesheet_directory_uri();
         </div><!-- .col-full -->
     </div><!-- #content -->
 
+<style>
+.fd-footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 40px;
+}
+@media (max-width: 992px) {
+    .fd-footer-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 32px !important;
+    }
+}
+@media (max-width: 600px) {
+    .fd-footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        padding: 36px 20px 24px !important;
+    }
+}
+</style>
     <!-- CLEAN AUTHENTIC B2B FOOTER -->
     <footer id="colophon" class="site-footer" style="background: #0f172a; color: #94a3b8; font-size: 14px; border-top: 3px solid #007bff; margin-top: 60px;">
         
-        <!-- TOP FOOTER CONTENT (4 COLUMNS) -->
-        <div class="fd-footer-grid" style="max-width: 1240px; margin: 0 auto; padding: 48px 20px 36px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 40px;">
+        <!-- TOP FOOTER CONTENT (4 COLUMNS ON DESKTOP, 1 COLUMN ON MOBILE) -->
+        <div class="fd-footer-grid" style="max-width: 1240px; margin: 0 auto; padding: 48px 20px 36px;">
             
             <!-- COLUMN 1: BRANDING & CSL INTEGRATION -->
             <div>

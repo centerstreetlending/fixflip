@@ -164,6 +164,11 @@
             border-radius: 20px !important;
             color: #0f172a !important;
         }
+        .fd-footer-grid {
+            grid-template-columns: 1fr !important;
+            gap: 28px !important;
+            padding: 36px 20px 24px !important;
+        }
     }
 
     /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
