@@ -233,8 +233,84 @@ $theme_uri = get_stylesheet_directory_uri();
     align-items: center;
     gap: 4px;
 }
-.fd-section-link:hover {
-    text-decoration: underline;
+/* 3 MAIN DEPARTMENT SHOWCASE CARDS (FLOOR & DECOR / HOME DEPOT STYLE) */
+.fd-department-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+}
+.fd-dept-card {
+    background: #ffffff;
+    border: 2px solid #0f172a;
+    border-radius: 0px;
+    padding: 22px 20px;
+    text-decoration: none;
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    position: relative;
+}
+.fd-dept-card:hover {
+    border-color: #007bff;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,123,255,0.15);
+}
+.fd-dept-card.is-appliances {
+    border-color: #007bff;
+    background: #f8fbff;
+}
+.fd-dept-kicker {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fd-dept-title {
+    font-size: 21px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.4px;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+}
+.fd-dept-price-tag {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #007bff;
+    margin-bottom: 8px;
+}
+.fd-dept-desc {
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.45;
+    margin-bottom: 16px;
+}
+.fd-dept-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 10px 14px;
+    box-sizing: border-box;
+    transition: background 0.15s ease;
+}
+.fd-dept-card:hover .fd-dept-btn {
+    background: #007bff;
 }
 
 /* 4 Visual Category Tiles (Floor & Decor Style) */
@@ -695,6 +771,10 @@ $theme_uri = get_stylesheet_directory_uri();
    RESPONSIVE OVERRIDES FOR TABLET & MOBILE DEVICES
 ------------------------------------------------------------- */
 @media (max-width: 992px) {
+    .fd-department-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
     .fd-trust-strip {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
@@ -839,16 +919,20 @@ $theme_uri = get_stylesheet_directory_uri();
             </div>
 
             <h1 class="fd-hero-title">
-                Finance 100% of Your Flooring Through Your Rehab Loan
+                Finance 100% of Your Flooring &amp; Appliances Through Your Rehab Loan
             </h1>
 
             <p class="fd-hero-subtitle">
-                FixFlip advances the cost of commercial-grade flooring and finishes through your existing Center Street Lending loan at your current interest rate. Keep cash in your bank for labor and pay only upon project completion.
+                FixFlip advances the cost of commercial-grade flooring, builder appliance suites, and renovation finishes through your existing Center Street Lending loan at your current interest rate. Keep cash in your bank for labor and pay only upon project completion.
             </p>
 
             <div class="fd-hero-ctas">
                 <a href="#pro-catalog" class="fd-btn-primary">
                     <span>Shop All Flooring</span>
+                    <span style="font-size: 16px;">&rarr;</span>
+                </a>
+                <a href="/appliances/" class="fd-btn-primary" style="background: #0f172a; border: 1.5px solid #007bff;">
+                    <span>Shop Appliances</span>
                     <span style="font-size: 16px;">&rarr;</span>
                 </a>
                 <a href="/how-it-works/" class="fd-btn-outline">
@@ -904,13 +988,88 @@ $theme_uri = get_stylesheet_directory_uri();
         </section>
 
         <!-- =============================================================
-             2. SHOP BY CATEGORY & TIER (4 VISUAL CATEGORY TILES)
+             2. MAIN DEPARTMENTS SHOWCASE (FLOOR & DECOR / HOME DEPOT STYLE)
+        ============================================================== -->
+        <section style="margin-bottom: 40px;">
+            <div class="fd-section-header">
+                <div>
+                    <span class="fd-section-kicker">PRO CONTRACTOR &amp; BUILDER DEPARTMENTS</span>
+                    <h2 class="fd-section-title">Shop by Primary Department</h2>
+                </div>
+                <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 8px; text-transform: uppercase;">100% CSL DRAW FINANCED</span>
+            </div>
+
+            <!-- 3 Department Showcase Cards -->
+            <div class="fd-department-grid">
+                
+                <!-- Dept 1: Flooring (Consolidated) -->
+                <a href="#pro-catalog" class="fd-dept-card">
+                    <div>
+                        <div class="fd-dept-kicker">
+                            <span>DEPARTMENT 01</span>
+                            <span style="color: #007bff; font-weight: 900;">25% PRO DISCOUNT</span>
+                        </div>
+                        <h3 class="fd-dept-title">Commercial Flooring</h3>
+                        <div class="fd-dept-price-tag">Wholesale from $3.56 / sq ft</div>
+                        <p class="fd-dept-desc">
+                            100% waterproof rigid core SPC vinyl plank and authentic engineered red &amp; white oak hardwoods engineered for high-traffic flips and rentals.
+                        </p>
+                    </div>
+                    <div class="fd-dept-btn">
+                        <span>Shop All Flooring SKUs</span>
+                        <span>&rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Dept 2: Appliances (New Department) -->
+                <a href="/appliances/" class="fd-dept-card is-appliances">
+                    <div>
+                        <div class="fd-dept-kicker">
+                            <span>DEPARTMENT 02</span>
+                            <span style="background: #007bff; color: #ffffff; padding: 2px 6px; font-size: 9px; font-weight: 900;">NEW</span>
+                        </div>
+                        <h3 class="fd-dept-title">Pro Builder Appliances</h3>
+                        <div class="fd-dept-price-tag">4-Piece Suites from $2,190.00</div>
+                        <p class="fd-dept-desc">
+                            Turnkey 4-piece stainless steel kitchen packages, French door refrigerators, slide-in ranges, dishwashers, and laundry pairs ready to roll into your loan.
+                        </p>
+                    </div>
+                    <div class="fd-dept-btn" style="background: #007bff;">
+                        <span>Shop Appliance Suites</span>
+                        <span>&rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Dept 3: Pro Financing & Draws -->
+                <a href="/how-it-works/" class="fd-dept-card">
+                    <div>
+                        <div class="fd-dept-kicker">
+                            <span>DEPARTMENT 03</span>
+                            <span style="color: #16a34a; font-weight: 900;">$0 CASH TODAY</span>
+                        </div>
+                        <h3 class="fd-dept-title">Pro Financing &amp; Draws</h3>
+                        <div class="fd-dept-price-tag">Center Street Lending Integration</div>
+                        <p class="fd-dept-desc">
+                            Finance 100% of materials and jobsite freight directly through your active rehab loan draw. Zero paperwork hassle, fast automated verification.
+                        </p>
+                    </div>
+                    <div class="fd-dept-btn">
+                        <span>How Financing Works</span>
+                        <span>&rarr;</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- =============================================================
+             2B. SHOP BY FLOORING CATEGORY & TIER (4 VISUAL CATEGORY TILES)
         ============================================================== -->
         <section style="margin-bottom: 48px;">
             <div class="fd-section-header">
                 <div>
-                    <span class="fd-section-kicker">CURATED REHAB COLLECTIONS</span>
-                    <h2 class="fd-section-title">Shop by Flooring Category &amp; Tier</h2>
+                    <span class="fd-section-kicker">CURATED FLOORING COLLECTIONS</span>
+                    <h2 class="fd-section-title">Explore Flooring Categories &amp; Tiers</h2>
                 </div>
                 <a href="/shop/" class="fd-section-link">View All Catalog Styles &rarr;</a>
             </div>

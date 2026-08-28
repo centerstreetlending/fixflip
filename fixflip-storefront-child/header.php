@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </header>
 
-            <!-- CLEAN CLASSIC TEXT DROPDOWN NAVIGATION TIER -->
+      <!-- CLEAN CLASSIC TEXT DROPDOWN NAVIGATION TIER (FLOOR & DECOR / HOME DEPOT STYLE) -->
       <style>
         .nav-item:hover .text-dropdown {
             display: block !important;
@@ -767,65 +767,143 @@ document.addEventListener('DOMContentLoaded', function() {
             background: #f1f5f9 !important;
             color: #007bff !important;
         }
+        .nav-col-title {
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 6px 14px 4px 14px;
+        }
+        .nav-sublink {
+            display: block;
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            text-decoration: none;
+            border-radius: 0px;
+        }
       </style>
 
       <nav class="header-tier-2 mega-menu-wrapper" style="background: #ffffff !important; width: 100% !important; border-top: 1px solid #eaebed; border-bottom: 1px solid #eaebed; position: relative; z-index: 9999;">
-        <div class="mega-menu-container" style="max-width: 1080px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 36px; padding: 0;">
+        <div class="mega-menu-container" style="max-width: 1180px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 40px; padding: 0 20px;">
           
-          <!-- 1. VINYL FLOORING NAV ITEM -->
+          <!-- 1. CONSOLIDATED FLOORING NAV ITEM (FLOOR & DECOR STYLE) -->
           <div class="nav-item" style="position: relative;">
-            <a href="/category/spc/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-              <span class="desktop-nav-txt">VINYL FLOORING</span>
-              <span class="mobile-nav-txt">VINYL</span>
+            <a href="/shop/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+              <span class="desktop-nav-txt">FLOORING</span>
+              <span class="mobile-nav-txt">FLOORING</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
-            <!-- CLEAN TEXT DROPDOWN MENU -->
-            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 260px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
-              <a href="/category/spc/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9;">All Vinyl Flooring (SPC) &rarr;</a>
-              <a href="/product/zion-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Zion Oak ($3.56 / sq ft)</a>
-              <a href="/product/riverside-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Riverside Oak ($3.56 / sq ft)</a>
-              <a href="/product/prairie-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Prairie Oak ($3.56 / sq ft)</a>
-              <a href="/product/smokey-oak-spc-vinyl-plank/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Smokey Oak ($3.56 / sq ft)</a>
+            <!-- MULTI-COLUMN FLOORING DROPDOWN -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 740px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 18px 45px rgba(0,0,0,0.14); padding: 18px; z-index: 10000; box-sizing: border-box;">
+              <div style="display: grid; grid-template-columns: 1fr 1.25fr 0.95fr; gap: 20px;">
+                
+                <!-- Col 1: Vinyl (SPC) -->
+                <div>
+                  <div class="nav-col-title" style="color: #007bff; border-bottom: 1.5px solid #007bff; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Waterproof Vinyl (SPC)</div>
+                  <a href="/product/zion-oak-spc-vinyl-plank/" class="nav-sublink">Zion Oak ($3.56/sqft)</a>
+                  <a href="/product/riverside-oak-spc-vinyl-plank/" class="nav-sublink">Riverside Oak ($3.56/sqft)</a>
+                  <a href="/product/prairie-oak-spc-vinyl-plank/" class="nav-sublink">Prairie Oak ($3.56/sqft)</a>
+                  <a href="/product/smokey-oak-spc-vinyl-plank/" class="nav-sublink">Smokey Oak ($3.56/sqft)</a>
+                  <a href="/category/spc/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #007bff; text-decoration: none; background: #f0f7ff;">View All Vinyl Collections &rarr;</a>
+                </div>
+
+                <!-- Col 2: Engineered Hardwood -->
+                <div>
+                  <div class="nav-col-title" style="color: #b45309; border-bottom: 1.5px solid #b45309; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Hardwood &bull; Good &amp; Better</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 4px 0 2px 0;">Good Tier Red Oak ($5.12/sqft)</div>
+                  <a href="/product/rustic-natural-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Rustic Natural Red Oak</a>
+                  <a href="/product/biscuit-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Biscuit Red Oak</a>
+                  <a href="/product/flax-seed-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Flax Seed Red Oak</a>
+                  <a href="/product/kona-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Kona Red Oak</a>
+                  
+                  <div style="font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin: 8px 0 2px 0; border-top: 1px dashed #e2e8f0; padding-top: 6px;">Better Tier White Oak ($5.97/sqft)</div>
+                  <a href="/product/exquisite-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Exquisite White Oak</a>
+                  <a href="/product/sophisticated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Sophisticated White Oak</a>
+                  <a href="/product/cultivated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Cultivated White Oak</a>
+                  
+                  <a href="/category/hardwood-flooring/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #b45309; text-decoration: none; background: #fffbeb;">View All Hardwood &rarr;</a>
+                </div>
+
+                <!-- Col 3: Pro Feature Box -->
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div>
+                    <span style="font-size: 9.5px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">PRO CONTRACTOR DESK</span>
+                    <h4 style="font-size: 13px; font-weight: 900; color: #0f172a; margin-bottom: 6px; text-transform: uppercase;">$5.00 Sample Swatches</h4>
+                    <p style="font-size: 11px; color: #475569; line-height: 1.45; margin-bottom: 10px;">Delivered direct to verify color &amp; texture before placing bulk pallet draw orders.</p>
+                    <div style="font-size: 10.5px; color: #16a34a; font-weight: 800; margin-bottom: 12px;">&bull; 1-Week Direct Jobsite Delivery</div>
+                  </div>
+                  <a href="/shop/" style="background: #0f172a; color: #ffffff; text-align: center; padding: 10px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; text-decoration: none; letter-spacing: 0.5px;">Shop All Flooring &rarr;</a>
+                </div>
+
+              </div>
             </div>
           </div>
 
-          <!-- 2. ENGINEERED HARDWOOD NAV ITEM -->
+          <!-- 2. NEW APPLIANCES NAV ITEM (FLOOR & DECOR / HOME DEPOT STYLE) -->
           <div class="nav-item" style="position: relative;">
-            <a href="/category/hardwood-flooring/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-              <span class="desktop-nav-txt">ENGINEERED HARDWOOD</span>
-              <span class="mobile-nav-txt">HARDWOOD</span>
+            <a href="/appliances/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+              <span class="desktop-nav-txt">APPLIANCES</span>
+              <span class="mobile-nav-txt">APPLIANCES</span>
+              <span style="background: #007bff; color: #ffffff; font-size: 9px; font-weight: 900; padding: 2px 5px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">NEW</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
-            <!-- CLEAN TEXT DROPDOWN MENU -->
-            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 290px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
-              <a href="/category/hardwood-flooring/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9;">All Engineered Hardwood &rarr;</a>
-              
-              <div style="padding: 6px 18px; font-size: 10px; font-weight: 900; color: #b45309; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px;">Good Tier Red Oak ($5.12 / sqft)</div>
-              <a href="/product/rustic-natural-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Rustic Natural Red Oak</a>
-              <a href="/product/biscuit-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Biscuit Red Oak</a>
-              <a href="/product/flax-seed-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Flax Seed Red Oak</a>
-              <a href="/product/kona-red-oak/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Kona Red Oak</a>
+            <!-- MULTI-COLUMN APPLIANCES DROPDOWN -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 660px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 18px 45px rgba(0,0,0,0.14); padding: 18px; z-index: 10000; box-sizing: border-box;">
+              <div style="display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 20px;">
+                
+                <!-- Col 1: Builder Kitchen Packages -->
+                <div>
+                  <div class="nav-col-title" style="color: #007bff; border-bottom: 1.5px solid #007bff; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Kitchen Packages</div>
+                  <a href="/appliances/#packages" class="nav-sublink">4-Pc Stainless Steel Suites</a>
+                  <a href="/appliances/#packages" class="nav-sublink">Gas Range Kitchen Sets</a>
+                  <a href="/appliances/#packages" class="nav-sublink">Electric Smooth-Top Sets</a>
+                  <a href="/appliances/#packages" class="nav-sublink">High-Yield Rental Packages</a>
+                  <a href="/appliances/#packages" class="nav-sublink">Luxury Spec Home Suites</a>
+                  <a href="/appliances/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #007bff; text-decoration: none; background: #f0f7ff;">View Builder Suites &rarr;</a>
+                </div>
 
-              <div style="padding: 8px 18px 6px 18px; font-size: 10px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.8px; border-top: 1px solid #f1f5f9; margin-top: 4px;">Better Tier White Oak ($5.97 / sqft)</div>
-              <a href="/product/exquisite-oak-engineered-hardwood/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Exquisite Oak</a>
-              <a href="/product/sophisticated-oak-engineered-hardwood/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Sophisticated Oak</a>
-              <a href="/product/cultivated-oak-engineered-hardwood/" style="display: block; padding: 8px 18px 8px 28px; font-size: 12.5px; font-weight: 600; color: #334155; text-decoration: none;">&bull; Cultivated Oak</a>
+                <!-- Col 2: Major Appliances -->
+                <div>
+                  <div class="nav-col-title" style="color: #0f172a; border-bottom: 1.5px solid #0f172a; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Major Appliances</div>
+                  <a href="/appliances/#categories" class="nav-sublink">French Door Refrigerators</a>
+                  <a href="/appliances/#categories" class="nav-sublink">Slide-In Ranges &amp; Ovens</a>
+                  <a href="/appliances/#categories" class="nav-sublink">Built-in Dishwashers</a>
+                  <a href="/appliances/#categories" class="nav-sublink">Over-the-Range Microwaves</a>
+                  <a href="/appliances/#categories" class="nav-sublink">Front-Load Laundry Pairs</a>
+                  <a href="/appliances/#categories" class="nav-sublink">Range Hoods &amp; Ventilation</a>
+                </div>
+
+                <!-- Col 3: Pro Loan Integration Box -->
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div>
+                    <span style="font-size: 9.5px; font-weight: 900; color: #16a34a; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 4px;">100% REHAB DRAW FINANCED</span>
+                    <h4 style="font-size: 13px; font-weight: 900; color: #0f172a; margin-bottom: 6px; text-transform: uppercase;">$0 Down Today</h4>
+                    <p style="font-size: 11px; color: #475569; line-height: 1.45; margin-bottom: 10px;">Roll your entire kitchen and laundry appliance package directly into your active CSL construction draw.</p>
+                    <div style="font-size: 10.5px; color: #007bff; font-weight: 800; margin-bottom: 12px;">&bull; 1-Week Direct Jobsite Freight</div>
+                  </div>
+                  <a href="/appliances/" style="background: #007bff; color: #ffffff; text-align: center; padding: 10px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; text-decoration: none; letter-spacing: 0.5px;">Explore Appliances &rarr;</a>
+                </div>
+
+              </div>
             </div>
           </div>
 
           <!-- 3. PRO FINANCING & DRAWS NAV ITEM -->
           <div class="nav-item" style="position: relative;">
-            <a href="/how-it-works/" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 20px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+            <a href="/how-it-works/" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
               <span class="desktop-nav-txt">PRO FINANCING &amp; DRAWS</span>
               <span class="mobile-nav-txt">PRO FINANCING</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
             <!-- CLEAN TEXT DROPDOWN MENU -->
-            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 270px; background: #ffffff; border: 1.5px solid #007bff; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 290px; background: #ffffff; border: 1.5px solid #007bff; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
               <a href="/how-it-works/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">How FixFlip Works &rarr;</a>
+              <a href="/appliances/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Appliance Draw Financing &rarr;</a>
               <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Review Active Cart &rarr;</a>
               <a href="/checkout/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-top: 1px solid #f1f5f9;">Submit Order for CSL Draw &rarr;</a>
             </div>
