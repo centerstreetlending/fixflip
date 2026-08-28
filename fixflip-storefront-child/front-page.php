@@ -1026,16 +1026,16 @@ $theme_uri = get_stylesheet_directory_uri();
                     <div>
                         <div class="fd-dept-kicker">
                             <span>DEPARTMENT 02</span>
-                            <span style="background: #007bff; color: #ffffff; padding: 2px 6px; font-size: 9px; font-weight: 900;">NEW</span>
+                            <span style="background: #007bff; color: #ffffff; padding: 2px 6px; font-size: 8.5px; font-weight: 900;">COMING SOON</span>
                         </div>
                         <h3 class="fd-dept-title">Pro Builder Appliances</h3>
-                        <div class="fd-dept-price-tag">4-Piece Suites from $2,190.00</div>
+                        <div class="fd-dept-price-tag">4-Piece Suites &bull; 100% Draw Financed</div>
                         <p class="fd-dept-desc">
-                            Turnkey 4-piece stainless steel kitchen packages, French door refrigerators, slide-in ranges, dishwashers, and laundry pairs ready to roll into your loan.
+                            Turnkey 4-piece stainless steel kitchen packages, French door refrigerators, slide-in ranges, dishwashers, and laundry pairs ready to roll into your CSL rehab loan.
                         </p>
                     </div>
                     <div class="fd-dept-btn" style="background: #007bff;">
-                        <span>Shop Appliance Suites</span>
+                        <span>View Program Details</span>
                         <span>&rarr;</span>
                     </div>
                 </a>
