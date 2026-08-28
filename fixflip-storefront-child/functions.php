@@ -221,14 +221,14 @@ function fixflip_reorganize_product_categories_once() {
     $lvp_id   = $create_cat('LVP', 'lvp', $vinyl_id);
     $spc_id   = $create_cat('SPC', 'spc', $lvp_id);
 
-    // 2. HARDWOOD TREE
-    $hardwood_id   = $create_cat('Hardwood Flooring', 'hardwood-flooring', 0);
-    $eng_hw_id     = $create_cat('Engineered Hardwood', 'engineered-hardwood', $hardwood_id);
+    // 2. ENGINEERED WOOD TREE
+    $hardwood_id   = $create_cat('Engineered Wood Flooring', 'hardwood-flooring', 0);
+    $eng_hw_id     = $create_cat('Engineered Wood', 'engineered-hardwood', $hardwood_id);
     
-    // Clean Tiers under Engineered Hardwood (No collection names)
-    $good_id   = $create_cat('Good Tier', 'hardwood-good', $eng_hw_id);
-    $better_id = $create_cat('Better Tier', 'hardwood-better', $eng_hw_id);
-    $best_id   = $create_cat('Best Tier', 'hardwood-best', $eng_hw_id);
+    // Clean Tiers under Engineered Wood (No collection names)
+    $good_id   = $create_cat('Engineered Wood (Good Tier)', 'hardwood-good', $eng_hw_id);
+    $better_id = $create_cat('Engineered Wood (Better Tier)', 'hardwood-better', $eng_hw_id);
+    $best_id   = $create_cat('Engineered Wood (Best Tier)', 'hardwood-best', $eng_hw_id);
 
     // SKUs / Products for SPC Vinyl
     $spc_skus = array('56103', '56140', '56240', '56516', '56140-GRAND');

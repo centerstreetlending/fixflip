@@ -48,7 +48,7 @@
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="cat" value="hardwood" style="width: 16px; height: 16px; accent-color: #007bff;">
-                        Engineered Hardwood
+                        Engineered Wood
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(7)</span>
                 </label>

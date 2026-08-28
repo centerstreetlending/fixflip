@@ -145,15 +145,15 @@ $theme_uri = get_stylesheet_directory_uri();
             'vinyl-flooring'      => 'Vinyl Flooring',
             'lvp'                 => 'LVP (Luxury Vinyl Plank)',
             'spc'                 => 'SPC (Solid Polymer Core)',
-            'hardwood-flooring'   => 'Hardwood Flooring',
-            'engineered-hardwood' => 'Engineered Hardwood',
-            'hardwood-good'       => 'Good Tier',
-            'hardwood-better'     => 'Better Tier',
-            'hardwood-best'       => 'Best Tier',
+            'hardwood-flooring'   => 'Engineered Wood Flooring',
+            'engineered-hardwood' => 'Engineered Wood',
+            'hardwood-good'       => 'Engineered Wood (Good Tier)',
+            'hardwood-better'     => 'Engineered Wood (Better Tier)',
+            'hardwood-best'       => 'Engineered Wood (Best Tier)',
             'luxury-vinyl-plank'  => 'Vinyl Flooring',
             'branching-out'       => 'Vinyl Flooring',
-            'refined-oak'         => 'Engineered Hardwood',
-            'oak-traditions'      => 'Engineered Hardwood',
+            'refined-oak'         => 'Engineered Wood',
+            'oak-traditions'      => 'Engineered Wood',
         );
 
         $page_heading = 'Pro Flooring Catalog';

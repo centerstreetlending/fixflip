@@ -1092,15 +1092,15 @@ $theme_uri = get_stylesheet_directory_uri();
                     </div>
                 </a>
 
-                <!-- Tile 2: Good Tier Hardwood -->
+                <!-- Tile 2: Good Tier Engineered Wood -->
                 <a href="/category/hardwood-good/" class="fd-cat-tile">
                     <div class="fd-cat-tile-img">
-                        <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp?v=<?php echo time(); ?>" alt="Good Tier Engineered Hardwood">
+                        <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp?v=<?php echo time(); ?>" alt="Good Tier Engineered Wood">
                         <span style="position: absolute; top: 10px; right: 10px; background: #b45309; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">GOOD TIER</span>
                     </div>
                     <div class="fd-cat-tile-body">
                         <div>
-                            <h3 class="fd-cat-tile-title">Hardwood (Good Tier)</h3>
+                            <h3 class="fd-cat-tile-title">Engineered Wood (Good Tier)</h3>
                             <div class="fd-cat-tile-price">$5.12 <span>/ sq ft</span></div>
                             <div class="fd-cat-tile-desc">5" Wide Plank Red Oak with authentic natural wood grain and durable multi-ply core construction.</div>
                         </div>
@@ -1108,15 +1108,15 @@ $theme_uri = get_stylesheet_directory_uri();
                     </div>
                 </a>
 
-                <!-- Tile 3: Better Tier Hardwood -->
+                <!-- Tile 3: Better Tier Engineered Wood -->
                 <a href="/category/hardwood-better/" class="fd-cat-tile">
                     <div class="fd-cat-tile-img">
-                        <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp?v=<?php echo time(); ?>" alt="Better Tier Engineered Hardwood">
+                        <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp?v=<?php echo time(); ?>" alt="Better Tier Engineered Wood">
                         <span style="position: absolute; top: 10px; right: 10px; background: #0f172a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">BETTER TIER</span>
                     </div>
                     <div class="fd-cat-tile-body">
                         <div>
-                            <h3 class="fd-cat-tile-title">Hardwood (Better Tier)</h3>
+                            <h3 class="fd-cat-tile-title">Engineered Wood (Better Tier)</h3>
                             <div class="fd-cat-tile-price">$5.97 <span>/ sq ft</span></div>
                             <div class="fd-cat-tile-desc">7.5" Ultra-Wide Plank European White Oak. Wire-brushed luxury finish engineered for upscale flips.</div>
                         </div>
@@ -1313,7 +1313,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="spc">
                     <a href="/product/riverside-oak-spc-vinyl-plank/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56140.webp?v=<?php echo time(); ?>" alt="Riverside Oak SPC Vinyl Plank">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56104.webp?v=<?php echo time(); ?>" alt="Riverside Oak SPC Vinyl Plank">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">25% OFF PRO RATE</span>
                         </div>
                         <div class="fd-card-body">
@@ -1338,7 +1338,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="spc">
                     <a href="/product/prairie-oak-spc-vinyl-plank/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56240.webp?v=<?php echo time(); ?>" alt="Prairie Oak SPC Vinyl Plank">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56105.webp?v=<?php echo time(); ?>" alt="Prairie Oak SPC Vinyl Plank">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">25% OFF PRO RATE</span>
                         </div>
                         <div class="fd-card-body">
@@ -1363,7 +1363,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="spc">
                     <a href="/product/smokey-oak-spc-vinyl-plank/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_56516.webp?v=<?php echo time(); ?>" alt="Smokey Oak SPC Vinyl Plank">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_56106.webp?v=<?php echo time(); ?>" alt="Smokey Oak SPC Vinyl Plank">
                             <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">25% OFF PRO RATE</span>
                         </div>
                         <div class="fd-card-body">
@@ -1388,7 +1388,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="good">
                     <a href="/product/rustic-natural-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_00135.webp?v=<?php echo time(); ?>" alt="Rustic Natural Red Oak Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_00135.webp?v=<?php echo time(); ?>" alt="Rustic Natural Red Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #b45309; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">GOOD TIER</span>
                         </div>
                         <div class="fd-card-body">
@@ -1413,7 +1413,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="good">
                     <a href="/product/biscuit-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp?v=<?php echo time(); ?>" alt="Biscuit Red Oak Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp?v=<?php echo time(); ?>" alt="Biscuit Red Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #b45309; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">GOOD TIER</span>
                         </div>
                         <div class="fd-card-body">
@@ -1438,7 +1438,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="good">
                     <a href="/product/flax-seed-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_07087.webp?v=<?php echo time(); ?>" alt="Flax Seed Red Oak Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_07087.webp?v=<?php echo time(); ?>" alt="Flax Seed Red Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #b45309; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">GOOD TIER</span>
                         </div>
                         <div class="fd-card-body">
@@ -1463,7 +1463,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="good">
                     <a href="/product/kona-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_07091.webp?v=<?php echo time(); ?>" alt="Kona Red Oak Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_07091.webp?v=<?php echo time(); ?>" alt="Kona Red Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #b45309; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">GOOD TIER</span>
                         </div>
                         <div class="fd-card-body">
@@ -1488,7 +1488,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="better">
                     <a href="/product/exquisite-oak-engineered-hardwood/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp?v=<?php echo time(); ?>" alt="Exquisite Oak Engineered Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp?v=<?php echo time(); ?>" alt="Exquisite Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #0f172a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">BETTER TIER</span>
                         </div>
                         <div class="fd-card-body">
@@ -1513,7 +1513,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="better">
                     <a href="/product/sophisticated-oak-engineered-hardwood/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Sophisticated Oak Engineered Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Sophisticated Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #0f172a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">BETTER TIER</span>
                         </div>
                         <div class="fd-card-body">
@@ -1538,7 +1538,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <div class="fd-home-card" data-cat="better">
                     <a href="/product/cultivated-oak-engineered-hardwood/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
-                            <img src="<?php echo $theme_uri; ?>/images/hero_05014.webp?v=<?php echo time(); ?>" alt="Cultivated Oak Engineered Hardwood">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_05014.webp?v=<?php echo time(); ?>" alt="Cultivated Oak Engineered Wood">
                             <span style="position: absolute; top: 10px; right: 10px; background: #0f172a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">BETTER TIER</span>
                         </div>
                         <div class="fd-card-body">

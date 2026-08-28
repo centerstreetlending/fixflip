@@ -632,7 +632,7 @@ $theme_uri = get_stylesheet_directory_uri();
             <p>Order high-definition samples or shop full pallet wholesale collections today.</p>
             <div class="fd-hiw-cta-btns">
                 <a href="/category/spc/" class="fd-btn-primary">Shop Vinyl Flooring &rarr;</a>
-                <a href="/category/hardwood-flooring/" class="fd-btn-primary">Shop Hardwood &rarr;</a>
+                <a href="/category/hardwood-flooring/" class="fd-btn-primary">Shop Engineered Wood &rarr;</a>
                 <a href="mailto:sscouig@centerstreetlending.com" class="fd-btn-secondary">Contact Order Desk</a>
             </div>
         </div>

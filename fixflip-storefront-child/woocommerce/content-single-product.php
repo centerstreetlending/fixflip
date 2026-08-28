@@ -74,18 +74,18 @@ $main_image_url = $thumbs[0];
     $cat_level3_link = '/category/spc/';
 
     if ( strpos( $brand, 'Oak Traditions' ) !== false || strpos( strtolower($title), 'rustic' ) !== false || strpos( strtolower($title), 'biscuit' ) !== false || strpos( strtolower($title), 'flax' ) !== false || strpos( strtolower($title), 'kona' ) !== false ) {
-        $cat_level1_name = 'Hardwood Flooring';
+        $cat_level1_name = 'Engineered Wood Flooring';
         $cat_level1_link = '/category/hardwood-flooring/';
-        $cat_level2_name = 'Engineered Hardwood';
+        $cat_level2_name = 'Engineered Wood';
         $cat_level2_link = '/category/engineered-hardwood/';
-        $cat_level3_name = 'Good Tier';
+        $cat_level3_name = 'Good Tier Red Oak';
         $cat_level3_link = '/category/hardwood-good/';
     } elseif ( strpos( $brand, 'Refined Oak' ) !== false || strpos( strtolower($title), 'exquisite' ) !== false || strpos( strtolower($title), 'sophisticated' ) !== false || strpos( strtolower($title), 'cultivated' ) !== false ) {
-        $cat_level1_name = 'Hardwood Flooring';
+        $cat_level1_name = 'Engineered Wood Flooring';
         $cat_level1_link = '/category/hardwood-flooring/';
-        $cat_level2_name = 'Engineered Hardwood';
+        $cat_level2_name = 'Engineered Wood';
         $cat_level2_link = '/category/engineered-hardwood/';
-        $cat_level3_name = 'Better Tier';
+        $cat_level3_name = 'Better Tier White Oak';
         $cat_level3_link = '/category/hardwood-better/';
     }
     ?>

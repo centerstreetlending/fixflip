@@ -810,9 +810,9 @@ document.addEventListener('DOMContentLoaded', function() {
                   <a href="/category/spc/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #007bff; text-decoration: none; background: #f0f7ff;">View All Vinyl Collections &rarr;</a>
                 </div>
 
-                <!-- Col 2: Engineered Hardwood -->
+                <!-- Col 2: Engineered Wood -->
                 <div>
-                  <div class="nav-col-title" style="color: #b45309; border-bottom: 1.5px solid #b45309; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Hardwood &bull; Good &amp; Better</div>
+                  <div class="nav-col-title" style="color: #b45309; border-bottom: 1.5px solid #b45309; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Engineered Wood &bull; Good &amp; Better</div>
                   <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 4px 0 2px 0;">Good Tier Red Oak ($5.12/sqft)</div>
                   <a href="/product/rustic-natural-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Rustic Natural Red Oak</a>
                   <a href="/product/biscuit-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Biscuit Red Oak</a>
@@ -824,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <a href="/product/sophisticated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Sophisticated White Oak</a>
                   <a href="/product/cultivated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Cultivated White Oak</a>
                   
-                  <a href="/category/hardwood-flooring/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #b45309; text-decoration: none; background: #fffbeb;">View All Hardwood &rarr;</a>
+                  <a href="/category/hardwood-flooring/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #b45309; text-decoration: none; background: #fffbeb;">View All Engineered Wood &rarr;</a>
                 </div>
 
                 <!-- Col 3: Pro Feature Box -->
