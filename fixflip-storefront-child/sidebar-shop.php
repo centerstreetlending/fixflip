@@ -27,9 +27,9 @@
                 Your budget (per sqft)
             </label>
             <div style="font-size: 14px; font-weight: 700; color: #007bff; margin-bottom: 10px;">
-                $<span id="fd-lbl-min-price">1.99</span> – $<span id="fd-lbl-max-price">6.00</span>+
+                $<span id="fd-lbl-min-price">1.99</span> – $<span id="fd-lbl-max-price">8.00</span>+
             </div>
-            <input type="range" id="fd-price-range-slider" min="1.99" max="6.00" step="0.10" value="6.00" style="width: 100%; accent-color: #007bff; cursor: pointer;">
+            <input type="range" id="fd-price-range-slider" min="1.99" max="8.00" step="0.10" value="8.00" style="width: 100%; accent-color: #007bff; cursor: pointer;">
         </div>
 
         <!-- 2. CATEGORY FILTERS -->

@@ -1274,8 +1274,9 @@ $theme_uri = get_stylesheet_directory_uri();
 
             <!-- Instant Category Filter Tabs -->
             <div class="fd-filter-tabs">
-                <button type="button" class="fd-tab-btn is-active" data-filter="all">All Pro Styles (11)</button>
+                <button type="button" class="fd-tab-btn is-active" data-filter="all">All Flooring (11)</button>
                 <button type="button" class="fd-tab-btn" data-filter="spc">Waterproof Vinyl &bull; $3.56 (4)</button>
+                <button type="button" class="fd-tab-btn" data-filter="wood">All Engineered Wood (7)</button>
                 <button type="button" class="fd-tab-btn" data-filter="good">Good Tier Red Oak &bull; $5.12 (4)</button>
                 <button type="button" class="fd-tab-btn" data-filter="better">Better Tier White Oak &bull; $5.97 (3)</button>
             </div>
@@ -1384,7 +1385,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 5. Rustic Natural Red Oak (Good Tier $5.12) -->
-                <div class="fd-home-card" data-cat="good">
+                <div class="fd-home-card" data-cat="good wood hardwood engineered-wood">
                     <a href="/product/rustic-natural-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_00135.webp?v=<?php echo time(); ?>" alt="Rustic Natural Red Oak Engineered Wood">
@@ -1409,7 +1410,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 6. Biscuit Red Oak (Good Tier $5.12) -->
-                <div class="fd-home-card" data-cat="good">
+                <div class="fd-home-card" data-cat="good wood hardwood engineered-wood">
                     <a href="/product/biscuit-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_01102.webp?v=<?php echo time(); ?>" alt="Biscuit Red Oak Engineered Wood">
@@ -1434,7 +1435,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 7. Flax Seed Red Oak (Good Tier $5.12) -->
-                <div class="fd-home-card" data-cat="good">
+                <div class="fd-home-card" data-cat="good wood hardwood engineered-wood">
                     <a href="/product/flax-seed-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_07087.webp?v=<?php echo time(); ?>" alt="Flax Seed Red Oak Engineered Wood">
@@ -1459,7 +1460,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 8. Kona Red Oak (Good Tier $5.12) -->
-                <div class="fd-home-card" data-cat="good">
+                <div class="fd-home-card" data-cat="good wood hardwood engineered-wood">
                     <a href="/product/kona-red-oak/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_07091.webp?v=<?php echo time(); ?>" alt="Kona Red Oak Engineered Wood">
@@ -1484,7 +1485,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 9. Exquisite Oak (Better Tier $5.97) -->
-                <div class="fd-home-card" data-cat="better">
+                <div class="fd-home-card" data-cat="better wood hardwood engineered-wood">
                     <a href="/product/exquisite-oak-engineered-hardwood/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_01015.webp?v=<?php echo time(); ?>" alt="Exquisite Oak Engineered Wood">
@@ -1509,7 +1510,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 10. Sophisticated Oak (Better Tier $5.97) -->
-                <div class="fd-home-card" data-cat="better">
+                <div class="fd-home-card" data-cat="better wood hardwood engineered-wood">
                     <a href="/product/sophisticated-oak-engineered-hardwood/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Sophisticated Oak Engineered Wood">
@@ -1534,7 +1535,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </div>
 
                 <!-- 11. Cultivated Oak (Better Tier $5.97) -->
-                <div class="fd-home-card" data-cat="better">
+                <div class="fd-home-card" data-cat="better wood hardwood engineered-wood">
                     <a href="/product/cultivated-oak-engineered-hardwood/" style="text-decoration: none; color: inherit;">
                         <div class="fd-card-thumb">
                             <img src="<?php echo $theme_uri; ?>/images/hero_05014.webp?v=<?php echo time(); ?>" alt="Cultivated Oak Engineered Wood">
@@ -1693,11 +1694,12 @@ document.addEventListener('DOMContentLoaded', function() {
             tabBtns.forEach(b => b.classList.remove('is-active'));
             this.classList.add('is-active');
 
-            const filterVal = this.getAttribute('data-filter');
+            const filterVal = (this.getAttribute('data-filter') || '').toLowerCase();
 
             productCards.forEach(card => {
-                const cardCat = card.getAttribute('data-cat');
-                if (filterVal === 'all' || cardCat === filterVal) {
+                const cardCatStr = (card.getAttribute('data-cat') || '').toLowerCase();
+                const cardCats = cardCatStr.split(/\s+/);
+                if (filterVal === 'all' || cardCats.includes(filterVal)) {
                     card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
