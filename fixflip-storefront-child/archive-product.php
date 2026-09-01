@@ -168,7 +168,7 @@ $theme_uri = get_stylesheet_directory_uri();
         $page_heading = 'Pro Flooring Catalog';
         $crumb_trail  = array(
             array('name' => 'Home', 'url' => '/'),
-            array('name' => 'All Shopping', 'url' => '/shop/')
+            array('name' => 'Commercial Flooring', 'url' => '/commercial-flooring/')
         );
 
         if ( is_product_category() ) {

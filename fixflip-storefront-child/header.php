@@ -790,7 +790,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           <!-- 1. CONSOLIDATED FLOORING NAV ITEM (FLOOR & DECOR STYLE) -->
           <div class="nav-item" style="position: relative;">
-            <a href="/shop/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+            <a href="/commercial-flooring/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
               <span class="desktop-nav-txt">FLOORING</span>
               <span class="mobile-nav-txt">FLOORING</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -835,7 +835,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p style="font-size: 11px; color: #475569; line-height: 1.45; margin-bottom: 10px;">Delivered direct to verify color &amp; texture before placing bulk pallet draw orders.</p>
                     <div style="font-size: 10.5px; color: #16a34a; font-weight: 800; margin-bottom: 12px;">&bull; 1-Week Direct Jobsite Delivery</div>
                   </div>
-                  <a href="/shop/" style="background: #0f172a; color: #ffffff; text-align: center; padding: 10px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; text-decoration: none; letter-spacing: 0.5px;">Shop All Flooring &rarr;</a>
+                  <a href="/commercial-flooring/" style="background: #0f172a; color: #ffffff; text-align: center; padding: 10px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; text-decoration: none; letter-spacing: 0.5px;">Shop All Flooring &rarr;</a>
                 </div>
 
               </div>

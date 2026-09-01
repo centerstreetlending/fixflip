@@ -662,4 +662,10 @@ img {
     }
 }
 
-
+/* Hide Obsolete Sidebar Feature Filters & Empty Badges */
+input[data-filter-type="feature"],
+label:has(input[data-filter-type="feature"]),
+div:has(> label > span > input[data-filter-type="feature"]),
+.fd-sidebar-filter-body > div:has(input[data-filter-type="feature"]) {
+    display: none !important;
+}

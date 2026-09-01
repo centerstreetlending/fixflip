@@ -32,6 +32,13 @@ function fixflip_enqueue_styles() {
         '2.2.' . time() // Instant cache buster
     );
 
+    wp_enqueue_script( 'fixflip-catalog-script',
+        get_stylesheet_directory_uri() . '/fixflip-catalog.js',
+        array(),
+        '2.3.' . time(),
+        true
+    );
+
     // Dequeue heavy block library stylesheets on standard pages
     if ( ! is_admin() ) {
         wp_dequeue_style( 'wp-block-library' );
@@ -2158,6 +2165,14 @@ function fixflip_ensure_custom_theme_pages() {
         'appliances' => array(
             'title'    => 'Pro Builder Appliances',
             'template' => 'page-appliances.php'
+        ),
+        'flooring' => array(
+            'title'    => 'Commercial Flooring Catalog',
+            'template' => 'page-flooring.php'
+        ),
+        'commercial-flooring' => array(
+            'title'    => 'Commercial Flooring Catalog',
+            'template' => 'page-flooring.php'
         )
     );
 
@@ -2181,13 +2196,13 @@ function fixflip_ensure_custom_theme_pages() {
 }
 
 /**
- * Reset 404 flags and set proper page title for How It Works and Appliances
+ * Reset 404 flags and set proper page title for How It Works, Appliances, and Flooring
  */
 add_action( 'wp', 'fixflip_clear_404_on_custom_pages', 1 );
 function fixflip_clear_404_on_custom_pages() {
     global $wp_query;
     $path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
-    if ( in_array( $path, array('how-it-works', 'how-fixflip-works', 'appliances', 'pro-appliances') ) ) {
+    if ( in_array( $path, array('how-it-works', 'how-fixflip-works', 'appliances', 'pro-appliances', 'flooring', 'commercial-flooring') ) ) {
         if ( isset($wp_query) ) {
             $wp_query->is_404 = false;
             $wp_query->is_page = true;
@@ -2205,6 +2220,9 @@ function fixflip_custom_pages_doc_title( $title ) {
     if ( $path === 'appliances' || $path === 'pro-appliances' ) {
         return 'Commercial Builder Appliances & Kitchen Suites – FixFlip.com';
     }
+    if ( $path === 'flooring' || $path === 'commercial-flooring' ) {
+        return 'Commercial Flooring Catalog – FixFlip.com';
+    }
     return $title;
 }
 
@@ -2219,11 +2237,15 @@ function fixflip_custom_pages_page_title( $title_parts ) {
         $title_parts['title'] = 'Pro Builder Appliances';
         $title_parts['site']  = 'FixFlip.com';
     }
+    if ( $path === 'flooring' || $path === 'commercial-flooring' ) {
+        $title_parts['title'] = 'Commercial Flooring Catalog';
+        $title_parts['site']  = 'FixFlip.com';
+    }
     return $title_parts;
 }
 
 /**
- * Route /how-it-works/ and /appliances/ directly to custom templates
+ * Route /how-it-works/, /appliances/, and /flooring/ directly to custom templates
  */
 add_filter( 'template_include', 'fixflip_route_custom_templates', 99 );
 function fixflip_route_custom_templates( $template ) {
@@ -2256,7 +2278,32 @@ function fixflip_route_custom_templates( $template ) {
         }
     }
 
+    if ( $path === 'flooring' || $path === 'commercial-flooring' ) {
+        global $wp_query;
+        if ( isset($wp_query) ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+        status_header(200);
+        $custom_template = get_stylesheet_directory() . '/page-flooring.php';
+        if ( file_exists( $custom_template ) ) {
+            return $custom_template;
+        }
+    }
+
     return $template;
+}
+
+/**
+ * Clean redirect from bare /shop/ to /commercial-flooring/
+ */
+add_action( 'template_redirect', 'fixflip_redirect_shop_to_flooring', 2 );
+function fixflip_redirect_shop_to_flooring() {
+    $path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+    if ( $path === 'shop' && empty($_SERVER['QUERY_STRING']) ) {
+        wp_safe_redirect( home_url( '/commercial-flooring/' ), 301 );
+        exit;
+    }
 }
 
 /**

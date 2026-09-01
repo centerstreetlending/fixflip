@@ -938,7 +938,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <a href="/how-it-works/" class="fd-btn-outline">
                     <span>How It Works</span>
                 </a>
-                <a href="/shop/" class="fd-btn-emerald">
+                <a href="/commercial-flooring/" class="fd-btn-emerald">
                     <span>Order $5 Swatches</span>
                 </a>
             </div>
@@ -1071,7 +1071,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span class="fd-section-kicker">CURATED FLOORING COLLECTIONS</span>
                     <h2 class="fd-section-title">Explore Flooring Categories &amp; Tiers</h2>
                 </div>
-                <a href="/shop/" class="fd-section-link">View All Catalog Styles &rarr;</a>
+                <a href="/commercial-flooring/" class="fd-section-link">View All Catalog Styles &rarr;</a>
             </div>
 
             <div class="fd-category-tiles-grid">
@@ -1125,7 +1125,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 </a>
 
                 <!-- Tile 4: Sample Swatches -->
-                <a href="/shop/" class="fd-cat-tile">
+                <a href="/commercial-flooring/" class="fd-cat-tile">
                     <div class="fd-cat-tile-img">
                         <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Order Pro Sample Swatches">
                     </div>

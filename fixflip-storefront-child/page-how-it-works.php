@@ -548,7 +548,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 Designed exclusively for active real estate investors, fix-and-flippers, and licensed general contractors partnering with Center Street Lending.
             </p>
             <div class="fd-hiw-cta-btns">
-                <a href="/shop/" class="fd-btn-primary">Browse Wholesale Catalog &rarr;</a>
+                <a href="/commercial-flooring/" class="fd-btn-primary">Browse Wholesale Catalog &rarr;</a>
                 <a href="/category/spc/" class="fd-btn-secondary">Order Samples ($5.00)</a>
             </div>
         </div>

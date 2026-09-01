@@ -277,7 +277,7 @@ $theme_uri = get_stylesheet_directory_uri();
 
         <!-- Navigation CTAs -->
         <div class="fd-app-soon-ctas">
-            <a href="/shop/" class="fd-app-soon-btn-shop">&larr; Shop Commercial Flooring Catalog</a>
+            <a href="/commercial-flooring/" class="fd-app-soon-btn-shop">&larr; Shop Commercial Flooring Catalog</a>
             <a href="/how-it-works/" class="fd-app-soon-btn-hiw">How Rehab Loan Financing Works &rarr;</a>
         </div>
 

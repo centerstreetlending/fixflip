@@ -177,7 +177,7 @@ $main_image_url = $thumbs[0];
     <div class="fd-breadcrumbs" style="font-size: 14px; font-weight: 400; color: #64748b; margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
         <a href="/">Home</a> 
         <span style="color: #64748b; margin: 0 4px; font-size: 15px;">&rsaquo;</span> 
-        <a href="/shop/">All Shopping</a> 
+        <a href="/commercial-flooring/">All Shopping</a> 
         <span style="color: #64748b; margin: 0 4px; font-size: 15px;">&rsaquo;</span> 
         <a href="<?php echo esc_url($cat_level1_link); ?>"><?php echo esc_html($cat_level1_name); ?></a> 
         <span style="color: #64748b; margin: 0 4px; font-size: 15px;">&rsaquo;</span> 
@@ -610,7 +610,7 @@ $main_image_url = $thumbs[0];
             <span style="font-size: 11px; font-weight: 800; color: #007bff; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">EXPLORE SIMILAR PLANK STYLES</span>
             <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0;">Related Flooring Products</h2>
         </div>
-        <a href="/shop/" style="font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">View All Catalog Products &rarr;</a>
+        <a href="/commercial-flooring/" style="font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">View All Catalog Products &rarr;</a>
     </div>
 
     <div class="fd-related-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">

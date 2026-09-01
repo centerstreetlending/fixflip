@@ -62,7 +62,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     <li><a href="/category/spc/" style="color: #cbd5e1; text-decoration: none;">Vinyl Flooring (SPC)</a></li>
                     <li><a href="/category/hardwood-good/" style="color: #cbd5e1; text-decoration: none;">Engineered Wood (Good Tier)</a></li>
                     <li><a href="/category/hardwood-better/" style="color: #cbd5e1; text-decoration: none;">Engineered Wood (Better Tier)</a></li>
-                    <li><a href="/shop/" style="color: #007bff; text-decoration: none; font-weight: 700;">View All Products &rarr;</a></li>
+                    <li><a href="/commercial-flooring/" style="color: #007bff; text-decoration: none; font-weight: 700;">View All Products &rarr;</a></li>
                 </ul>
             </div>
 
