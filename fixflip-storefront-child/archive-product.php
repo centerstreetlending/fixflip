@@ -226,7 +226,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <?php echo esc_html( $page_heading ); ?>
             </h1>
             <p style="font-size: 14px; color: #64748b; margin: 0; font-weight: 500;">
-                Curated High-Yield Flooring Catalog &bull; 100% Pro Financing Available via Center Street Lending
+                Curated Wholesale Commercial Flooring Catalog &bull; Center Street Lending Materials Partner
             </p>
         </section>
 
@@ -303,7 +303,7 @@ $theme_uri = get_stylesheet_directory_uri();
             <?php get_template_part('sidebar-shop'); ?>
 
             <div class="fd-archive-main-col">
-                <div class="fd-responsive-4-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                <div class="fd-responsive-4-grid" id="fd-shop-products-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
                     <?php
                     // Query products dynamically matching active category context
                     $tax_query = array();
@@ -334,22 +334,31 @@ $theme_uri = get_stylesheet_directory_uri();
                             $sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
                             $price = (float)($product->get_price() ?: 2.55);
 
-                            // Compute regular retail price and FixFlip Online price by SKU
+                            // Compute regular retail price and metadata by SKU
                             if ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
                                 $price = 3.56;
                                 $reg_price = 4.81;
+                                $cat_type = 'spc';
+                                $col_type = 'branching-out';
+                                $size_type = '7x48';
                             } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
                                 $price = 5.97;
                                 $reg_price = 8.06;
+                                $cat_type = 'hardwood';
+                                $col_type = 'refined-oak';
+                                $size_type = '7.5x75';
                             } else {
                                 $price = 5.12;
                                 $reg_price = 6.91;
+                                $cat_type = 'hardwood';
+                                $col_type = 'oak-traditions';
+                                $size_type = '5in';
                             }
 
                             $hero_img = $theme_uri . '/images/hero_' . $sku . '.webp?v=' . time();
                             ?>
-                            <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
-                                <a href="<?php echo esc_url( get_permalink() ); ?>" data-price="<?php echo $price; ?>" style="text-decoration: none; color: inherit; display: block;">
+                            <div class="fd-home-card" data-sku="<?php echo esc_attr($sku); ?>" data-price="<?php echo esc_attr($price); ?>" data-cat="<?php echo esc_attr($cat_type); ?>" data-collection="<?php echo esc_attr($col_type); ?>" data-size="<?php echo esc_attr($size_type); ?>" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
+                                <a href="<?php echo esc_url( get_permalink() ); ?>" data-price="<?php echo esc_attr($price); ?>" data-cat="<?php echo esc_attr($cat_type); ?>" data-collection="<?php echo esc_attr($col_type); ?>" data-size="<?php echo esc_attr($size_type); ?>" style="text-decoration: none; color: inherit; display: block;">
                                     <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
                                         <img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php the_title_attribute(); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                                         <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
@@ -369,6 +378,10 @@ $theme_uri = get_stylesheet_directory_uri();
                         wp_reset_postdata();
                     endif;
                     ?>
+                    <div id="fd-no-filter-results" style="display: none; grid-column: 1 / -1; padding: 36px 20px; text-align: center; background: #ffffff; border: 1.5px dashed #cbd5e1; color: #64748b; font-size: 14px; font-weight: 700;">
+                        No flooring products match your selected filters. 
+                        <button type="button" id="fd-clear-no-results-btn" style="background: none; border: none; color: #007bff; font-weight: 800; cursor: pointer; text-decoration: underline; margin-left: 6px; font-size: 14px;">Reset filters</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -382,7 +395,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const priceSlider = document.getElementById('fd-price-range-slider');
     const maxPriceLbl = document.getElementById('fd-lbl-max-price');
     const resetBtn = document.getElementById('fd-reset-filters-btn');
-    const cards = document.querySelectorAll('.fd-home-card');
+    const resetBtn2 = document.getElementById('fd-clear-no-results-btn');
+    const cards = document.querySelectorAll('#fd-shop-products-grid .fd-home-card');
 
     const mobileToggle = document.getElementById('fd-mobile-filter-toggle-btn');
     const filterBody = document.getElementById('fd-sidebar-filter-body');
@@ -407,14 +421,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const checkedCols = Array.from(document.querySelectorAll('.fd-filter-chk[data-filter-type="collection"]:checked')).map(c => c.value);
         const checkedSizes = Array.from(document.querySelectorAll('.fd-filter-chk[data-filter-type="size"]:checked')).map(c => c.value);
 
-        cards.forEach(card => {
-            const link = card.querySelector('a');
-            if (!link) return;
+        let visibleCount = 0;
 
-            const price = parseFloat(link.getAttribute('data-price') || 0);
-            const cat = link.getAttribute('data-cat') || '';
-            const col = link.getAttribute('data-collection') || '';
-            const size = link.getAttribute('data-size') || '';
+        cards.forEach(card => {
+            const price = parseFloat(card.getAttribute('data-price') || 0);
+            const cat = card.getAttribute('data-cat') || '';
+            const col = card.getAttribute('data-collection') || '';
+            const size = card.getAttribute('data-size') || '';
 
             let matches = true;
             if (price > maxPrice) matches = false;
@@ -424,10 +437,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (matches) {
                 card.style.display = 'block';
+                visibleCount++;
             } else {
                 card.style.display = 'none';
             }
         });
+
+        const noResultsMsg = document.getElementById('fd-no-filter-results');
+        if (noResultsMsg) {
+            noResultsMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
+        }
+    }
+
+    function resetAllFilters() {
+        filterChks.forEach(c => c.checked = false);
+        if (priceSlider) priceSlider.value = 6.00;
+        applyFilters();
     }
 
     if (filterChks) {
@@ -437,11 +462,10 @@ document.addEventListener('DOMContentLoaded', function() {
         priceSlider.addEventListener('input', applyFilters);
     }
     if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            filterChks.forEach(c => c.checked = false);
-            if (priceSlider) priceSlider.value = 6.00;
-            applyFilters();
-        });
+        resetBtn.addEventListener('click', resetAllFilters);
+    }
+    if (resetBtn2) {
+        resetBtn2.addEventListener('click', resetAllFilters);
     }
 });
 </script>

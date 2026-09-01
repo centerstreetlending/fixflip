@@ -86,7 +86,7 @@
         </div>
 
         <!-- 4. PLANK SIZE FILTERS -->
-        <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9;">
+        <div>
             <label style="font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
                 Plank Dimensions
             </label>
@@ -111,29 +111,6 @@
                         7.5" &times; 75" Plank
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
-                </label>
-            </div>
-        </div>
-
-        <!-- 5. SMART FEATURES -->
-        <div>
-            <label style="font-size: 13px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-                Features &amp; Stock
-            </label>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" class="fd-filter-chk" data-filter-type="feature" value="instock" checked style="width: 16px; height: 16px; accent-color: #007bff;">
-                        In Stock &amp; Ships Fast
-                    </span>
-                    <span style="font-size: 11px; color: #16a34a; font-weight: 700;">(11)</span>
-                </label>
-                <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" class="fd-filter-chk" data-filter-type="feature" value="financing" checked style="width: 16px; height: 16px; accent-color: #007bff;">
-                        100% Financing Eligible
-                    </span>
-                    <span style="font-size: 11px; color: #007bff; font-weight: 700;">(11)</span>
                 </label>
             </div>
         </div>

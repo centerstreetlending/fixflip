@@ -466,7 +466,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         Shop the products you need for your renovation.
                     </p>
                     <p class="fd-step-sub-text">
-                        Browse our curated, 100% in-stock catalog of Heavy Commercial SPC Vinyl Plank ($3.56/sqft), Good Tier Red Oak ($5.12/sqft), and Better Tier White Oak ($5.97/sqft). Order $5.00 sample swatches with free priority courier delivery to verify finishes on-site.
+                        Browse our curated catalog of Heavy Commercial SPC Vinyl Plank ($3.56/sqft), Good Tier Red Oak ($5.12/sqft), and Better Tier White Oak ($5.97/sqft). Order $5.00 sample swatches with free priority courier delivery to verify finishes on-site.
                     </p>
                 </div>
             </div>
@@ -478,12 +478,12 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span class="step-digit">02</span>
                 </div>
                 <div class="fd-step-content">
-                    <h3>2. FixFlip Advances the Cost</h3>
+                    <h3>2. Select Rehab Loan Advance at Checkout</h3>
                     <p class="fd-step-main-text">
-                        FixFlip advances the cost of eligible materials through your existing rehab loan at the same interest rate you are already paying.
+                        Finance 100% of material costs with zero out-of-pocket cash today.
                     </p>
                     <p class="fd-step-sub-text">
-                        Select <strong>Center Street Lending Draw Advance</strong> at checkout and enter your active loan number or project address. There are zero separate credit checks, zero secondary supplier applications, and <strong>$0 out-of-pocket cash required today</strong>.
+                        Select "Center Street Lending Loan Advance" as your payment method. Simply enter your active CSL Loan Number or Property Address. FixFlip advances the material and freight cost at your existing interest rate.
                     </p>
                 </div>
             </div>
@@ -495,12 +495,12 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span class="step-digit">03</span>
                 </div>
                 <div class="fd-step-content">
-                    <h3>3. We Deliver</h3>
+                    <h3>3. Fast Automated Draw Approval</h3>
                     <p class="fd-step-main-text">
-                        Your materials are delivered directly to your project.
+                        Direct lender integration for rapid order processing.
                     </p>
                     <p class="fd-step-sub-text">
-                        Once verified with your CSL Draw Administrator, your full pallet order is dispatched directly from our regional distribution hub with scheduled commercial liftgate delivery straight to your jobsite curb in 2 to 5 business days.
+                        Our system confirms your active loan status with Center Street Lending within 2–4 hours. Once verified, materials are released immediately from the warehouse for direct liftgate freight delivery to your jobsite curb in 1 week.
                     </p>
                 </div>
             </div>
@@ -512,12 +512,12 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span class="step-digit">04</span>
                 </div>
                 <div class="fd-step-content">
-                    <h3>4. Build Your Project</h3>
+                    <h3>4. Complete Your Renovation</h3>
                     <p class="fd-step-main-text">
-                        Install the materials and keep your renovation moving without tying up as much of your own cash.
+                        Keep liquid capital in your operating account for labor and unexpected costs.
                     </p>
                     <p class="fd-step-sub-text">
-                        Keep your project on schedule and protect your cash flow. By rolling flooring procurement into your loan draw upfront, your working capital stays free for contractor labor, unforeseen structural repairs, and rapid project turnaround.
+                        Install premium, high-yield materials that maximize appraisal value upon completion. No monthly material loan payments during construction.
                     </p>
                 </div>
             </div>
@@ -529,12 +529,12 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span class="step-digit">05</span>
                 </div>
                 <div class="fd-step-content">
-                    <h3>5. Repay Through Your Loan</h3>
+                    <h3>5. Repay at Property Exit</h3>
                     <p class="fd-step-main-text">
-                        The advance remains tied to your existing loan and is repaid when the loan is paid off.
+                        Pay off materials when your project sells or refinances.
                     </p>
                     <p class="fd-step-sub-text">
-                        No monthly material supplier payments, no surprise administrative invoices, and no tedious reimbursement paperwork. The advance is seamlessly accounted for in your rehab escrow balance and settled upon property sale or loan payoff.
+                        The material advance is simply repaid out of escrow proceeds when you sell the flip or refinance into long-term DSCR/permanent financing.
                     </p>
                 </div>
             </div>
@@ -591,7 +591,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         <tr>
                             <td><strong>Inventory Assurance</strong></td>
                             <td>Frequent backorders and mixed dye-lots</td>
-                            <td class="ff-col"><strong>100% In-Stock Bulk Inventory</strong> reserved for active projects</td>
+                            <td class="ff-col"><strong>Bulk Pallet Inventory</strong> reserved for active projects</td>
                         </tr>
                     </tbody>
                 </table>
@@ -620,7 +620,7 @@ $theme_uri = get_stylesheet_directory_uri();
 
                 <div class="fd-faq-card">
                     <h4>How quickly do materials arrive on site?</h4>
-                    <p>All catalog SKUs are in stock and ready to ship. Once draw verification is complete, materials are dispatched via commercial liftgate freight and arrive at your project curb in approx. 1 week.</p>
+                    <p>All catalog SKUs are ready to ship. Once draw verification is complete, materials are dispatched via commercial liftgate freight and arrive at your project curb in approx. 1 week.</p>
                 </div>
 
             </div>

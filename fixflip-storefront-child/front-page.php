@@ -1128,7 +1128,6 @@ $theme_uri = get_stylesheet_directory_uri();
                 <a href="/shop/" class="fd-cat-tile">
                     <div class="fd-cat-tile-img">
                         <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Order Pro Sample Swatches">
-                        <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 9.5px; font-weight: 900; padding: 4px 8px; text-transform: uppercase;">FAST DELIVERY</span>
                     </div>
                     <div class="fd-cat-tile-body">
                         <div>
@@ -1269,7 +1268,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     <h2 class="fd-section-title">Best-Selling Pro Flooring Catalog</h2>
                 </div>
                 <div style="font-size: 13px; font-weight: 700; color: #64748b;">
-                    Showing 11 In-Stock Contractor Planks
+                    Showing 11 Contractor Planks
                 </div>
             </div>
 
