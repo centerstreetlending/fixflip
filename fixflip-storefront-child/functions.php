@@ -2281,8 +2281,28 @@ add_filter( 'site_icon_meta_tags', function( $meta_tags ) {
 }, 99 );
 
 
-
-
+/**
+ * Force no-cache headers on WooCommerce shop and category pages so GoDaddy gateway
+ * and Cloudflare do not serve stale HTML after theme file updates.
+ */
+function fixflip_nocache_shop_pages() {
+    if ( is_shop() || is_product_category() || is_product() || is_woocommerce() ) {
+        if ( ! headers_sent() ) {
+            header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0' );
+            header( 'Pragma: no-cache' );
+            header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
+            header( 'Surrogate-Control: no-store' );
+            header( 'CDN-Cache-Control: no-cache' );
+            header( 'Cloudflare-CDN-Cache-Control: no-cache' );
+            header( 'x-accel-expires: 0' );
+        }
+        // Tell WordPress object cache not to cache this request
+        define( 'DONOTCACHEPAGE', true );
+        define( 'DONOTCACHEOBJECT', true );
+        define( 'DONOTMINIFY', true );
+    }
+}
+add_action( 'template_redirect', 'fixflip_nocache_shop_pages', 1 );
 
 
 

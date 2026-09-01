@@ -5,6 +5,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Prevent GoDaddy gateway / CDN from caching this page
+if ( ! headers_sent() ) {
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Pragma: no-cache' );
+    header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
+    header( 'Surrogate-Control: no-store' );
+    header( 'x-accel-expires: 0' );
+}
+
 get_header();
 $theme_uri = get_stylesheet_directory_uri();
 ?>
