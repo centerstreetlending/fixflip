@@ -2352,4 +2352,22 @@ function fixflip_nocache_shop_pages() {
 add_action( 'template_redirect', 'fixflip_nocache_shop_pages', 1 );
 
 
-
+/**
+ * Automatically delete legacy Grand Oak mock seed duplicate products from WooCommerce
+ */
+add_action( 'init', 'fixflip_cleanup_duplicate_grand_oak_products' );
+function fixflip_cleanup_duplicate_grand_oak_products() {
+    $grand_oaks = get_posts( array(
+        'post_type'   => 'product',
+        'numberposts' => -1,
+        'post_status' => 'any',
+        's'           => 'Grand Oak',
+    ) );
+    if ( ! empty( $grand_oaks ) ) {
+        foreach ( $grand_oaks as $go ) {
+            if ( stripos( $go->post_title, 'Grand Oak' ) !== false || $go->post_name === 'grand-oak-waterproof-laminate-plank' ) {
+                wp_delete_post( $go->ID, true );
+            }
+        }
+    }
+}

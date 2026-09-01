@@ -28,6 +28,11 @@
             var title = (card.querySelector('h3') ? card.querySelector('h3').textContent : '').toLowerCase();
             var fullText = (href + ' ' + title).toLowerCase();
 
+            if (fullText.indexOf('grand oak') !== -1 || fullText.indexOf('grand-oak') !== -1) {
+                card.remove();
+                return;
+            }
+
             var currentCat = card.getAttribute('data-cat') || '';
             if (!currentCat) {
                 if (fullText.indexOf('cultivated') !== -1 || fullText.indexOf('sophisticated') !== -1 || fullText.indexOf('exquisite') !== -1 || fullText.indexOf('refined') !== -1) {

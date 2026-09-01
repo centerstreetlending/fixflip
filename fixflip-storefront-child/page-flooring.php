@@ -341,6 +341,9 @@ $theme_uri = get_stylesheet_directory_uri();
                     if ( $products_query->have_posts() ) :
                         while ( $products_query->have_posts() ) : $products_query->the_post();
                             global $product;
+                            if ( stripos( get_the_title(), 'Grand Oak' ) !== false ) {
+                                continue;
+                            }
                             $sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
                             $price = (float)($product->get_price() ?: 2.55);
 
