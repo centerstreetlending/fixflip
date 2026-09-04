@@ -2375,6 +2375,7 @@ function fixflip_nocache_shop_pages() {
     }
 }
 add_action( 'template_redirect', 'fixflip_nocache_shop_pages', 1 );
+add_action( 'send_headers', 'fixflip_nocache_shop_pages', 1 );
 
 
 /**
@@ -2404,10 +2405,10 @@ function fixflip_is_best_tier_unlocked() {
     if ( is_user_logged_in() && current_user_can( 'manage_woocommerce' ) ) {
         return true;
     }
-    if ( isset( $_COOKIE['fixflip_best_tier_auth'] ) && $_COOKIE['fixflip_best_tier_auth'] === 'flooring_unlocked' ) {
+    if ( isset( $_GET['trade_pass'] ) && strtolower( trim( sanitize_text_field( $_GET['trade_pass'] ) ) ) === 'flooring' ) {
         return true;
     }
-    if ( isset( $_SESSION['fixflip_best_tier_auth'] ) && $_SESSION['fixflip_best_tier_auth'] === true ) {
+    if ( isset( $_COOKIE['fixflip_best_tier_auth'] ) && $_COOKIE['fixflip_best_tier_auth'] === 'flooring_unlocked' ) {
         return true;
     }
     return false;
@@ -2424,22 +2425,17 @@ function fixflip_handle_best_tier_login() {
 
         if ( $entered_pass === 'flooring' ) {
             // Set 30-day cookie
-            setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + ( 30 * DAY_IN_SECONDS ), '/', '', is_ssl(), false );
-            if ( ! session_id() && ! headers_sent() ) {
-                @session_start();
-            }
-            if ( session_id() ) {
-                $_SESSION['fixflip_best_tier_auth'] = true;
-            }
+            setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
+            $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
 
             // Remove auth_error parameter if present
             $redirect_to = remove_query_arg( 'auth_error', $redirect_to );
-            wp_safe_redirect( $redirect_to );
+            wp_redirect( $redirect_to );
             exit;
         } else {
             // Add auth_error parameter
             $redirect_to = add_query_arg( 'auth_error', '1', $redirect_to );
-            wp_safe_redirect( $redirect_to );
+            wp_redirect( $redirect_to );
             exit;
         }
     }
