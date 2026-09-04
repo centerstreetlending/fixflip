@@ -210,9 +210,10 @@ $theme_uri = get_stylesheet_directory_uri();
                 foreach ( $ancestors as $ancestor_id ) {
                     $ancestor_term = get_term( $ancestor_id, 'product_cat' );
                     if ( $ancestor_term && ! is_wp_error( $ancestor_term ) && $ancestor_term->slug !== 'uncategorized' ) {
+                        $anc_link = get_term_link( $ancestor_term, 'product_cat' );
                         $crumb_trail[] = array(
                             'name' => $ancestor_term->name,
-                            'url'  => get_term_link( $ancestor_term, 'product_cat' )
+                            'url'  => ( ! is_wp_error($anc_link) ? $anc_link : '/category/' . $ancestor_term->slug . '/' )
                         );
                     }
                 }
@@ -220,7 +221,6 @@ $theme_uri = get_stylesheet_directory_uri();
                     'name' => $current_term->name,
                     'url'  => ''
                 );
-            }
         } elseif ( ! empty($col_slug) && isset($col_titles[$col_slug]) ) {
             $page_heading = $col_titles[$col_slug];
             $crumb_trail[] = array('name' => $page_heading, 'url' => '');
