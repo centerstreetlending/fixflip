@@ -159,7 +159,8 @@ $theme_uri = get_stylesheet_directory_uri();
             'engineered-hardwood' => 'Engineered Wood',
             'hardwood-good'       => 'Engineered Wood (Good Tier)',
             'hardwood-better'     => 'Engineered Wood (Better Tier)',
-            'hardwood-best'       => 'Engineered Wood (Best Tier)',
+            'hardwood-best'       => 'Engineered Wood (Best Tier - $9.00/sqft)',
+            'ca399'               => 'CA399 Provincial Plank 7.5"',
             'luxury-vinyl-plank'  => 'Vinyl Flooring',
             'branching-out'       => 'Vinyl Flooring',
             'refined-oak'         => 'Engineered Wood',
@@ -213,6 +214,20 @@ $theme_uri = get_stylesheet_directory_uri();
             $raw_title = woocommerce_page_title(false);
             $page_heading = preg_replace('/\s*\(.*?\)/i', '', $raw_title);
             $crumb_trail[] = array('name' => $page_heading, 'url' => '');
+        }
+
+        // Check for Best Tier password protection gate
+        $is_best_category = (
+            ( is_product_category() && ( ( isset($current_term) && $current_term->slug === 'hardwood-best' ) || ( get_queried_object() && isset(get_queried_object()->slug) && get_queried_object()->slug === 'hardwood-best' ) ) ) ||
+            $col_slug === 'hardwood-best' ||
+            $mat_cat === 'hardwood-best' ||
+            $col_slug === 'ca399'
+        );
+
+        if ( $is_best_category && function_exists('fixflip_is_best_tier_unlocked') && ! fixflip_is_best_tier_unlocked() ) {
+            fixflip_render_trade_password_gate();
+            get_footer();
+            return;
         }
         ?>
         <!-- FULL DYNAMIC BREADCRUMBS -->
@@ -297,9 +312,10 @@ $theme_uri = get_stylesheet_directory_uri();
                     <?php foreach ( $sub_cats as $sub ) : 
                         $sub_link = get_term_link( $sub, 'product_cat' );
                         $sub_count = $sub->count;
+                        $is_locked_cat = ($sub->slug === 'hardwood-best');
                     ?>
                         <a href="<?php echo esc_url($sub_link); ?>" style="display: inline-flex; align-items: center; gap: 10px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 10px 18px; text-decoration: none; color: #0f172a; font-weight: 800; font-size: 14px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#007bff'; this.style.color='#007bff';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#0f172a';">
-                            <span><?php echo esc_html($sub->name); ?></span>
+                            <span><?php echo esc_html($sub->name); ?><?php if ($is_locked_cat) echo ' 🔒'; ?></span>
                             <span style="background: #e2e8f0; color: #475569; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px;">(<?php echo $sub_count; ?>)</span>
                             <span style="color: #007bff;">&rarr;</span>
                         </a>
@@ -354,6 +370,12 @@ $theme_uri = get_stylesheet_directory_uri();
                                 $cat_type = 'spc vinyl luxury-vinyl-plank';
                                 $col_type = 'branching-out 4308v';
                                 $size_type = '7x48 7-inch';
+                            } elseif ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) {
+                                $price = 9.00;
+                                $reg_price = 12.15;
+                                $cat_type = 'hardwood engineered-wood best ca399 provincial-plank';
+                                $col_type = 'ca399 provincial-plank';
+                                $size_type = '7.5x74.8 7.5-inch';
                             } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
                                 $price = 5.97;
                                 $reg_price = 8.06;
@@ -369,15 +391,20 @@ $theme_uri = get_stylesheet_directory_uri();
                             }
 
                             $hero_img = $theme_uri . '/images/hero_' . $sku . '.webp?v=' . time();
+                            $clean_title = preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS|CA399 PROVINCIAL PLANK|PROVINCIAL PLANK)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303|CA399)\s*/i', '', get_the_title()));
                             ?>
                             <div class="fd-home-card" data-sku="<?php echo esc_attr($sku); ?>" data-price="<?php echo esc_attr($price); ?>" data-cat="<?php echo esc_attr($cat_type); ?>" data-collection="<?php echo esc_attr($col_type); ?>" data-size="<?php echo esc_attr($size_type); ?>" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
                                 <a href="<?php echo esc_url( get_permalink() ); ?>" data-price="<?php echo esc_attr($price); ?>" data-cat="<?php echo esc_attr($cat_type); ?>" data-collection="<?php echo esc_attr($col_type); ?>" data-size="<?php echo esc_attr($size_type); ?>" style="text-decoration: none; color: inherit; display: block;">
                                     <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
                                         <img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php the_title_attribute(); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                                        <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
+                                        <?php if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) : ?>
+                                            <span style="position: absolute; top: 10px; right: 10px; background: #0f172a; color: #38bdf8; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">BEST TIER 🔒</span>
+                                        <?php else : ?>
+                                            <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">25% OFF PRO RATE</span>
+                                        <?php endif; ?>
                                     </div>
                                     <div style="padding: 16px 14px;">
-                                        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;"><?php echo esc_html( preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303)\s*/i', '', get_the_title())) ); ?></h3>
+                                        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;"><?php echo esc_html( $clean_title ); ?></h3>
                                         <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
                                             <span style="font-size: 14px; font-weight: 600; color: #94a3b8; text-decoration: line-through;">$<?php echo number_format($reg_price, 2); ?></span>
                                             <span style="font-size: 22px; font-weight: 900; color: #0f172a;">$<?php echo number_format($price, 2); ?></span>
@@ -433,9 +460,9 @@ $theme_uri = get_stylesheet_directory_uri();
 
         function applyFilters() {
             var cards = document.querySelectorAll('.fd-home-card');
-            var maxPrice = parseFloat(priceSlider ? priceSlider.value : 8.00);
+            var maxPrice = parseFloat(priceSlider ? priceSlider.value : 10.00);
             if (maxPriceLbl) {
-                maxPriceLbl.textContent = (maxPrice >= 8.00) ? '8.00+' : maxPrice.toFixed(2);
+                maxPriceLbl.textContent = (maxPrice >= 10.00) ? '10.00+' : maxPrice.toFixed(2);
             }
 
             var checkedCats = Array.from(document.querySelectorAll('.fd-filter-chk[data-filter-type="cat"]:checked')).map(function(c) { return c.value; });
@@ -452,7 +479,7 @@ $theme_uri = get_stylesheet_directory_uri();
 
                 var matches = true;
 
-                if (maxPrice < 8.00 && price > (maxPrice + 0.05)) {
+                if (maxPrice < 10.00 && price > (maxPrice + 0.05)) {
                     matches = false;
                 }
                 if (!tokenMatch(cat, checkedCats)) {
@@ -484,7 +511,7 @@ $theme_uri = get_stylesheet_directory_uri();
             var chks = document.querySelectorAll('.fd-filter-chk');
             chks.forEach(function(c) { c.checked = false; });
             if (priceSlider) {
-                priceSlider.value = 8.00;
+                priceSlider.value = 10.00;
             }
             applyFilters();
         }

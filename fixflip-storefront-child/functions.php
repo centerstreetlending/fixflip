@@ -2061,12 +2061,17 @@ function fixflip_resolve_sku( $input = '' ) {
     if ( strpos( $text, '01015' ) !== false || strpos( $text, 'exquisite' ) !== false ) return '01015';
     if ( strpos( $text, '02012' ) !== false || strpos( $text, 'sophisticated' ) !== false ) return '02012';
     if ( strpos( $text, '05014' ) !== false || strpos( $text, 'cultivated' ) !== false ) return '05014';
+    if ( strpos( $text, '11100' ) !== false || strpos( $text, 'parchment' ) !== false ) return '11100';
+    if ( strpos( $text, '11101' ) !== false || strpos( $text, 'french' ) !== false ) return '11101';
+    if ( strpos( $text, '11102' ) !== false || strpos( $text, 'naturale' ) !== false ) return '11102';
+    if ( strpos( $text, '15041' ) !== false || strpos( $text, 'ashen' ) !== false ) return '15041';
+    if ( strpos( $text, '17065' ) !== false || strpos( $text, 'fawn' ) !== false ) return '17065';
     
     return '56103';
 }
 
 /**
- * Return Curated High-Definition Photo Galleries for All 11 Wholesale SKUs
+ * Return Curated High-Definition Photo Galleries for All Wholesale SKUs
  */
 function fixflip_get_curated_product_images( $sku_or_product = '' ) {
     $sku = fixflip_resolve_sku( $sku_or_product );
@@ -2139,6 +2144,26 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/1767U_05014_ROOM.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/EmpireOak-SW583-05014-Roosevelt-5in-V.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/CA308_05014_5x70_1.webp'
+        ),
+        '11100' => array(
+            '/images/hero_11100.webp',
+            '/images/hero_ca399_room.webp'
+        ),
+        '11101' => array(
+            '/images/hero_11101.webp',
+            '/images/hero_ca399_room.webp'
+        ),
+        '11102' => array(
+            '/images/hero_11102.webp',
+            '/images/hero_ca399_room.webp'
+        ),
+        '15041' => array(
+            '/images/hero_15041.webp',
+            '/images/hero_ca399_room.webp'
+        ),
+        '17065' => array(
+            '/images/hero_17065.webp',
+            '/images/hero_ca399_room.webp'
         )
     );
 
@@ -2367,6 +2392,256 @@ function fixflip_cleanup_duplicate_grand_oak_products() {
         foreach ( $grand_oaks as $go ) {
             if ( stripos( $go->post_title, 'Grand Oak' ) !== false || $go->post_name === 'grand-oak-waterproof-laminate-plank' ) {
                 wp_delete_post( $go->ID, true );
+            }
+        }
+    }
+}
+
+/**
+ * Check if the visitor has unlocked Best Tier trade access
+ */
+function fixflip_is_best_tier_unlocked() {
+    if ( is_user_logged_in() && current_user_can( 'manage_woocommerce' ) ) {
+        return true;
+    }
+    if ( isset( $_COOKIE['fixflip_best_tier_auth'] ) && $_COOKIE['fixflip_best_tier_auth'] === 'flooring_unlocked' ) {
+        return true;
+    }
+    if ( isset( $_SESSION['fixflip_best_tier_auth'] ) && $_SESSION['fixflip_best_tier_auth'] === true ) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Handle Best Tier Trade Password submission
+ */
+add_action( 'init', 'fixflip_handle_best_tier_login', 1 );
+function fixflip_handle_best_tier_login() {
+    if ( isset( $_POST['fixflip_trade_action'] ) && $_POST['fixflip_trade_action'] === 'unlock_best_tier' ) {
+        $entered_pass = isset( $_POST['fixflip_trade_pass'] ) ? strtolower( trim( sanitize_text_field( $_POST['fixflip_trade_pass'] ) ) ) : '';
+        $redirect_to  = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : ( wp_get_referer() ?: home_url( '/category/hardwood-best/' ) );
+
+        if ( $entered_pass === 'flooring' ) {
+            // Set 30-day cookie
+            setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + ( 30 * DAY_IN_SECONDS ), '/', '', is_ssl(), false );
+            if ( ! session_id() && ! headers_sent() ) {
+                @session_start();
+            }
+            if ( session_id() ) {
+                $_SESSION['fixflip_best_tier_auth'] = true;
+            }
+
+            // Remove auth_error parameter if present
+            $redirect_to = remove_query_arg( 'auth_error', $redirect_to );
+            wp_safe_redirect( $redirect_to );
+            exit;
+        } else {
+            // Add auth_error parameter
+            $redirect_to = add_query_arg( 'auth_error', '1', $redirect_to );
+            wp_safe_redirect( $redirect_to );
+            exit;
+        }
+    }
+}
+
+/**
+ * Render Contractor & Trade Partner Password Protection Gate
+ */
+function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' ) {
+    $has_error    = isset( $_GET['auth_error'] ) && $_GET['auth_error'] === '1';
+    $current_url  = esc_url( ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+    $current_url  = remove_query_arg( 'auth_error', $current_url );
+    $theme_uri    = get_stylesheet_directory_uri();
+    ?>
+    <div class="fd-trade-gate-container" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; background: #f8fafc; font-family: 'Roboto', system-ui, -apple-system, sans-serif;">
+        <div style="max-width: 540px; width: 100%; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; box-shadow: 0 16px 40px rgba(0,0,0,0.08); padding: 36px 32px; box-sizing: border-box; text-align: center;">
+            
+            <!-- Lock Icon Badge -->
+            <div style="width: 58px; height: 58px; background: #0f172a; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px; box-shadow: 0 4px 14px rgba(15,23,42,0.25);">
+                <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; stroke: #38bdf8; stroke-width: 2.2; fill: none;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+
+            <div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">
+                ARCHITECTURAL &amp; TRADE PARTNER ACCESS
+            </div>
+
+            <h1 style="font-size: 24px; font-weight: 900; color: #0f172a; margin: 0 0 8px 0; letter-spacing: -0.3px;">
+                Best Tier Flooring Access
+            </h1>
+
+            <div style="display: inline-block; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 13px; font-weight: 800; padding: 4px 12px; border-radius: 20px; margin-bottom: 18px;">
+                ShawContract® CA399 Provincial Plank 7.5" &bull; $9.00 / sq ft
+            </div>
+
+            <?php if ( ! empty( $item_title ) ) : ?>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 4px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; text-align: left;">
+                    <?php if ( ! empty( $item_image ) ) : ?>
+                        <img src="<?php echo esc_url( $item_image ); ?>" alt="<?php echo esc_attr( $item_title ); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 2px; border: 1px solid #cbd5e1; flex-shrink: 0;">
+                    <?php endif; ?>
+                    <div>
+                        <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase;">LOCKED PRODUCT SPEC</div>
+                        <div style="font-size: 14px; font-weight: 800; color: #0f172a;"><?php echo esc_html( $item_title ); ?></div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <p style="font-size: 13.5px; color: #475569; line-height: 1.5; margin: 0 0 24px 0;">
+                This premium Best Tier European White Oak line is reserved for verified contractors, developers, and Center Street Lending borrowers. Enter the trade password to unlock full product specifications and wholesale pricing.
+            </p>
+
+            <?php if ( $has_error ) : ?>
+                <div style="background: #fef2f2; border: 1.5px solid #f87171; color: #991b1b; padding: 10px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; margin-bottom: 20px;">
+                    Incorrect password. Please verify with your account manager and try again.
+                </div>
+            <?php endif; ?>
+
+            <!-- Login Form -->
+            <form method="POST" action="<?php echo esc_url( $current_url ); ?>" style="margin-bottom: 20px;">
+                <input type="hidden" name="fixflip_trade_action" value="unlock_best_tier">
+                <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $current_url ); ?>">
+
+                <div style="margin-bottom: 14px;">
+                    <label for="fixflip_trade_pass" style="display: block; font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #0f172a; text-align: left; margin-bottom: 6px; letter-spacing: 0.5px;">
+                        Trade Partner Password
+                    </label>
+                    <input type="password" id="fixflip_trade_pass" name="fixflip_trade_pass" placeholder="Enter trade password..." required autofocus style="width: 100%; padding: 12px 14px; font-size: 15px; border: 1.5px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; font-weight: 600; color: #0f172a; text-align: center; letter-spacing: 2px;">
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 14px 20px; background: #007bff; color: #ffffff; border: none; border-radius: 4px; font-size: 14.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 14px rgba(0,123,255,0.3);" onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+                    Unlock Best Tier Pricing ($9.00/sqft) &rarr;
+                </button>
+            </form>
+
+            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.5; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+                <span>Need immediate trade credentials?</span><br>
+                <span>Contact the FixFlip Pro Desk at <strong style="color: #0f172a;">(949) 705-4300</strong> or email <a href="mailto:support@fixflip.com" style="color: #007bff; text-decoration: none; font-weight: 700;">support@fixflip.com</a></span>
+            </div>
+
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Ensure Best Tier WooCommerce Categories and 5 Products Exist in DB
+ */
+add_action( 'init', 'fixflip_ensure_best_tier_products', 20 );
+function fixflip_ensure_best_tier_products() {
+    // 1. Ensure categories exist
+    $parent_term = term_exists( 'hardwood-flooring', 'product_cat' );
+    if ( ! $parent_term ) {
+        $parent_term = wp_insert_term( 'Engineered Wood Flooring', 'product_cat', array(
+            'slug' => 'hardwood-flooring'
+        ) );
+    }
+    $parent_id = is_array( $parent_term ) ? $parent_term['term_id'] : ( is_object( $parent_term ) ? $parent_term->term_id : 0 );
+
+    $eng_term = term_exists( 'engineered-hardwood', 'product_cat' );
+    if ( ! $eng_term ) {
+        $eng_term = wp_insert_term( 'Engineered Wood', 'product_cat', array(
+            'slug'   => 'engineered-hardwood',
+            'parent' => $parent_id
+        ) );
+    }
+    $eng_id = is_array( $eng_term ) ? $eng_term['term_id'] : ( is_object( $eng_term ) ? $eng_term->term_id : 0 );
+
+    $best_term = term_exists( 'hardwood-best', 'product_cat' );
+    if ( ! $best_term ) {
+        $best_term = wp_insert_term( 'Engineered Wood (Best Tier)', 'product_cat', array(
+            'slug'        => 'hardwood-best',
+            'parent'      => $eng_id,
+            'description' => 'Best Tier European White Oak CA399 Provincial Plank 7.5" ($9.00/sqft wholesale pro rate).'
+        ) );
+    }
+    $best_id = is_array( $best_term ) ? $best_term['term_id'] : ( is_object( $best_term ) ? $best_term->term_id : 0 );
+
+    // 2. Define 5 Best Tier Products
+    $best_products = array(
+        '11100' => array(
+            'title'       => 'Parchment White Oak - CA399 Provincial Plank 7.5"',
+            'slug'        => 'parchment-white-oak-ca399-provincial-plank',
+            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Parchment (SKU: 11100). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+        ),
+        '11101' => array(
+            'title'       => 'French Buff White Oak - CA399 Provincial Plank 7.5"',
+            'slug'        => 'french-buff-white-oak-ca399-provincial-plank',
+            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in French Buff (SKU: 11101). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+        ),
+        '11102' => array(
+            'title'       => 'Au Naturale White Oak - CA399 Provincial Plank 7.5"',
+            'slug'        => 'au-naturale-white-oak-ca399-provincial-plank',
+            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Au Naturale (SKU: 11102). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+        ),
+        '15041' => array(
+            'title'       => 'Ashen White Oak - CA399 Provincial Plank 7.5"',
+            'slug'        => 'ashen-white-oak-ca399-provincial-plank',
+            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Ashen (SKU: 15041). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+        ),
+        '17065' => array(
+            'title'       => 'Fawn White Oak - CA399 Provincial Plank 7.5"',
+            'slug'        => 'fawn-white-oak-ca399-provincial-plank',
+            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Fawn (SKU: 17065). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+        ),
+    );
+
+    foreach ( $best_products as $sku => $data ) {
+        // Check if product already exists by SKU or slug
+        $existing_id = wc_get_product_id_by_sku( $sku );
+        if ( ! $existing_id ) {
+            $post = get_page_by_path( $data['slug'], OBJECT, 'product' );
+            if ( $post ) {
+                $existing_id = $post->ID;
+            }
+        }
+
+        if ( ! $existing_id ) {
+            $post_id = wp_insert_post( array(
+                'post_title'   => $data['title'],
+                'post_name'    => $data['slug'],
+                'post_content' => $data['description'],
+                'post_excerpt' => 'ShawContract® CA399 Provincial Plank 7.5" European White Oak with 4mm heavy face veneer. 23.31 sqft/carton. Best Tier pro rate at $9.00/sq ft.',
+                'post_status'  => 'publish',
+                'post_type'    => 'product',
+            ) );
+
+            if ( $post_id && ! is_wp_error( $post_id ) ) {
+                wp_set_object_terms( $post_id, 'simple', 'product_type' );
+                if ( $best_id ) {
+                    wp_set_object_terms( $post_id, array( (int)$parent_id, (int)$eng_id, (int)$best_id ), 'product_cat' );
+                }
+
+                update_post_meta( $post_id, '_visibility', 'visible' );
+                update_post_meta( $post_id, '_stock_status', 'instock' );
+                update_post_meta( $post_id, 'total_sales', '0' );
+                update_post_meta( $post_id, '_downloadable', 'no' );
+                update_post_meta( $post_id, '_virtual', 'no' );
+                update_post_meta( $post_id, '_sku', $sku );
+                update_post_meta( $post_id, '_regular_price', '12.15' );
+                update_post_meta( $post_id, '_sale_price', '9.00' );
+                update_post_meta( $post_id, '_price', '9.00' );
+
+                // Custom FixFlip meta
+                update_post_meta( $post_id, 'custom_brand', 'CA399 Provincial Plank' );
+                update_post_meta( $post_id, 'custom_coverage', '23.31' );
+                update_post_meta( $post_id, 'custom_size', '7.5" x 74.8" x 5/8"' );
+                update_post_meta( $post_id, 'custom_wear_layer', '4mm Face Veneer' );
+                update_post_meta( $post_id, 'custom_unit', 'sqft' );
+                update_post_meta( $post_id, 'custom_tier', 'best' );
+            }
+        } else {
+            // Ensure pricing and meta are strictly updated
+            update_post_meta( $existing_id, '_sku', $sku );
+            update_post_meta( $existing_id, '_regular_price', '12.15' );
+            update_post_meta( $existing_id, '_sale_price', '9.00' );
+            update_post_meta( $existing_id, '_price', '9.00' );
+            update_post_meta( $existing_id, 'custom_coverage', '23.31' );
+            update_post_meta( $existing_id, 'custom_size', '7.5" x 74.8" x 5/8"' );
+            update_post_meta( $existing_id, 'custom_brand', 'CA399 Provincial Plank' );
+            update_post_meta( $existing_id, 'custom_tier', 'best' );
+
+            if ( $best_id ) {
+                wp_set_object_terms( $existing_id, array( (int)$parent_id, (int)$eng_id, (int)$best_id ), 'product_cat' );
             }
         }
     }

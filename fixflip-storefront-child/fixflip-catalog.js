@@ -35,7 +35,11 @@
 
             var currentCat = card.getAttribute('data-cat') || '';
             if (!currentCat) {
-                if (fullText.indexOf('cultivated') !== -1 || fullText.indexOf('sophisticated') !== -1 || fullText.indexOf('exquisite') !== -1 || fullText.indexOf('refined') !== -1) {
+                if (fullText.indexOf('parchment') !== -1 || fullText.indexOf('french') !== -1 || fullText.indexOf('naturale') !== -1 || fullText.indexOf('ashen') !== -1 || fullText.indexOf('fawn') !== -1 || fullText.indexOf('ca399') !== -1 || fullText.indexOf('provincial') !== -1) {
+                    card.setAttribute('data-cat', 'hardwood engineered-wood best ca399 provincial-plank');
+                    card.setAttribute('data-collection', 'ca399 provincial-plank');
+                    card.setAttribute('data-size', '7.5x74.8 7.5-inch');
+                } else if (fullText.indexOf('cultivated') !== -1 || fullText.indexOf('sophisticated') !== -1 || fullText.indexOf('exquisite') !== -1 || fullText.indexOf('refined') !== -1) {
                     card.setAttribute('data-cat', 'hardwood engineered-wood better refined-oak');
                     card.setAttribute('data-collection', 'refined-oak ca308');
                     card.setAttribute('data-size', '7.5x75 7.5-inch');
@@ -76,8 +80,8 @@
         }
 
         function applyFilters() {
-            var maxPrice = parseFloat(priceSlider ? priceSlider.value : 8.00);
-            if (maxPriceLbl) maxPriceLbl.textContent = maxPrice.toFixed(2);
+            var maxPrice = parseFloat(priceSlider ? priceSlider.value : 10.00);
+            if (maxPriceLbl) maxPriceLbl.textContent = (maxPrice >= 10.00) ? '10.00+' : maxPrice.toFixed(2);
 
             var checkedCats = Array.from(document.querySelectorAll('.fd-filter-chk[data-filter-type="cat"]:checked')).map(function(c) { return c.value; });
             var checkedCols = Array.from(document.querySelectorAll('.fd-filter-chk[data-filter-type="collection"]:checked')).map(function(c) { return c.value; });
@@ -93,7 +97,7 @@
                 var size = card.getAttribute('data-size') || (link ? link.getAttribute('data-size') : '') || '';
 
                 var matches = true;
-                if (price > maxPrice) matches = false;
+                if (maxPrice < 10.00 && price > (maxPrice + 0.05)) matches = false;
                 if (!tokenMatch(cat, checkedCats)) matches = false;
                 if (!tokenMatch(col, checkedCols)) matches = false;
                 if (!tokenMatch(size, checkedSizes)) matches = false;
@@ -127,8 +131,8 @@
             resetBtn.addEventListener('click', function() {
                 filterChks.forEach(function(c) { c.checked = false; });
                 if (priceSlider) {
-                    priceSlider.value = priceSlider.max || "8.00";
-                    if (maxPriceLbl) maxPriceLbl.textContent = parseFloat(priceSlider.value).toFixed(2);
+                    priceSlider.value = priceSlider.max || "10.00";
+                    if (maxPriceLbl) maxPriceLbl.textContent = (parseFloat(priceSlider.value) >= 10.00) ? '10.00+' : parseFloat(priceSlider.value).toFixed(2);
                 }
                 applyFilters();
             });

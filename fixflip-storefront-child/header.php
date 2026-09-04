@@ -797,8 +797,8 @@ document.addEventListener('DOMContentLoaded', function() {
             </a>
 
             <!-- MULTI-COLUMN FLOORING DROPDOWN -->
-            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 740px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 18px 45px rgba(0,0,0,0.14); padding: 18px; z-index: 10000; box-sizing: border-box;">
-              <div style="display: grid; grid-template-columns: 1fr 1.25fr 0.95fr; gap: 20px;">
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 820px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 18px 45px rgba(0,0,0,0.14); padding: 18px; z-index: 10000; box-sizing: border-box;">
+              <div style="display: grid; grid-template-columns: 1fr 1.35fr 0.95fr; gap: 20px;">
                 
                 <!-- Col 1: Vinyl (SPC) -->
                 <div>
@@ -812,19 +812,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <!-- Col 2: Engineered Wood -->
                 <div>
-                  <div class="nav-col-title" style="color: #b45309; border-bottom: 1.5px solid #b45309; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Engineered Wood &bull; Good &amp; Better</div>
+                  <div class="nav-col-title" style="color: #b45309; border-bottom: 1.5px solid #b45309; padding-left: 0; padding-bottom: 6px; margin-bottom: 8px;">Engineered Wood (Good, Better, Best)</div>
+                  
                   <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin: 4px 0 2px 0;">Good Tier Red Oak ($5.12/sqft)</div>
-                  <a href="/product/rustic-natural-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Rustic Natural Red Oak</a>
-                  <a href="/product/biscuit-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Biscuit Red Oak</a>
-                  <a href="/product/flax-seed-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Flax Seed Red Oak</a>
-                  <a href="/product/kona-red-oak/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Kona Red Oak</a>
+                  <a href="/product/rustic-natural-red-oak/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Rustic Natural Red Oak</a>
+                  <a href="/product/biscuit-red-oak/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Biscuit Red Oak</a>
+                  <a href="/product/flax-seed-red-oak/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Flax Seed Red Oak</a>
+                  <a href="/product/kona-red-oak/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Kona Red Oak</a>
                   
-                  <div style="font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin: 8px 0 2px 0; border-top: 1px dashed #e2e8f0; padding-top: 6px;">Better Tier White Oak ($5.97/sqft)</div>
-                  <a href="/product/exquisite-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Exquisite White Oak</a>
-                  <a href="/product/sophisticated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Sophisticated White Oak</a>
-                  <a href="/product/cultivated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 4px; padding-bottom: 4px;">&bull; Cultivated White Oak</a>
+                  <div style="font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin: 6px 0 2px 0; border-top: 1px dashed #e2e8f0; padding-top: 5px;">Better Tier White Oak ($5.97/sqft)</div>
+                  <a href="/product/exquisite-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Exquisite White Oak</a>
+                  <a href="/product/sophisticated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Sophisticated White Oak</a>
+                  <a href="/product/cultivated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Cultivated White Oak</a>
                   
-                  <a href="/category/hardwood-flooring/" style="display: block; margin-top: 10px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; color: #b45309; text-decoration: none; background: #fffbeb;">View All Engineered Wood &rarr;</a>
+                  <div style="font-size: 10px; font-weight: 900; color: #007bff; text-transform: uppercase; margin: 6px 0 2px 0; border-top: 1px dashed #e2e8f0; padding-top: 5px;">Best Tier White Oak ($9.00/sqft) 🔒</div>
+                  <a href="/product/parchment-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Parchment White Oak 7.5"</a>
+                  <a href="/product/french-buff-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; French Buff White Oak 7.5"</a>
+                  <a href="/product/au-naturale-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Au Naturale White Oak 7.5"</a>
+                  <a href="/product/ashen-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Ashen White Oak 7.5"</a>
+                  <a href="/product/fawn-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Fawn White Oak 7.5"</a>
+                  
+                  <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <a href="/category/hardwood-best/" style="flex: 1; text-align: center; padding: 6px 8px; font-size: 11px; font-weight: 800; color: #007bff; text-decoration: none; background: #eff6ff; border: 1px solid #bfdbfe;">Best Tier (🔒 $9.00)</a>
+                    <a href="/category/hardwood-flooring/" style="flex: 1; text-align: center; padding: 6px 8px; font-size: 11px; font-weight: 800; color: #b45309; text-decoration: none; background: #fffbeb;">All Hardwood &rarr;</a>
+                  </div>
                 </div>
 
                 <!-- Col 3: Pro Feature Box -->

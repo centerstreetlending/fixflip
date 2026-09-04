@@ -27,9 +27,9 @@
                 Your budget (per sqft)
             </label>
             <div style="font-size: 14px; font-weight: 700; color: #007bff; margin-bottom: 10px;">
-                $<span id="fd-lbl-min-price">1.99</span> – $<span id="fd-lbl-max-price">8.00</span>+
+                $<span id="fd-lbl-min-price">1.99</span> – $<span id="fd-lbl-max-price">10.00</span>+
             </div>
-            <input type="range" id="fd-price-range-slider" min="1.99" max="8.00" step="0.10" value="8.00" style="width: 100%; accent-color: #007bff; cursor: pointer;">
+            <input type="range" id="fd-price-range-slider" min="1.99" max="10.00" step="0.10" value="10.00" style="width: 100%; accent-color: #007bff; cursor: pointer;">
         </div>
 
         <!-- 2. CATEGORY FILTERS -->
@@ -51,6 +51,13 @@
                         Engineered Wood
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(7)</span>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" class="fd-filter-chk" data-filter-type="cat" value="best" style="width: 16px; height: 16px; accent-color: #007bff;">
+                        Engineered Wood - Best Tier ($9.00) 🔒
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(5)</span>
                 </label>
             </div>
         </div>
@@ -82,6 +89,13 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
                 </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" class="fd-filter-chk" data-filter-type="collection" value="ca399" style="width: 16px; height: 16px; accent-color: #007bff;">
+                        CA399 Provincial Plank 7.5" 🔒
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(5)</span>
+                </label>
             </div>
         </div>
 
@@ -111,6 +125,13 @@
                         7.5" &times; 75" Plank
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" class="fd-filter-chk" data-filter-type="size" value="7.5x74.8" style="width: 16px; height: 16px; accent-color: #007bff;">
+                        7.5" &times; 74.8" Plank (Best Tier)
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(5)</span>
                 </label>
             </div>
         </div>

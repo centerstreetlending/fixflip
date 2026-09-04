@@ -887,6 +887,14 @@ $theme_uri = get_stylesheet_directory_uri();
                             </div>
                             <div class="fd-spot-tier-price">$5.97 <span style="font-size:10px;color:#94a3b8;font-weight:600;">/ sqft</span></div>
                         </a>
+
+                        <a href="/category/hardwood-best/" class="fd-spot-tier-row">
+                            <div>
+                                <div class="fd-spot-tier-name">Best Tier Engineered White Oak 🔒</div>
+                                <div class="fd-spot-tier-sub">7.5" Heavy 4mm Veneer &bull; 5 Colorways</div>
+                            </div>
+                            <div class="fd-spot-tier-price">$9.00 <span style="font-size:10px;color:#94a3b8;font-weight:600;">/ sqft</span></div>
+                        </a>
                     </div>
 
                     <div class="fd-spot-footer-note">
@@ -967,7 +975,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         </p>
                     </div>
                     <div class="fd-dept-btn">
-                        <span>Browse 11 Flooring SKUs</span>
+                        <span>Browse 16 Flooring SKUs</span>
                         <span>&rarr;</span>
                     </div>
                 </a>
@@ -1073,19 +1081,19 @@ $theme_uri = get_stylesheet_directory_uri();
                     </div>
                 </a>
 
-                <!-- 4. Sample Swatches -->
-                <a href="/commercial-flooring/" class="fd-cat-card">
+                <!-- 4. Best Tier White Oak -->
+                <a href="/category/hardwood-best/" class="fd-cat-card">
                     <div class="fd-cat-thumb">
-                        <img src="<?php echo $theme_uri; ?>/images/hero_02012.webp?v=<?php echo time(); ?>" alt="Order Sample Swatches">
-                        <span class="fd-cat-badge" style="background: #16a34a;">PHYSICAL SAMPLES</span>
+                        <img src="<?php echo $theme_uri; ?>/images/hero_11100.webp?v=<?php echo time(); ?>" alt="Best Tier CA399 Provincial Plank">
+                        <span class="fd-cat-badge" style="background: #0f172a; color: #38bdf8;">BEST TIER 🔒</span>
                     </div>
                     <div class="fd-cat-body">
                         <div>
-                            <h3 class="fd-cat-name">Contractor Swatches</h3>
-                            <div class="fd-cat-price">$5.00 <span>/ swatch</span></div>
-                            <div class="fd-cat-detail">Order physical plank swatches delivered direct to jobsite or office before placing full pallet orders.</div>
+                            <h3 class="fd-cat-name">Best Tier White Oak</h3>
+                            <div class="fd-cat-price">$9.00 <span>/ sq ft</span></div>
+                            <div class="fd-cat-detail">ShawContract® CA399 7.5" White Oak. Heavy 4.0mm face veneer, UV aluminum oxide wirebrushed.</div>
                         </div>
-                        <span class="fd-cat-link">Order Swatches &rarr;</span>
+                        <span class="fd-cat-link">Unlock 5 Best Colors &rarr; 🔒</span>
                     </div>
                 </a>
             </div>
@@ -1115,6 +1123,7 @@ $theme_uri = get_stylesheet_directory_uri();
                                 <option value="3.56" selected>Waterproof Vinyl Plank ($3.56 / sqft)</option>
                                 <option value="5.12">Good Tier Red Oak ($5.12 / sqft)</option>
                                 <option value="5.97">Better Tier White Oak ($5.97 / sqft)</option>
+                                <option value="9.00">Best Tier White Oak ($9.00 / sqft) 🔒</option>
                             </select>
                         </div>
                     </div>
@@ -1163,21 +1172,22 @@ $theme_uri = get_stylesheet_directory_uri();
             <div class="fd-section-header">
                 <div>
                     <span class="fd-section-kicker">CONTRACTOR INVENTORY</span>
-                    <h2 class="fd-section-title">11 Contractor Flooring Planks</h2>
+                    <h2 class="fd-section-title">16 Contractor Flooring Planks</h2>
                 </div>
                 <a href="/commercial-flooring/" class="fd-section-link">View Full Catalog &rarr;</a>
             </div>
 
             <!-- Instant Category Filter Tabs -->
             <div class="fd-tab-strip">
-                <button type="button" class="fd-tab-btn is-active" data-filter="all">All Flooring (11)</button>
+                <button type="button" class="fd-tab-btn is-active" data-filter="all">All Flooring (16)</button>
                 <button type="button" class="fd-tab-btn" data-filter="spc">Waterproof Vinyl &bull; $3.56 (4)</button>
-                <button type="button" class="fd-tab-btn" data-filter="wood">All Engineered Wood (7)</button>
+                <button type="button" class="fd-tab-btn" data-filter="wood">All Engineered Wood (12)</button>
                 <button type="button" class="fd-tab-btn" data-filter="good">Good Tier Red Oak &bull; $5.12 (4)</button>
                 <button type="button" class="fd-tab-btn" data-filter="better">Better Tier White Oak &bull; $5.97 (3)</button>
+                <button type="button" class="fd-tab-btn" data-filter="best">Best Tier White Oak &bull; $9.00 (5) 🔒</button>
             </div>
 
-            <!-- 11 Master Products Grid -->
+            <!-- 16 Master Products Grid -->
             <div class="fd-products-grid" id="fd-catalog-grid">
                 
                 <!-- 1. Zion Oak (Vinyl $3.56) -->
@@ -1455,6 +1465,131 @@ $theme_uri = get_stylesheet_directory_uri();
                     </a>
                 </div>
 
+                <!-- 12. Parchment White Oak (Best Tier $9.00) -->
+                <div class="fd-card" data-cat="best wood hardwood engineered-wood">
+                    <a href="/product/parchment-white-oak-ca399-provincial-plank/" style="text-decoration: none; color: inherit;">
+                        <div class="fd-card-thumb">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_11100.webp?v=<?php echo time(); ?>" alt="Parchment White Oak Best Tier Engineered Wood">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #0f172a; color: #38bdf8; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 2px;">BEST TIER 🔒</span>
+                        </div>
+                        <div class="fd-card-body">
+                            <div>
+                                <h3 class="fd-card-title">Parchment White Oak</h3>
+                                <div class="fd-card-prices">
+                                    <span class="fd-card-reg">$12.15</span>
+                                    <span class="fd-card-cur">$9.00</span>
+                                    <span class="fd-card-unit">/ sq ft</span>
+                                </div>
+                                <div class="fd-card-box">$209.79 / box &bull; 23.31 sqft</div>
+                            </div>
+                            <div class="fd-card-actions">
+                                <span class="fd-card-btn-buy" style="background: #0f172a;">Unlock &amp; Buy &rarr; 🔒</span>
+                                <span class="fd-card-btn-sample">Order Sample &bull; $5.00</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 13. French Buff White Oak (Best Tier $9.00) -->
+                <div class="fd-card" data-cat="best wood hardwood engineered-wood">
+                    <a href="/product/french-buff-white-oak-ca399-provincial-plank/" style="text-decoration: none; color: inherit;">
+                        <div class="fd-card-thumb">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_11101.webp?v=<?php echo time(); ?>" alt="French Buff White Oak Best Tier Engineered Wood">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #0f172a; color: #38bdf8; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 2px;">BEST TIER 🔒</span>
+                        </div>
+                        <div class="fd-card-body">
+                            <div>
+                                <h3 class="fd-card-title">French Buff White Oak</h3>
+                                <div class="fd-card-prices">
+                                    <span class="fd-card-reg">$12.15</span>
+                                    <span class="fd-card-cur">$9.00</span>
+                                    <span class="fd-card-unit">/ sq ft</span>
+                                </div>
+                                <div class="fd-card-box">$209.79 / box &bull; 23.31 sqft</div>
+                            </div>
+                            <div class="fd-card-actions">
+                                <span class="fd-card-btn-buy" style="background: #0f172a;">Unlock &amp; Buy &rarr; 🔒</span>
+                                <span class="fd-card-btn-sample">Order Sample &bull; $5.00</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 14. Au Naturale White Oak (Best Tier $9.00) -->
+                <div class="fd-card" data-cat="best wood hardwood engineered-wood">
+                    <a href="/product/au-naturale-white-oak-ca399-provincial-plank/" style="text-decoration: none; color: inherit;">
+                        <div class="fd-card-thumb">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_11102.webp?v=<?php echo time(); ?>" alt="Au Naturale White Oak Best Tier Engineered Wood">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #0f172a; color: #38bdf8; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 2px;">BEST TIER 🔒</span>
+                        </div>
+                        <div class="fd-card-body">
+                            <div>
+                                <h3 class="fd-card-title">Au Naturale White Oak</h3>
+                                <div class="fd-card-prices">
+                                    <span class="fd-card-reg">$12.15</span>
+                                    <span class="fd-card-cur">$9.00</span>
+                                    <span class="fd-card-unit">/ sq ft</span>
+                                </div>
+                                <div class="fd-card-box">$209.79 / box &bull; 23.31 sqft</div>
+                            </div>
+                            <div class="fd-card-actions">
+                                <span class="fd-card-btn-buy" style="background: #0f172a;">Unlock &amp; Buy &rarr; 🔒</span>
+                                <span class="fd-card-btn-sample">Order Sample &bull; $5.00</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 15. Ashen White Oak (Best Tier $9.00) -->
+                <div class="fd-card" data-cat="best wood hardwood engineered-wood">
+                    <a href="/product/ashen-white-oak-ca399-provincial-plank/" style="text-decoration: none; color: inherit;">
+                        <div class="fd-card-thumb">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_15041.webp?v=<?php echo time(); ?>" alt="Ashen White Oak Best Tier Engineered Wood">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #0f172a; color: #38bdf8; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 2px;">BEST TIER 🔒</span>
+                        </div>
+                        <div class="fd-card-body">
+                            <div>
+                                <h3 class="fd-card-title">Ashen White Oak</h3>
+                                <div class="fd-card-prices">
+                                    <span class="fd-card-reg">$12.15</span>
+                                    <span class="fd-card-cur">$9.00</span>
+                                    <span class="fd-card-unit">/ sq ft</span>
+                                </div>
+                                <div class="fd-card-box">$209.79 / box &bull; 23.31 sqft</div>
+                            </div>
+                            <div class="fd-card-actions">
+                                <span class="fd-card-btn-buy" style="background: #0f172a;">Unlock &amp; Buy &rarr; 🔒</span>
+                                <span class="fd-card-btn-sample">Order Sample &bull; $5.00</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 16. Fawn White Oak (Best Tier $9.00) -->
+                <div class="fd-card" data-cat="best wood hardwood engineered-wood">
+                    <a href="/product/fawn-white-oak-ca399-provincial-plank/" style="text-decoration: none; color: inherit;">
+                        <div class="fd-card-thumb">
+                            <img src="<?php echo $theme_uri; ?>/images/hero_17065.webp?v=<?php echo time(); ?>" alt="Fawn White Oak Best Tier Engineered Wood">
+                            <span style="position: absolute; top: 8px; right: 8px; background: #0f172a; color: #38bdf8; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 2px;">BEST TIER 🔒</span>
+                        </div>
+                        <div class="fd-card-body">
+                            <div>
+                                <h3 class="fd-card-title">Fawn White Oak</h3>
+                                <div class="fd-card-prices">
+                                    <span class="fd-card-reg">$12.15</span>
+                                    <span class="fd-card-cur">$9.00</span>
+                                    <span class="fd-card-unit">/ sq ft</span>
+                                </div>
+                                <div class="fd-card-box">$209.79 / box &bull; 23.31 sqft</div>
+                            </div>
+                            <div class="fd-card-actions">
+                                <span class="fd-card-btn-buy" style="background: #0f172a;">Unlock &amp; Buy &rarr; 🔒</span>
+                                <span class="fd-card-btn-sample">Order Sample &bull; $5.00</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
             </div>
         </section>
 
@@ -1615,10 +1750,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const baseSqft = parseFloat(sqftInput ? sqftInput.value : 1500) || 0;
         const pricePerSqft = parseFloat(tierSelect ? tierSelect.value : 3.56) || 3.56;
         let regPricePerSqft = 4.81;
-        if (Math.abs(pricePerSqft - 5.12) < 0.05) regPricePerSqft = 6.91;
-        if (Math.abs(pricePerSqft - 5.97) < 0.05) regPricePerSqft = 8.06;
-
-        const coveragePerBox = 15.5;
+        let coveragePerBox = 15.5;
+        if (Math.abs(pricePerSqft - 5.12) < 0.05) {
+            regPricePerSqft = 6.91;
+            coveragePerBox = 15.5;
+        } else if (Math.abs(pricePerSqft - 5.97) < 0.05) {
+            regPricePerSqft = 8.06;
+            coveragePerBox = 15.5;
+        } else if (Math.abs(pricePerSqft - 9.00) < 0.05) {
+            regPricePerSqft = 12.15;
+            coveragePerBox = 23.31;
+        }
 
         // 10% contingency
         const totalCov = baseSqft * 1.10;

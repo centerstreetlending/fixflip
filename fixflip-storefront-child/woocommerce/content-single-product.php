@@ -29,28 +29,37 @@ $theme_dir = get_stylesheet_directory_uri();
 $raw_title = ( is_a($product, 'WC_Product') ? $product->get_name() : get_the_title() ) ?: 'ZION OAK';
 $raw_brand = $product->get_meta('custom_brand') ?: 'BRANCHING OUT';
 
-// Strip manufacturer code prefixes (4308V, CA308, CA303)
-$brand = preg_replace('/^(4308V|CA308|CA303)\s*/i', '', $raw_brand);
+// Strip manufacturer code prefixes (4308V, CA308, CA303, CA399)
+$brand = preg_replace('/^(4308V|CA308|CA303|CA399)\s*/i', '', $raw_brand);
 
 // Strip collection name prefix from product title
-$title = preg_replace('/^(4308V|CA308|CA303)\s*/i', '', $raw_title);
-$title = preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', $title);
+$title = preg_replace('/^(4308V|CA308|CA303|CA399)\s*/i', '', $raw_title);
+$title = preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS|CA399 PROVINCIAL PLANK|PROVINCIAL PLANK)\s*[\-\–\—]?\s*/i', '', $title);
 $title = trim($title);
 
 $sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
 $title_lower = strtolower(get_the_title());
+
+$is_best_tier_product = in_array( $sku, array('11100', '11101', '11102', '15041', '17065') ) || ( has_term( 'hardwood-best', 'product_cat', $product->get_id() ) );
+
 if ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
     $price = 3.56;
     $reg_price = 4.81;
+    $coverage = 15.5;
+} elseif ( $is_best_tier_product ) {
+    $price = 9.00;
+    $reg_price = 12.15;
+    $coverage = 23.31;
 } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
     $price = 5.97;
     $reg_price = 8.06;
+    $coverage = 15.5;
 } else {
     $price = 5.12;
     $reg_price = 6.91;
+    $coverage = 15.5;
 }
 $unit  = $product->get_meta('custom_unit') ?: 'sqft';
-$coverage = (float)($product->get_meta('custom_coverage') ?: 15.5);
 $box_price = $price * $coverage;
 
 // Gallery Thumbnails via Curated High-Definition SKU Mapping
@@ -60,6 +69,13 @@ if ( function_exists('fixflip_get_curated_product_images') ) {
     $thumbs = array( $theme_dir . '/images/hero_' . $sku . '.webp' );
 }
 $main_image_url = $thumbs[0];
+
+// Best Tier Trade Password Lock Gate
+if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') && ! fixflip_is_best_tier_unlocked() ) {
+    fixflip_render_trade_password_gate( $title, $main_image_url );
+    get_footer();
+    return;
+}
 ?>
 
 <div id="product-<?php the_ID(); ?>" class="fd-single-product-container" style="max-width: 1320px; margin: 0 auto; padding: 24px; font-family: 'Roboto', system-ui, -apple-system, sans-serif; color: #0f172a;">
@@ -73,7 +89,14 @@ $main_image_url = $thumbs[0];
     $cat_level3_name = 'SPC';
     $cat_level3_link = '/category/spc/';
 
-    if ( strpos( $brand, 'Oak Traditions' ) !== false || strpos( strtolower($title), 'rustic' ) !== false || strpos( strtolower($title), 'biscuit' ) !== false || strpos( strtolower($title), 'flax' ) !== false || strpos( strtolower($title), 'kona' ) !== false ) {
+    if ( $is_best_tier_product ) {
+        $cat_level1_name = 'Engineered Wood Flooring';
+        $cat_level1_link = '/category/hardwood-flooring/';
+        $cat_level2_name = 'Engineered Wood';
+        $cat_level2_link = '/category/engineered-hardwood/';
+        $cat_level3_name = 'Best Tier White Oak ($9.00)';
+        $cat_level3_link = '/category/hardwood-best/';
+    } elseif ( strpos( $brand, 'Oak Traditions' ) !== false || strpos( strtolower($title), 'rustic' ) !== false || strpos( strtolower($title), 'biscuit' ) !== false || strpos( strtolower($title), 'flax' ) !== false || strpos( strtolower($title), 'kona' ) !== false ) {
         $cat_level1_name = 'Engineered Wood Flooring';
         $cat_level1_link = '/category/hardwood-flooring/';
         $cat_level2_name = 'Engineered Wood';
@@ -601,6 +624,75 @@ $main_image_url = $thumbs[0];
 
 
 
+    <!-- PRODUCT SPECIFICATIONS & TECHNICAL DATA TABLE -->
+    <div style="margin-top: 48px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 28px 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #0f172a;">
+            <div>
+                <span style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">TECHNICAL SPECIFICATIONS</span>
+                <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 0; text-transform: uppercase;">Product Details &amp; Packaging Specs</h3>
+            </div>
+            <?php if ( $is_best_tier_product ) : ?>
+                <span style="background: #0f172a; color: #38bdf8; font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.5px;">BEST TIER WHITE OAK 🔒</span>
+            <?php endif; ?>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+            <div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600; width: 45%;">Manufacturer / Collection:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? 'ShawContract® CA399 Provincial Plank' : esc_html($brand ?: 'Commercial Wholesale'); ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Species / Material:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? 'European White Oak' : ( strpos($brand, 'Oak') !== false ? 'Engineered Oak' : 'Rigid Core SPC Vinyl' ); ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Plank Dimensions:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? '7.5" Width &times; Up to 74.8" Length &times; 5/8" (15.875mm)' : ( in_array($sku, array('01015','02012','05014')) ? '7.5" &times; 75" &times; 1/2"' : ( in_array($sku, array('56103','56140','56240','56516')) ? '7" &times; 48" &times; 6mm' : '5" &times; Random Length &times; 3/8"' ) ); ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Face Veneer / Wear Layer:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? '4.0 mm Heavy Sliced Face Veneer' : ( in_array($sku, array('56103','56140','56240','56516')) ? '20mil Commercial Wear Layer' : '2.0 mm Sliced Hardwood' ); ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Surface Texture &amp; Finish:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? 'UV Aluminum Oxide Wirebrushed Finish' : 'UV Cured Matte Urethane with Aluminum Oxide'; ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600; width: 45%;">Carton Packaging:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? '6 planks / 23.31 sq ft per box (46.3 lbs)' : ($coverage . ' sq ft per carton'); ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Pallet Yield:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? '50 cartons / 1,165.5 sq ft (2,365 lbs)' : '48-55 cartons per pallet'; ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Installation Profile:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? 'Tongue &amp; Groove (Micro-Bevel Edge)' : ( in_array($sku, array('56103','56140','56240','56516')) ? 'Angle/Tap Click-Lock' : 'Tongue &amp; Groove' ); ?></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Approved Placement:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;">Above Grade, On Grade, Below Grade</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Wholesale Pro Rate:</td>
+                            <td style="padding: 10px 0; color: #16a34a; font-weight: 900;">$<?php echo number_format($price, 2); ?> / sq ft <span style="color: #64748b; font-weight: 600; font-size: 12px;">(Save 25% vs $<?php echo number_format($reg_price, 2); ?> retail)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- FEATURE: RELATED PRODUCTS SECTION (4-COLUMN GRID) -->
@@ -625,15 +717,15 @@ $main_image_url = $thumbs[0];
         if ( $related_query->have_posts() ) :
             while ( $related_query->have_posts() ) : $related_query->the_post();
                 global $product;
-                $rel_sku   = $product->get_sku() ?: '100872985';
+                $rel_sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
                 $rel_price = (float)($product->get_price() ?: 3.56);
                 
-                $title_lower = strtolower(get_the_title());
-                $rel_sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $rel_product ) : ( $rel_product->get_sku() ?: '56103' );
-
                 if ( in_array($rel_sku, array('56103', '56140', '56240', '56516')) ) {
                     $rel_price = 3.56;
                     $rel_reg   = 4.81;
+                } elseif ( in_array($rel_sku, array('11100', '11101', '11102', '15041', '17065')) ) {
+                    $rel_price = 9.00;
+                    $rel_reg   = 12.15;
                 } elseif ( in_array($rel_sku, array('01015', '02012', '05014')) ) {
                     $rel_price = 5.97;
                     $rel_reg   = 8.06;
@@ -643,15 +735,20 @@ $main_image_url = $thumbs[0];
                 }
 
                 $rel_img = $theme_dir . '/images/hero_' . $rel_sku . '.webp?v=' . time();
+                $rel_clean_title = preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS|CA399 PROVINCIAL PLANK|PROVINCIAL PLANK)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303|CA399)\s*/i', '', get_the_title()));
                 ?>
                 <div class="fd-home-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
                     <a href="<?php echo esc_url( get_permalink() ); ?>" style="text-decoration: none; color: inherit; display: block;">
                         <div style="aspect-ratio: 1 / 1; overflow: hidden; background: #f8fafc; position: relative;">
                             <img src="<?php echo esc_url( $rel_img ); ?>" alt="<?php the_title_attribute(); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                            <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">PRO RATE DISCOUNT</span>
+                            <?php if ( in_array($rel_sku, array('11100', '11101', '11102', '15041', '17065')) ) : ?>
+                                <span style="position: absolute; top: 10px; right: 10px; background: #0f172a; color: #38bdf8; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">BEST TIER 🔒</span>
+                            <?php else : ?>
+                                <span style="position: absolute; top: 10px; right: 10px; background: #16a34a; color: #ffffff; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 0px; text-transform: uppercase; letter-spacing: 0.5px;">PRO RATE DISCOUNT</span>
+                            <?php endif; ?>
                         </div>
                         <div style="padding: 16px 14px;">
-                            <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;"><?php echo esc_html( preg_replace('/^(BRANCHING OUT|REFINED OAK|OAK TRADITIONS)\s*[\-\–\—]?\s*/i', '', preg_replace('/^(4308V|CA308|CA303)\s*/i', '', get_the_title())) ); ?></h3>
+                            <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0;"><?php echo esc_html( $rel_clean_title ); ?></h3>
                             <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
                                 <span style="font-size: 14px; font-weight: 600; color: #94a3b8; text-decoration: line-through;">$<?php echo number_format($rel_reg, 2); ?></span>
                                 <span style="font-size: 22px; font-weight: 900; color: #0f172a;">$<?php echo number_format($rel_price, 2); ?></span>
