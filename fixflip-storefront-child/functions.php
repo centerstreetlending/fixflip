@@ -2303,7 +2303,7 @@ function fixflip_route_custom_templates( $template ) {
         }
     }
 
-    if ( $path === 'flooring' || $path === 'commercial-flooring' ) {
+    if ( $path === 'flooring' || $path === 'commercial-flooring' || strpos($path, 'category/') === 0 || strpos($path, 'collections/') === 0 || strpos($path, 'product-category/') === 0 ) {
         global $wp_query;
         if ( isset($wp_query) ) {
             $wp_query->is_404 = false;

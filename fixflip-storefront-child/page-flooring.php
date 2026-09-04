@@ -151,6 +151,25 @@ $theme_uri = get_stylesheet_directory_uri();
             $mat_cat = sanitize_text_field($_GET['mat_cat']);
         }
 
+        $uri_path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+        if ( empty($col_slug) && empty($mat_cat) && ! empty($uri_path) ) {
+            if ( preg_match('#^(?:category|product-category|collections)/([^/]+)#', $uri_path, $matches) ) {
+                $mat_cat = sanitize_title($matches[1]);
+                $col_slug = sanitize_title($matches[1]);
+            }
+        }
+
+        $current_term = null;
+        if ( is_product_category() ) {
+            $current_term = get_queried_object();
+        } elseif ( ! empty($mat_cat) || ! empty($col_slug) ) {
+            $term_lookup_slug = ! empty($mat_cat) ? $mat_cat : $col_slug;
+            $term_obj = get_term_by('slug', $term_lookup_slug, 'product_cat');
+            if ( $term_obj && ! is_wp_error($term_obj) ) {
+                $current_term = $term_obj;
+            }
+        }
+
         $col_titles = array(
             'vinyl-flooring'      => 'Vinyl Flooring',
             'lvp'                 => 'LVP (Luxury Vinyl Plank)',
@@ -173,10 +192,8 @@ $theme_uri = get_stylesheet_directory_uri();
             array('name' => 'Commercial Flooring', 'url' => '/commercial-flooring/')
         );
 
-        if ( is_product_category() ) {
-            $current_term = get_queried_object();
-            if ( $current_term && is_a($current_term, 'WP_Term') ) {
-                $page_heading = $current_term->name;
+        if ( $current_term && is_a($current_term, 'WP_Term') ) {
+            $page_heading = isset($col_titles[$current_term->slug]) ? $col_titles[$current_term->slug] : $current_term->name;
 
                 // Robust multi-level ancestor walk
                 $ancestors = get_ancestors( $current_term->term_id, 'product_cat', 'taxonomy' );
