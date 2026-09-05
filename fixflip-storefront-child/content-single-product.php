@@ -78,7 +78,7 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
 }
 ?>
 
-<div id="product-<?php the_ID(); ?>" class="fd-single-product-container" style="max-width: 1320px; margin: 0 auto; padding: 24px; font-family: 'Roboto', system-ui, -apple-system, sans-serif; color: #0f172a;">
+<div id="product-<?php the_ID(); ?>" class="fd-single-product-container" style="max-width: 1320px; margin: 0 auto; padding: 24px; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #0f172a;">
 
     <?php
     // Dynamic 4-Level Breadcrumb Taxonomy Trail

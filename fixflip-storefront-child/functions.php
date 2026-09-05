@@ -1085,7 +1085,7 @@ function fixflip_render_ajax_cart_drawer() {
     <div id="fd-cart-drawer-backdrop" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999998;"></div>
 
     <!-- Slide-Out Drawer Panel from Right -->
-    <aside id="fd-cart-drawer-panel" style="position: fixed; top: 0; right: -420px; width: 400px; max-width: 90vw; height: 100vh; background: #ffffff; z-index: 999999; box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; font-family: 'Roboto', sans-serif;">
+    <aside id="fd-cart-drawer-panel" style="position: fixed; top: 0; right: -420px; width: 400px; max-width: 90vw; height: 100vh; background: #ffffff; z-index: 999999; box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         
         <!-- Drawer Header -->
         <div style="padding: 20px 24px; border-bottom: 1.5px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
@@ -2563,7 +2563,7 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
     $reg_url      = add_query_arg( array( 'tab' => 'register', 'redirect_to' => urlencode( $current_url ) ), home_url( '/member-login/' ) );
     $theme_uri    = get_stylesheet_directory_uri();
     ?>
-    <div class="fd-trade-gate-container" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; background: #f8fafc; font-family: 'Roboto', system-ui, -apple-system, sans-serif;">
+    <div class="fd-trade-gate-container" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; background: #f8fafc; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="max-width: 560px; width: 100%; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; box-shadow: 0 16px 40px rgba(0,0,0,0.08); padding: 36px 32px; box-sizing: border-box; text-align: center;">
             
             <!-- Lock Icon Badge -->

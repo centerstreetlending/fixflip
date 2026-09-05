@@ -17,9 +17,11 @@
   <?php wp_head(); ?>
   
   <style>
-    /* Global Proportional Typography Override */
-    html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, a, div {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    /* Global Proportional Typography Override - Unified Inter (Atoms / Manors style) */
+    *, *::before, *::after,
+    html, body, button, input, select, textarea,
+    h1, h2, h3, h4, h5, h6, p, span, a, div, li, ul, ol, label, table, th, td, b, strong, em, small {
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
         letter-spacing: -0.011em !important;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -350,7 +352,7 @@
     body.single-product .fd-title,
     body.single-product .product_title,
     body.single-product h1.entry-title {
-        font-family: 'Roboto', 'Roboto', sans-serif !important;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         font-weight: 600 !important; /* Reduced from heavy 800 to clean 600 */
         font-size: 28px !important;
         color: #111111 !important;

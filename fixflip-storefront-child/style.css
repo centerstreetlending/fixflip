@@ -6,9 +6,11 @@
  Template:     storefront
  Version:      2.1.0
 */
-/* GLOBAL TYPOGRAPHY TIGHTENING & PROPORTIONAL FIX */
-html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, a, div {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+/* GLOBAL TYPOGRAPHY TIGHTENING & PROPORTIONAL FIX - UNIFIED INTER */
+*, *::before, *::after,
+html, body, button, input, select, textarea,
+h1, h2, h3, h4, h5, h6, p, span, a, div, li, ul, ol, table, th, td, label {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
     letter-spacing: -0.011em !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -103,6 +105,7 @@ button {
     stroke: #fff;
     stroke-width: 2;
     fill: none;
+}
 
 /* Mega Dropdown Panel */
 .mega-dropdown {
@@ -137,7 +140,7 @@ button {
 }
 
 .mega-column h4 {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 16px;
     font-weight: 800;
     color: #111;
@@ -204,13 +207,10 @@ button {
 .fd-title {
     font-size: 32px;
     font-weight: 800;
-.fd-title {
-    font-size: 32px;
-    font-weight: 800;
     text-transform: uppercase;
     line-height: 1.2;
     margin-bottom: 24px;
-    font-family: 'Archivo', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     letter-spacing: -0.5px;
 }
 
