@@ -821,10 +821,10 @@ function fixflip_force_enable_cod() {
     }
 }
 
-// 7. Force Classic Checkout (Blocks do not respect checkout hooks)
+// 7. Force Classic Checkout and Cart (Blocks do not respect checkout/cart hooks)
 add_action('init', 'fixflip_force_classic_checkout');
 function fixflip_force_classic_checkout() {
-    if (!get_option('fixflip_classic_checkout_forced')) {
+    if (!get_option('fixflip_classic_cart_forced_v2')) {
         $checkout_id = wc_get_page_id('checkout');
         if ($checkout_id) {
             wp_update_post(array(
@@ -839,7 +839,7 @@ function fixflip_force_classic_checkout() {
                 'post_content' => '[woocommerce_cart]'
             ));
         }
-        update_option('fixflip_classic_checkout_forced', true);
+        update_option('fixflip_classic_cart_forced_v2', true);
     }
 }
 
@@ -2353,6 +2353,19 @@ function fixflip_route_custom_templates( $template ) {
         }
     }
 
+    if ( $path === 'cart' || $path === 'cart/' ) {
+        global $wp_query;
+        if ( isset($wp_query) ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+        status_header(200);
+        $custom_template = get_stylesheet_directory() . '/page-cart.php';
+        if ( file_exists( $custom_template ) ) {
+            return $custom_template;
+        }
+    }
+
     if ( $path === 'flooring' || $path === 'commercial-flooring' || strpos($path, 'category/') === 0 || strpos($path, 'collections/') === 0 || strpos($path, 'product-category/') === 0 ) {
         global $wp_query;
         if ( isset($wp_query) ) {
@@ -2366,6 +2379,19 @@ function fixflip_route_custom_templates( $template ) {
         }
     }
 
+    return $template;
+}
+
+/**
+ * Force WooCommerce to load Child Theme templates from /woocommerce/
+ */
+add_filter( 'woocommerce_locate_template', 'fixflip_force_cart_template_override', 99, 3 );
+add_filter( 'wc_get_template', 'fixflip_force_cart_template_override', 99, 2 );
+function fixflip_force_cart_template_override( $template, $template_name, $template_path = '' ) {
+    $theme_file = get_stylesheet_directory() . '/woocommerce/' . $template_name;
+    if ( file_exists( $theme_file ) ) {
+        return $theme_file;
+    }
     return $template;
 }
 

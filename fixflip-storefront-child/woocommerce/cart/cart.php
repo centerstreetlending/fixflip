@@ -71,7 +71,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                             <?php
                                             $thumbnail = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key );
 
-                                            if ( ! $product_permalink ) {
+                                            if ( ! $product_permalink || strpos( $thumbnail, '<a ' ) !== false ) {
                                                 echo $thumbnail; // PHPCS: XSS ok.
                                             } else {
                                                 printf( '<a href="%s" style="text-decoration: none; display: block;">%s</a>', esc_url( $product_permalink ), $thumbnail ); // PHPCS: XSS ok.

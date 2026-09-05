@@ -55,10 +55,7 @@ $theme_uri = get_stylesheet_directory_uri();
         <!-- MAIN WOOCOMMERCE CONTENT -->
         <div class="fd-cart-content-container">
             <?php
-            while ( have_posts() ) :
-                the_post();
-                the_content();
-            endwhile;
+            echo do_shortcode( '[woocommerce_cart]' );
             ?>
         </div>
 
