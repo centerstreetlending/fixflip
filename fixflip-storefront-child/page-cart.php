@@ -17,11 +17,11 @@ get_header();
 $theme_uri = get_stylesheet_directory_uri();
 ?>
 
-<div class="fd-cart-page-wrap" style="background: #f8fafc; min-height: 75vh; padding: 32px 16px 80px 16px; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a;">
+<div class="fd-cart-page-wrap" style="background: #f8fafc; min-height: 75vh; padding: 44px 20px 80px 20px; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a;">
     <div style="max-width: 1240px; margin: 0 auto;">
 
         <!-- BREADCRUMBS -->
-        <div class="fd-breadcrumbs" style="font-size: 13.5px; font-weight: 500; color: #64748b; margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
+        <div class="fd-breadcrumbs" style="font-size: 13.5px; font-weight: 500; color: #64748b; margin-bottom: 22px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
             <a href="/" style="color: #007bff; font-weight: 700; text-decoration: none;">Home</a>
             <span style="color: #94a3b8;">&rsaquo;</span>
             <a href="/commercial-flooring/" style="color: #007bff; font-weight: 700; text-decoration: none;">Commercial Flooring</a>
