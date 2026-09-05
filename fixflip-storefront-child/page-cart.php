@@ -1,0 +1,69 @@
+<?php
+/**
+ * Template Name: FixFlip Material Cart
+ * Description: Dedicated Contractor & Rehab Material Order Cart Page
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+// Prevent caching on cart page
+if ( ! headers_sent() ) {
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Pragma: no-cache' );
+    header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
+}
+
+get_header();
+$theme_uri = get_stylesheet_directory_uri();
+?>
+
+<div class="fd-cart-page-wrap" style="background: #f8fafc; min-height: 75vh; padding: 32px 16px 80px 16px; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0f172a;">
+    <div style="max-width: 1240px; margin: 0 auto;">
+
+        <!-- BREADCRUMBS -->
+        <div class="fd-breadcrumbs" style="font-size: 13.5px; font-weight: 500; color: #64748b; margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
+            <a href="/" style="color: #007bff; font-weight: 700; text-decoration: none;">Home</a>
+            <span style="color: #94a3b8;">&rsaquo;</span>
+            <a href="/commercial-flooring/" style="color: #007bff; font-weight: 700; text-decoration: none;">Commercial Flooring</a>
+            <span style="color: #94a3b8;">&rsaquo;</span>
+            <span style="color: #0f172a; font-weight: 700;">Review Material Cart</span>
+        </div>
+
+        <!-- HERO HEADER BANNER -->
+        <div class="fd-cart-hero" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 28px 32px; margin-bottom: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <span style="display: inline-block; font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">
+                    PROJECT ORDER SUMMARY &bull; 100% DRAW FINANCING ELIGIBLE
+                </span>
+                <h1 style="font-size: 28px; font-weight: 900; color: #0f172a; margin: 0 0 6px 0; letter-spacing: -0.4px;">
+                    Review Your Material Cart
+                </h1>
+                <p style="font-size: 14px; color: #64748b; margin: 0; font-weight: 500;">
+                    Verify pallet quantities, calculated sq ft coverage, and direct jobsite freight delivery before proceeding.
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 12px; font-weight: 800; padding: 8px 14px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                    <span>🔒 CSL Draw Eligible</span>
+                </div>
+                <a href="/commercial-flooring/" style="background: #f1f5f9; color: #0f172a; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 800; padding: 8px 16px; border-radius: 3px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;" onmouseover="this.style.borderColor='#007bff'; this.style.color='#007bff';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#0f172a';">
+                    &larr; Add More Materials
+                </a>
+            </div>
+        </div>
+
+        <!-- MAIN WOOCOMMERCE CONTENT -->
+        <div class="fd-cart-content-container">
+            <?php
+            while ( have_posts() ) :
+                the_post();
+                the_content();
+            endwhile;
+            ?>
+        </div>
+
+    </div>
+</div>
+
+<?php
+get_footer();

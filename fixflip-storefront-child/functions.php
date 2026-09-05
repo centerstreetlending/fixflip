@@ -883,14 +883,51 @@ function fixflip_custom_mini_cart_qty( $html, $cart_item, $cart_item_key ) {
     return '<div class="fd-mini-qty">1 item &bull; ' . $boxes . ' boxes</div><div class="fd-mini-price">' . $product_price . '</div>';
 }
 
-// 13. Inject Product Images & Clean Titles into Checkout Table
+// 13. Dynamic Cart Item Thumbnail Resolver (Fixes placeholder images in Cart)
+add_filter( 'woocommerce_cart_item_thumbnail', 'fixflip_custom_cart_item_thumbnail', 10, 3 );
+function fixflip_custom_cart_item_thumbnail( $thumbnail, $cart_item, $cart_item_key ) {
+    $product = isset( $cart_item['data'] ) ? $cart_item['data'] : null;
+    if ( ! $product ) {
+        return $thumbnail;
+    }
+    $sku = fixflip_resolve_sku( $product );
+    $img_url = get_stylesheet_directory_uri() . '/images/hero_' . $sku . '.webp';
+    $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $product->is_visible() ? $product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
+
+    $img_html = '<img src="' . esc_url( $img_url ) . '" alt="' . esc_attr( $product->get_name() ) . '" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail fd-cart-img" style="width: 80px; height: 80px; min-width: 80px; max-width: 80px; object-fit: cover; border-radius: 4px; border: 1.5px solid #e2e8f0; display: block; box-shadow: 0 2px 6px rgba(0,0,0,0.04);" />';
+
+    if ( ! $product_permalink ) {
+        return $img_html;
+    } else {
+        return sprintf( '<a href="%s" style="display: block; line-height: 0; text-decoration: none;">%s</a>', esc_url( $product_permalink ), $img_html );
+    }
+}
+
+// 13b. Global WooCommerce Product Image Fallback (Ensures hero images appear across all WC templates)
+add_filter( 'woocommerce_product_get_image', 'fixflip_custom_product_image_fallback', 10, 5 );
+function fixflip_custom_product_image_fallback( $image, $product, $size, $attr, $placeholder ) {
+    if ( empty( $image ) || strpos( $image, 'placeholder' ) !== false || ( is_object( $product ) && method_exists( $product, 'get_id' ) && ! has_post_thumbnail( $product->get_id() ) ) ) {
+        $sku = fixflip_resolve_sku( $product );
+        $img_url = get_stylesheet_directory_uri() . '/images/hero_' . $sku . '.webp';
+        $alt = ( is_object( $product ) && method_exists( $product, 'get_name' ) ) ? esc_attr( $product->get_name() ) : 'FixFlip Flooring';
+        $style = isset( $attr['style'] ) ? esc_attr( $attr['style'] ) : 'width: 100%; height: 100%; object-fit: cover;';
+        $class = isset( $attr['class'] ) ? esc_attr( $attr['class'] ) : 'attachment-woocommerce_thumbnail size-woocommerce_thumbnail';
+        return '<img src="' . esc_url( $img_url ) . '" class="' . $class . '" alt="' . $alt . '" style="' . $style . '" />';
+    }
+    return $image;
+}
+
+// 13c. Inject Product Images & Clean Titles into Checkout Table
 add_filter( 'woocommerce_cart_item_name', 'fixflip_checkout_product_image', 10, 3 );
 function fixflip_checkout_product_image( $name, $cart_item, $cart_item_key ) {
     if ( ! is_checkout() || is_wc_endpoint_url() ) {
         return $name;
     }
-    $raw_title = $cart_item['data']->get_name();
-    $thumbnail = $cart_item['data']->get_image(array(48, 48), array('style' => 'width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1; flex-shrink: 0;'));
+    $product = isset( $cart_item['data'] ) ? $cart_item['data'] : null;
+    $raw_title = $product ? $product->get_name() : '';
+    $sku = fixflip_resolve_sku( $product );
+    $img_url = get_stylesheet_directory_uri() . '/images/hero_' . $sku . '.webp';
+    $thumbnail = '<img src="' . esc_url( $img_url ) . '" style="width: 52px; height: 52px; min-width: 52px; object-fit: cover; border-radius: 4px; border: 1.5px solid #cbd5e1; flex-shrink: 0; display: block;" alt="' . esc_attr($raw_title) . '">';
     
     return '<div style="display: inline-flex; align-items: center; gap: 12px; vertical-align: middle;">' . $thumbnail . '<span style="font-size: 15px; font-weight: 800; color: #0f172a; line-height: 1.3;">' . esc_html($raw_title) . '</span></div>';
 }

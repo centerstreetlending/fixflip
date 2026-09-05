@@ -883,11 +883,11 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
           </div>
 
-          <!-- 3. PRO FINANCING & DRAWS NAV ITEM -->
+          <!-- 3. HOW IT WORKS NAV ITEM -->
           <div class="nav-item" style="position: relative;">
             <a href="/how-it-works/" class="mega-menu-link" style="color: #007bff !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-              <span class="desktop-nav-txt">PRO FINANCING &amp; DRAWS</span>
-              <span class="mobile-nav-txt">PRO FINANCING</span>
+              <span class="desktop-nav-txt">HOW IT WORKS</span>
+              <span class="mobile-nav-txt">HOW IT WORKS</span>
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
 
