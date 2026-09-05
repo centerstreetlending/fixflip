@@ -55,9 +55,12 @@ add_action( 'wp_enqueue_scripts', 'fixflip_enqueue_styles', 20 );
 // 1. Enable Instant Live Updates & Prevent Cloudflare HTML Stale Lock
 add_action('send_headers', 'fixflip_enable_fast_edge_caching_headers', 9999);
 function fixflip_enable_fast_edge_caching_headers() {
-    header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0');
     header('Pragma: no-cache');
     header('Expires: Wed, 11 Jan 1984 05:00:00 GMT');
+    header('Cloudflare-CDN-Cache-Control: no-cache');
+    header('CDN-Cache-Control: no-cache');
+    header('Surrogate-Control: no-store');
     header('X-Accelerated-By: FixFlip-LiveSync');
 }
 
@@ -770,11 +773,11 @@ function fixflip_add_csl_draw_email_callout($order, $sent_to_admin, $plain_text,
     if ( $order ) {
         $loan_number = get_post_meta($order->get_id(), 'Loan Number', true);
         echo '<div class="csl-loan-callout" style="background: #e0f2fe; border: 1.5px solid #0284c7; padding: 16px 20px; margin-bottom: 24px;">';
-        echo '<h3 style="color: #0369a1; margin: 0 0 4px 0; font-size: 14px; font-weight: 800; text-transform: uppercase;">Center Street Lending Active Draw</h3>';
+        echo '<h3 style="color: #0369a1; margin: 0 0 4px 0; font-size: 14px; font-weight: 800; text-transform: uppercase;">Center Street Lending Material Advance</h3>';
         if ($loan_number) {
-            echo '<p style="color: #0c4a6e; margin: 0; font-size: 13.5px; font-weight: 600;"><strong>Active Loan Number:</strong> ' . esc_html($loan_number) . ' &bull; <em>100% Draw Financed ($0 Out-of-Pocket Cash Today)</em></p>';
+            echo '<p style="color: #0c4a6e; margin: 0; font-size: 13.5px; font-weight: 600;"><strong>Active Loan Number:</strong> ' . esc_html($loan_number) . ' &bull; <em>Advanced Through Existing Loan ($0 Out-of-Pocket Cash Today)</em></p>';
         } else {
-            echo '<p style="color: #0c4a6e; margin: 0; font-size: 13.5px; font-weight: 600;"><em>100% Draw Financed through Center Street Lending ($0 Out-of-Pocket Cash Today)</em></p>';
+            echo '<p style="color: #0c4a6e; margin: 0; font-size: 13.5px; font-weight: 600;"><em>Advanced through Center Street Lending ($0 Out-of-Pocket Cash Today)</em></p>';
         }
         echo '</div>';
     }
@@ -2451,7 +2454,7 @@ add_filter( 'site_icon_meta_tags', function( $meta_tags ) {
  * and Cloudflare do not serve stale HTML after theme file updates.
  */
 function fixflip_nocache_shop_pages() {
-    if ( is_shop() || is_product_category() || is_product() || is_woocommerce() ) {
+    if ( is_front_page() || is_home() || is_shop() || is_product_category() || is_product() || is_woocommerce() ) {
         if ( ! headers_sent() ) {
             header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0' );
             header( 'Pragma: no-cache' );
@@ -2462,9 +2465,9 @@ function fixflip_nocache_shop_pages() {
             header( 'x-accel-expires: 0' );
         }
         // Tell WordPress object cache not to cache this request
-        define( 'DONOTCACHEPAGE', true );
-        define( 'DONOTCACHEOBJECT', true );
-        define( 'DONOTMINIFY', true );
+        if ( ! defined('DONOTCACHEPAGE') ) define( 'DONOTCACHEPAGE', true );
+        if ( ! defined('DONOTCACHEOBJECT') ) define( 'DONOTCACHEOBJECT', true );
+        if ( ! defined('DONOTMINIFY') ) define( 'DONOTMINIFY', true );
     }
 }
 add_action( 'template_redirect', 'fixflip_nocache_shop_pages', 1 );
