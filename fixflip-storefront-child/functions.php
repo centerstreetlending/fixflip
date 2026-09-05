@@ -2366,6 +2366,23 @@ function fixflip_route_custom_templates( $template ) {
         }
     }
 
+    if ( $path === 'checkout' || $path === 'checkout/' ) {
+        // If order received endpoint, let WooCommerce handle thankyou.php
+        if ( ! empty( $GLOBALS['wp']->query_vars['order-received'] ) || isset( $_GET['key'] ) ) {
+            return $template;
+        }
+        global $wp_query;
+        if ( isset($wp_query) ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+        status_header(200);
+        $custom_template = get_stylesheet_directory() . '/page-checkout.php';
+        if ( file_exists( $custom_template ) ) {
+            return $custom_template;
+        }
+    }
+
     if ( $path === 'flooring' || $path === 'commercial-flooring' || strpos($path, 'category/') === 0 || strpos($path, 'collections/') === 0 || strpos($path, 'product-category/') === 0 ) {
         global $wp_query;
         if ( isset($wp_query) ) {
