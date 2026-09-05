@@ -52,6 +52,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(7)</span>
                 </label>
+                <?php if ( is_user_logged_in() ) : ?>
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="cat" value="best" style="width: 16px; height: 16px; accent-color: #007bff;">
@@ -59,6 +60,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(5)</span>
                 </label>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -89,6 +91,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
                 </label>
+                <?php if ( is_user_logged_in() ) : ?>
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="collection" value="ca399" style="width: 16px; height: 16px; accent-color: #007bff;">
@@ -96,6 +99,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(5)</span>
                 </label>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -126,6 +130,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
                 </label>
+                <?php if ( is_user_logged_in() ) : ?>
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="size" value="7.5x74.8" style="width: 16px; height: 16px; accent-color: #007bff;">
@@ -133,6 +138,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(5)</span>
                 </label>
+                <?php endif; ?>
             </div>
         </div>
 

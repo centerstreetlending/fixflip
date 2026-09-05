@@ -397,7 +397,7 @@ $theme_uri = get_stylesheet_directory_uri();
 /* 4. VISUAL CATEGORY TILES */
 .fd-cat-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 16px;
     margin-bottom: 44px;
 }
@@ -888,6 +888,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             <div class="fd-spot-tier-price">$5.97 <span style="font-size:10px;color:#94a3b8;font-weight:600;">/ sqft</span></div>
                         </a>
 
+                        <?php if ( is_user_logged_in() ) : ?>
                         <a href="/category/hardwood-best/" class="fd-spot-tier-row">
                             <div>
                                 <div class="fd-spot-tier-name">Best Tier Engineered White Oak 🔒</div>
@@ -895,6 +896,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             </div>
                             <div class="fd-spot-tier-price">$9.00 <span style="font-size:10px;color:#94a3b8;font-weight:600;">/ sqft</span></div>
                         </a>
+                        <?php endif; ?>
                     </div>
 
                     <div class="fd-spot-footer-note">
@@ -1009,6 +1011,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     </div>
                 </a>
 
+                <?php if ( is_user_logged_in() ) : ?>
                 <!-- 4. Best Tier White Oak -->
                 <a href="/category/hardwood-best/" class="fd-cat-card">
                     <div class="fd-cat-thumb">
@@ -1024,6 +1027,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         <span class="fd-cat-link">Unlock 5 Best Colors &rarr; 🔒</span>
                     </div>
                 </a>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -1051,7 +1055,9 @@ $theme_uri = get_stylesheet_directory_uri();
                                 <option value="3.56" selected>Waterproof Vinyl Plank ($3.56 / sqft)</option>
                                 <option value="5.12">Good Tier Red Oak ($5.12 / sqft)</option>
                                 <option value="5.97">Better Tier White Oak ($5.97 / sqft)</option>
+                                <?php if ( is_user_logged_in() ) : ?>
                                 <option value="9.00">Best Tier White Oak ($9.00 / sqft) 🔒</option>
+                                <?php endif; ?>
                             </select>
                         </div>
                     </div>
@@ -1107,12 +1113,14 @@ $theme_uri = get_stylesheet_directory_uri();
 
             <!-- Instant Category Filter Tabs -->
             <div class="fd-tab-strip">
-                <button type="button" class="fd-tab-btn is-active" data-filter="all">All Flooring (16)</button>
+                <button type="button" class="fd-tab-btn is-active" data-filter="all">All Flooring (<?php echo is_user_logged_in() ? '16' : '11'; ?>)</button>
                 <button type="button" class="fd-tab-btn" data-filter="spc">Waterproof Vinyl &bull; $3.56 (4)</button>
-                <button type="button" class="fd-tab-btn" data-filter="wood">All Engineered Wood (12)</button>
+                <button type="button" class="fd-tab-btn" data-filter="wood">All Engineered Wood (<?php echo is_user_logged_in() ? '12' : '7'; ?>)</button>
                 <button type="button" class="fd-tab-btn" data-filter="good">Good Tier Red Oak &bull; $5.12 (4)</button>
                 <button type="button" class="fd-tab-btn" data-filter="better">Better Tier White Oak &bull; $5.97 (3)</button>
+                <?php if ( is_user_logged_in() ) : ?>
                 <button type="button" class="fd-tab-btn" data-filter="best" style="border-color: #007bff; color: #007bff; font-weight: 800;">Best Tier White Oak &bull; $9.00 (5) 🔒</button>
+                <?php endif; ?>
                 <a href="/member-login/" class="fd-tab-btn" style="background: <?php echo is_user_logged_in() ? '#f0fdf4' : '#0f172a'; ?>; color: <?php echo is_user_logged_in() ? '#166534' : '#ffffff'; ?>; border-color: <?php echo is_user_logged_in() ? '#86efac' : '#0f172a'; ?>; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-left: auto;">
                     <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2.4;fill:none;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     <span><?php echo is_user_logged_in() ? 'Project Management 🔒' : 'Member Login 🔒'; ?></span>
@@ -1397,6 +1405,7 @@ $theme_uri = get_stylesheet_directory_uri();
                     </a>
                 </div>
 
+                <?php if ( is_user_logged_in() ) : ?>
                 <!-- 12. Parchment White Oak (Best Tier $9.00) -->
                 <div class="fd-card" data-cat="best wood hardwood engineered-wood">
                     <a href="/product/parchment-white-oak-ca399-provincial-plank/" style="text-decoration: none; color: inherit;">
@@ -1521,6 +1530,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         </div>
                     </a>
                 </div>
+                <?php endif; ?>
 
             </div>
         </section>

@@ -842,15 +842,19 @@ document.addEventListener('DOMContentLoaded', function() {
                   <a href="/product/sophisticated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Sophisticated White Oak</a>
                   <a href="/product/cultivated-oak-engineered-hardwood/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px;">&bull; Cultivated White Oak</a>
                   
+                  <?php if ( is_user_logged_in() ) : ?>
                   <div style="font-size: 10px; font-weight: 900; color: #007bff; text-transform: uppercase; margin: 6px 0 2px 0; border-top: 1px dashed #e2e8f0; padding-top: 5px;">Best Tier White Oak ($9.00/sqft) 🔒</div>
                   <a href="/product/parchment-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Parchment White Oak 7.5"</a>
                   <a href="/product/french-buff-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; French Buff White Oak 7.5"</a>
                   <a href="/product/au-naturale-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Au Naturale White Oak 7.5"</a>
                   <a href="/product/ashen-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Ashen White Oak 7.5"</a>
                   <a href="/product/fawn-white-oak-ca399-provincial-plank/" class="nav-sublink" style="padding-top: 3px; padding-bottom: 3px; color: #0f172a; font-weight: 700;">&bull; Fawn White Oak 7.5"</a>
+                  <?php endif; ?>
                   
                   <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <?php if ( is_user_logged_in() ) : ?>
                     <a href="/category/hardwood-best/" style="flex: 1; text-align: center; padding: 6px 8px; font-size: 11px; font-weight: 800; color: #007bff; text-decoration: none; background: #eff6ff; border: 1px solid #bfdbfe;">Best Tier (🔒 $9.00)</a>
+                    <?php endif; ?>
                     <a href="/category/hardwood-flooring/" style="flex: 1; text-align: center; padding: 6px 8px; font-size: 11px; font-weight: 800; color: #b45309; text-decoration: none; background: #fffbeb;">All Hardwood &rarr;</a>
                   </div>
                 </div>
@@ -915,7 +919,6 @@ document.addEventListener('DOMContentLoaded', function() {
               <?php else : ?>
                 <a href="/member-login/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #0f172a; text-decoration: none;">Member Sign In (Project Portal) &rarr;</a>
                 <a href="/member-login/?tab=register" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">Create Free Account (Project Management) &rarr;</a>
-                <a href="/category/hardwood-best/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #475569; text-decoration: none; border-top: 1px solid #f1f5f9;">Best Tier White Oak ($9.00) 🔒 &rarr;</a>
               <?php endif; ?>
             </div>
           </div>

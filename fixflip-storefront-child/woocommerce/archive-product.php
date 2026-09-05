@@ -315,6 +315,9 @@ $theme_uri = get_stylesheet_directory_uri();
         // Filter out Uncategorized and old collection slugs
         if ( ! empty($sub_cats) && ! is_wp_error($sub_cats) ) {
             $excluded_slugs = array('uncategorized', 'oak-traditions', 'refined-oak', 'branching-out');
+            if ( ! is_user_logged_in() ) {
+                $excluded_slugs[] = 'hardwood-best';
+            }
             $sub_cats = array_filter($sub_cats, function($c) use ($excluded_slugs) {
                 return ! in_array($c->slug, $excluded_slugs);
             });
@@ -378,6 +381,9 @@ $theme_uri = get_stylesheet_directory_uri();
                                 continue;
                             }
                             $sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
+                            if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) && ! is_user_logged_in() ) {
+                                continue;
+                            }
                             $price = (float)($product->get_price() ?: 2.55);
 
                             // Compute regular retail price and metadata by SKU
