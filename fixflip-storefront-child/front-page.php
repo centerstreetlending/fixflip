@@ -1184,7 +1184,11 @@ $theme_uri = get_stylesheet_directory_uri();
                 <button type="button" class="fd-tab-btn" data-filter="wood">All Engineered Wood (12)</button>
                 <button type="button" class="fd-tab-btn" data-filter="good">Good Tier Red Oak &bull; $5.12 (4)</button>
                 <button type="button" class="fd-tab-btn" data-filter="better">Better Tier White Oak &bull; $5.97 (3)</button>
-                <button type="button" class="fd-tab-btn" data-filter="best">Best Tier White Oak &bull; $9.00 (5) 🔒</button>
+                <button type="button" class="fd-tab-btn" data-filter="best" style="border-color: #007bff; color: #007bff; font-weight: 800;">Best Tier White Oak &bull; $9.00 (5) 🔒</button>
+                <a href="/member-login/" class="fd-tab-btn" style="background: <?php echo is_user_logged_in() ? '#f0fdf4' : '#0f172a'; ?>; color: <?php echo is_user_logged_in() ? '#166534' : '#ffffff'; ?>; border-color: <?php echo is_user_logged_in() ? '#86efac' : '#0f172a'; ?>; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-left: auto;">
+                    <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2.4;fill:none;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <span><?php echo is_user_logged_in() ? 'Trade Dashboard' : 'Member Login 🔒'; ?></span>
+                </a>
             </div>
 
             <!-- 16 Master Products Grid -->

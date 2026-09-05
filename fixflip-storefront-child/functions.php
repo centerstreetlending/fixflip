@@ -2303,6 +2303,19 @@ function fixflip_route_custom_templates( $template ) {
         }
     }
 
+    if ( $path === 'member-login' || $path === 'trade-login' || $path === 'member-portal' || $path === 'membership' ) {
+        global $wp_query;
+        if ( isset($wp_query) ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+        status_header(200);
+        $custom_template = get_stylesheet_directory() . '/page-member-login.php';
+        if ( file_exists( $custom_template ) ) {
+            return $custom_template;
+        }
+    }
+
     if ( $path === 'flooring' || $path === 'commercial-flooring' || strpos($path, 'category/') === 0 || strpos($path, 'collections/') === 0 || strpos($path, 'product-category/') === 0 ) {
         global $wp_query;
         if ( isset($wp_query) ) {
@@ -2399,10 +2412,10 @@ function fixflip_cleanup_duplicate_grand_oak_products() {
 }
 
 /**
- * Check if the visitor has unlocked Best Tier trade access
+ * Check if the visitor has unlocked Best Tier trade access (Logged in member, cookie, or passcode)
  */
 function fixflip_is_best_tier_unlocked() {
-    if ( is_user_logged_in() && current_user_can( 'manage_woocommerce' ) ) {
+    if ( is_user_logged_in() ) {
         return true;
     }
     if ( isset( $_GET['trade_pass'] ) && strtolower( trim( sanitize_text_field( $_GET['trade_pass'] ) ) ) === 'flooring' ) {
@@ -2415,25 +2428,123 @@ function fixflip_is_best_tier_unlocked() {
 }
 
 /**
- * Handle Best Tier Trade Password submission
+ * Handle Member Sign In, Registration, and Quick Passcode Submissions
  */
-add_action( 'init', 'fixflip_handle_best_tier_login', 1 );
-function fixflip_handle_best_tier_login() {
+add_action( 'init', 'fixflip_handle_member_auth_actions', 1 );
+function fixflip_handle_member_auth_actions() {
+    // 1. Member Sign In
+    if ( isset( $_POST['fixflip_auth_action'] ) && $_POST['fixflip_auth_action'] === 'member_login' ) {
+        $username    = isset( $_POST['member_username'] ) ? sanitize_text_field( $_POST['member_username'] ) : '';
+        $password    = isset( $_POST['member_password'] ) ? $_POST['member_password'] : '';
+        $remember    = isset( $_POST['rememberme'] ) && $_POST['rememberme'] === 'forever';
+        $redirect_to = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : home_url( '/category/hardwood-best/' );
+
+        $creds = array(
+            'user_login'    => $username,
+            'user_password' => $password,
+            'remember'      => $remember,
+        );
+
+        $user = wp_signon( $creds, is_ssl() );
+
+        if ( is_wp_error( $user ) ) {
+            $redirect = add_query_arg( array( 'auth_error' => 'invalid_creds', 'tab' => 'login' ), home_url( '/member-login/' ) );
+            wp_redirect( $redirect );
+            exit;
+        } else {
+            wp_set_current_user( $user->ID );
+            wp_set_auth_cookie( $user->ID, $remember );
+            setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
+            $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
+            wp_redirect( $redirect_to );
+            exit;
+        }
+    }
+
+    // 2. Create Trade Account / Registration
+    if ( isset( $_POST['fixflip_auth_action'] ) && $_POST['fixflip_auth_action'] === 'member_register' ) {
+        $first_name   = isset( $_POST['reg_first_name'] ) ? sanitize_text_field( $_POST['reg_first_name'] ) : '';
+        $last_name    = isset( $_POST['reg_last_name'] ) ? sanitize_text_field( $_POST['reg_last_name'] ) : '';
+        $company      = isset( $_POST['reg_company'] ) ? sanitize_text_field( $_POST['reg_company'] ) : '';
+        $email        = isset( $_POST['reg_email'] ) ? sanitize_email( $_POST['reg_email'] ) : '';
+        $phone        = isset( $_POST['reg_phone'] ) ? sanitize_text_field( $_POST['reg_phone'] ) : '';
+        $license_loan = isset( $_POST['reg_license_loan'] ) ? sanitize_text_field( $_POST['reg_license_loan'] ) : '';
+        $password     = isset( $_POST['reg_password'] ) ? $_POST['reg_password'] : '';
+        $redirect_to  = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : home_url( '/category/hardwood-best/' );
+
+        if ( empty( $email ) || empty( $password ) || empty( $first_name ) || empty( $last_name ) ) {
+            $redirect = add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            wp_redirect( $redirect );
+            exit;
+        }
+
+        if ( email_exists( $email ) ) {
+            $redirect = add_query_arg( array( 'auth_error' => 'email_exists', 'tab' => 'login' ), home_url( '/member-login/' ) );
+            wp_redirect( $redirect );
+            exit;
+        }
+
+        // Generate username from email
+        $username_base = sanitize_user( current( explode( '@', $email ) ) );
+        $username = $username_base;
+        $counter = 1;
+        while ( username_exists( $username ) ) {
+            $username = $username_base . '_' . $counter;
+            $counter++;
+        }
+
+        $user_id = wp_create_user( $username, $password, $email );
+
+        if ( is_wp_error( $user_id ) ) {
+            $redirect = add_query_arg( array( 'auth_error' => 'error', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            wp_redirect( $redirect );
+            exit;
+        }
+
+        // Set user details and roles
+        wp_update_user( array(
+            'ID'           => $user_id,
+            'first_name'   => $first_name,
+            'last_name'    => $last_name,
+            'display_name' => $first_name . ' ' . $last_name,
+            'role'         => 'customer'
+        ) );
+
+        update_user_meta( $user_id, 'billing_first_name', $first_name );
+        update_user_meta( $user_id, 'billing_last_name', $last_name );
+        update_user_meta( $user_id, 'billing_company', $company );
+        update_user_meta( $user_id, 'billing_phone', $phone );
+        update_user_meta( $user_id, 'billing_email', $email );
+        update_user_meta( $user_id, 'fixflip_company_name', $company );
+        update_user_meta( $user_id, 'fixflip_phone', $phone );
+        update_user_meta( $user_id, 'fixflip_license_loan', $license_loan );
+        update_user_meta( $user_id, 'fixflip_member_tier', 'verified_trade' );
+
+        // Instant auto-login
+        wp_set_current_user( $user_id );
+        wp_set_auth_cookie( $user_id, true );
+        setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
+        $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
+
+        // Redirect to target with success flag
+        $redirect = add_query_arg( 'registered', '1', $redirect_to );
+        wp_redirect( $redirect );
+        exit;
+    }
+
+    // 3. Fast-Track Trade Passcode
     if ( isset( $_POST['fixflip_trade_action'] ) && $_POST['fixflip_trade_action'] === 'unlock_best_tier' ) {
         $entered_pass = isset( $_POST['fixflip_trade_pass'] ) ? strtolower( trim( sanitize_text_field( $_POST['fixflip_trade_pass'] ) ) ) : '';
         $redirect_to  = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : ( wp_get_referer() ?: home_url( '/category/hardwood-best/' ) );
 
         if ( $entered_pass === 'flooring' ) {
-            // Set 30-day cookie
             setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
             $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
 
-            // Remove auth_error parameter if present
             $redirect_to = remove_query_arg( 'auth_error', $redirect_to );
             wp_redirect( $redirect_to );
             exit;
         } else {
-            // Add auth_error parameter
             $redirect_to = add_query_arg( 'auth_error', '1', $redirect_to );
             wp_redirect( $redirect_to );
             exit;
@@ -2448,10 +2559,12 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
     $has_error    = isset( $_GET['auth_error'] ) && $_GET['auth_error'] === '1';
     $current_url  = esc_url( ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
     $current_url  = remove_query_arg( 'auth_error', $current_url );
+    $login_url    = add_query_arg( 'redirect_to', urlencode( $current_url ), home_url( '/member-login/' ) );
+    $reg_url      = add_query_arg( array( 'tab' => 'register', 'redirect_to' => urlencode( $current_url ) ), home_url( '/member-login/' ) );
     $theme_uri    = get_stylesheet_directory_uri();
     ?>
     <div class="fd-trade-gate-container" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; background: #f8fafc; font-family: 'Roboto', system-ui, -apple-system, sans-serif;">
-        <div style="max-width: 540px; width: 100%; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; box-shadow: 0 16px 40px rgba(0,0,0,0.08); padding: 36px 32px; box-sizing: border-box; text-align: center;">
+        <div style="max-width: 560px; width: 100%; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; box-shadow: 0 16px 40px rgba(0,0,0,0.08); padding: 36px 32px; box-sizing: border-box; text-align: center;">
             
             <!-- Lock Icon Badge -->
             <div style="width: 58px; height: 58px; background: #0f172a; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px; box-shadow: 0 4px 14px rgba(15,23,42,0.25);">
@@ -2459,7 +2572,7 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
             </div>
 
             <div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">
-                ARCHITECTURAL &amp; TRADE PARTNER ACCESS
+                MEMBER &amp; TRADE PARTNER ACCESS ONLY
             </div>
 
             <h1 style="font-size: 24px; font-weight: 900; color: #0f172a; margin: 0 0 8px 0; letter-spacing: -0.3px;">
@@ -2476,42 +2589,48 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
                         <img src="<?php echo esc_url( $item_image ); ?>" alt="<?php echo esc_attr( $item_title ); ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 2px; border: 1px solid #cbd5e1; flex-shrink: 0;">
                     <?php endif; ?>
                     <div>
-                        <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase;">LOCKED PRODUCT SPEC</div>
+                        <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase;">MEMBER EXCLUSIVE PRODUCT</div>
                         <div style="font-size: 14px; font-weight: 800; color: #0f172a;"><?php echo esc_html( $item_title ); ?></div>
                     </div>
                 </div>
             <?php endif; ?>
 
             <p style="font-size: 13.5px; color: #475569; line-height: 1.5; margin: 0 0 24px 0;">
-                This premium Best Tier European White Oak line is reserved for verified contractors, developers, and Center Street Lending borrowers. Enter the trade password to unlock full product specifications and wholesale pricing.
+                This premium Best Tier European White Oak line is reserved exclusively for registered trade members, verified contractors, and Center Street Lending borrowers.
             </p>
 
-            <?php if ( $has_error ) : ?>
-                <div style="background: #fef2f2; border: 1.5px solid #f87171; color: #991b1b; padding: 10px 14px; border-radius: 4px; font-size: 13px; font-weight: 700; margin-bottom: 20px;">
-                    Incorrect password. Please verify with your account manager and try again.
-                </div>
-            <?php endif; ?>
+            <!-- Member Action Buttons -->
+            <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                <a href="<?php echo esc_url( $login_url ); ?>" style="flex: 1; padding: 12px 14px; background: #0f172a; color: #ffffff; font-size: 13px; font-weight: 800; text-decoration: none; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; justify-content: center;">
+                    Member Sign In &rarr;
+                </a>
+                <a href="<?php echo esc_url( $reg_url ); ?>" style="flex: 1; padding: 12px 14px; background: #007bff; color: #ffffff; font-size: 13px; font-weight: 800; text-decoration: none; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; justify-content: center;">
+                    Create Free Account &rarr;
+                </a>
+            </div>
 
-            <!-- Login Form -->
-            <form method="POST" action="<?php echo esc_url( $current_url ); ?>" style="margin-bottom: 20px;">
-                <input type="hidden" name="fixflip_trade_action" value="unlock_best_tier">
-                <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $current_url ); ?>">
+            <!-- Fast-Track Passcode Accordion/Form -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 16px;">
+                <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 8px;">
+                    Or Unlock with Instant Trade Passcode:
+                </span>
+                
+                <?php if ( $has_error ) : ?>
+                    <div style="background: #fef2f2; border: 1px solid #f87171; color: #991b1b; padding: 6px 10px; border-radius: 3px; font-size: 12px; font-weight: 700; margin-bottom: 10px;">
+                        Incorrect passcode. Try again or sign in above.
+                    </div>
+                <?php endif; ?>
 
-                <div style="margin-bottom: 14px;">
-                    <label for="fixflip_trade_pass" style="display: block; font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: #0f172a; text-align: left; margin-bottom: 6px; letter-spacing: 0.5px;">
-                        Trade Partner Password
-                    </label>
-                    <input type="password" id="fixflip_trade_pass" name="fixflip_trade_pass" placeholder="Enter trade password..." required autofocus style="width: 100%; padding: 12px 14px; font-size: 15px; border: 1.5px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; font-weight: 600; color: #0f172a; text-align: center; letter-spacing: 2px;">
-                </div>
+                <form method="POST" action="<?php echo esc_url( $current_url ); ?>" style="display: flex; gap: 8px;">
+                    <input type="hidden" name="fixflip_trade_action" value="unlock_best_tier">
+                    <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $current_url ); ?>">
+                    <input type="password" name="fixflip_trade_pass" placeholder="Enter passcode (e.g. flooring)" required style="flex: 1; padding: 10px 12px; font-size: 13.5px; border: 1.5px solid #cbd5e1; border-radius: 3px; font-weight: 700; text-align: center;">
+                    <button type="submit" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 16px; font-size: 12px; font-weight: 900; text-transform: uppercase; border-radius: 3px; cursor: pointer;">Unlock</button>
+                </form>
+            </div>
 
-                <button type="submit" style="width: 100%; padding: 14px 20px; background: #007bff; color: #ffffff; border: none; border-radius: 4px; font-size: 14.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 14px rgba(0,123,255,0.3);" onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
-                    Unlock Best Tier Pricing ($9.00/sqft) &rarr;
-                </button>
-            </form>
-
-            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.5; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                <span>Need immediate trade credentials?</span><br>
-                <span>Contact the FixFlip Pro Desk at <strong style="color: #0f172a;">(949) 705-4300</strong> or email <a href="mailto:support@fixflip.com" style="color: #007bff; text-decoration: none; font-weight: 700;">support@fixflip.com</a></span>
+            <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.5; border-top: 1px solid #f1f5f9; padding-top: 16px; margin-top: 20px;">
+                <span>FixFlip Pro Contractor Desk: <strong style="color: #0f172a;">(949) 705-4300</strong> &bull; <a href="mailto:support@fixflip.com" style="color: #007bff; text-decoration: none; font-weight: 700;">support@fixflip.com</a></span>
             </div>
 
         </div>

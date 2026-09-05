@@ -722,15 +722,30 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="user-links" style="display: flex; align-items: center; gap: 20px; height: 48px;">
 
-          <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" class="account-link" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
-            <div style="display: flex; align-items: center; justify-content: center; color: #007bff;">
-              <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </div>
-            <div style="display: flex; flex-direction: column; text-align: left;">
-              <span style="color: #111; font-weight: 700; font-size: 14px; line-height: 1.2;">My Account</span>
-              <span style="color: #6c757d; font-weight: 500; font-size: 11px; line-height: 1.2;">Check Order Status</span>
-            </div>
-          </a>
+          <?php if ( is_user_logged_in() ) : 
+            $curr_u = wp_get_current_user();
+            $u_name = $curr_u->first_name ?: $curr_u->display_name;
+          ?>
+            <a href="/member-login/" class="account-link" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+              <div style="display: flex; align-items: center; justify-content: center; color: #16a34a;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+              <div style="display: flex; flex-direction: column; text-align: left;">
+                <span style="color: #0f172a; font-weight: 800; font-size: 13.5px; line-height: 1.2;">Hello, <?php echo esc_html($u_name); ?></span>
+                <span style="color: #16a34a; font-weight: 700; font-size: 11px; line-height: 1.2;">Verified Member 🔒</span>
+              </div>
+            </a>
+          <?php else : ?>
+            <a href="/member-login/" class="account-link" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+              <div style="display: flex; align-items: center; justify-content: center; color: #007bff;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+              <div style="display: flex; flex-direction: column; text-align: left;">
+                <span style="color: #111; font-weight: 800; font-size: 13.5px; line-height: 1.2;">Member Login</span>
+                <span style="color: #6c757d; font-weight: 500; font-size: 11px; line-height: 1.2;">Trade Portal 🔒</span>
+              </div>
+            </a>
+          <?php endif; ?>
 
           <div class="cart-container" style="position: relative; height: 100%;">
             <a href="<?php echo wc_get_cart_url(); ?>" class="cart-wrapper" id="header-cart-toggle" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center; height: 100%; margin-left: 16px; padding-left: 24px; border-left: 1px solid #cbd5e1;">
@@ -917,6 +932,31 @@ document.addEventListener('DOMContentLoaded', function() {
               <a href="/appliances/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Appliance Draw Financing &rarr;</a>
               <a href="/cart/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Review Active Cart &rarr;</a>
               <a href="/checkout/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none; border-top: 1px solid #f1f5f9;">Submit Order for CSL Draw &rarr;</a>
+            </div>
+          </div>
+
+          <!-- 4. MEMBER LOGIN / TRADE PORTAL NAV ITEM -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/member-login/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 900; padding: 16px 18px; text-decoration: none; letter-spacing: 0.8px; font-size: 14px; display: flex; align-items: center; gap: 6px; background: <?php echo is_user_logged_in() ? '#f0fdf4' : '#f8fafc'; ?>; border: 1px solid <?php echo is_user_logged_in() ? '#86efac' : '#cbd5e1'; ?>; border-radius: 2px;">
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:<?php echo is_user_logged_in() ? '#16a34a' : '#007bff'; ?>;stroke-width:2.4;fill:none;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span class="desktop-nav-txt"><?php echo is_user_logged_in() ? 'TRADE DASHBOARD' : 'MEMBER LOGIN'; ?></span>
+              <span class="mobile-nav-txt"><?php echo is_user_logged_in() ? 'DASHBOARD' : 'LOGIN'; ?></span>
+              <span style="background: <?php echo is_user_logged_in() ? '#16a34a' : '#007bff'; ?>; color: #ffffff; font-size: 8.5px; font-weight: 900; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.5px;"><?php echo is_user_logged_in() ? 'ACTIVE 🔒' : 'TRADE 🔒'; ?></span>
+              <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#64748b;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+
+            <!-- MEMBER DROPDOWN MENU -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 290px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+              <?php if ( is_user_logged_in() ) : ?>
+                <a href="/member-login/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">Member Dashboard &rarr;</a>
+                <a href="/category/hardwood-best/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Best Tier European White Oak ($9.00) 🔒 &rarr;</a>
+                <a href="<?php echo wc_get_account_endpoint_url('orders'); ?>" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Recent Orders &amp; Swatches &rarr;</a>
+                <a href="<?php echo wp_logout_url( home_url('/member-login/') ); ?>" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #dc2626; text-decoration: none; border-top: 1px solid #f1f5f9;">Sign Out &rarr;</a>
+              <?php else : ?>
+                <a href="/member-login/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #0f172a; text-decoration: none;">Member Sign In &rarr;</a>
+                <a href="/member-login/?tab=register" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">Create Trade Membership Account &rarr;</a>
+                <a href="/category/hardwood-best/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #475569; text-decoration: none; border-top: 1px solid #f1f5f9;">Best Tier White Oak ($9.00) 🔒 &rarr;</a>
+              <?php endif; ?>
             </div>
           </div>
 
