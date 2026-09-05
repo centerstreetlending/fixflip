@@ -259,40 +259,18 @@ $theme_uri = get_stylesheet_directory_uri();
             </div>
         </div>
 
-        <!-- Early Access Notification / Custom Sourcing Box -->
-        <div class="fd-app-early-box">
-            <div class="fd-app-early-title">Have an Active Flip That Needs Appliances Today?</div>
-            <div class="fd-app-early-sub">Our Pro Desk can arrange custom commercial appliance package quotes for active Center Street Lending borrowers right now.</div>
-            
-            <form onsubmit="window.fdHandleEarlyAppliance(event)" class="fd-app-early-form">
-                <input type="text" class="fd-app-early-input" placeholder="Your Name" required>
-                <input type="tel" class="fd-app-early-input" placeholder="Phone Number" required>
-                <input type="text" class="fd-app-early-input" placeholder="CSL Loan # or Property Address" required>
-                <button type="submit" class="fd-app-early-btn">Request Quote &rarr;</button>
-            </form>
-            <div id="fd-early-success" style="display: none; font-size: 12px; color: #4ade80; font-weight: 700; margin-top: 8px;">
-                ✓ Request received! A FixFlip Pro Desk specialist will contact you shortly.
-            </div>
+        <!-- Program Status Box -->
+        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 24px; text-align: center; border-radius: 4px; margin-bottom: 28px;">
+            <div style="font-size: 13px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Program Status: Coming Soon</div>
+            <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.5;">Direct commercial appliance suites and builder packages are currently in development for active Center Street Lending borrowers.</p>
         </div>
 
-        <!-- Navigation CTAs -->
-        <div class="fd-app-soon-ctas">
-            <a href="/commercial-flooring/" class="fd-app-soon-btn-shop">&larr; Shop Commercial Flooring Catalog</a>
-            <a href="/how-it-works/" class="fd-app-soon-btn-hiw">How Rehab Loan Financing Works &rarr;</a>
+        <!-- Navigation CTA -->
+        <div class="fd-app-soon-ctas" style="justify-content: center;">
+            <a href="/commercial-flooring/" class="fd-app-soon-btn-shop">&larr; Return to Commercial Flooring Catalog</a>
         </div>
 
     </div>
 </div>
-
-<script>
-window.fdHandleEarlyAppliance = function(e) {
-    e.preventDefault();
-    var successDiv = document.getElementById('fd-early-success');
-    if (successDiv) {
-        successDiv.style.display = 'block';
-        e.target.reset();
-    }
-};
-</script>
 
 <?php get_footer(); ?>

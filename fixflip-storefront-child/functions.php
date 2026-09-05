@@ -2468,9 +2468,10 @@ function fixflip_handle_member_auth_actions() {
         $company      = isset( $_POST['reg_company'] ) ? sanitize_text_field( $_POST['reg_company'] ) : '';
         $email        = isset( $_POST['reg_email'] ) ? sanitize_email( $_POST['reg_email'] ) : '';
         $phone        = isset( $_POST['reg_phone'] ) ? sanitize_text_field( $_POST['reg_phone'] ) : '';
-        $license_loan = isset( $_POST['reg_license_loan'] ) ? sanitize_text_field( $_POST['reg_license_loan'] ) : '';
-        $password     = isset( $_POST['reg_password'] ) ? $_POST['reg_password'] : '';
-        $redirect_to  = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : home_url( '/category/hardwood-best/' );
+        $license_loan    = isset( $_POST['reg_license_loan'] ) ? sanitize_text_field( $_POST['reg_license_loan'] ) : '';
+        $project_address = isset( $_POST['reg_project_address'] ) ? sanitize_text_field( $_POST['reg_project_address'] ) : '';
+        $password        = isset( $_POST['reg_password'] ) ? $_POST['reg_password'] : '';
+        $redirect_to     = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : home_url( '/member-login/' );
 
         if ( empty( $email ) || empty( $password ) || empty( $first_name ) || empty( $last_name ) ) {
             $redirect = add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) );
@@ -2515,6 +2516,10 @@ function fixflip_handle_member_auth_actions() {
         update_user_meta( $user_id, 'billing_company', $company );
         update_user_meta( $user_id, 'billing_phone', $phone );
         update_user_meta( $user_id, 'billing_email', $email );
+        if ( ! empty( $project_address ) ) {
+            update_user_meta( $user_id, 'billing_address_1', $project_address );
+            update_user_meta( $user_id, 'fixflip_project_address', $project_address );
+        }
         update_user_meta( $user_id, 'fixflip_company_name', $company );
         update_user_meta( $user_id, 'fixflip_phone', $phone );
         update_user_meta( $user_id, 'fixflip_license_loan', $license_loan );

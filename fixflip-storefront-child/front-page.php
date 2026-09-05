@@ -949,79 +949,7 @@ $theme_uri = get_stylesheet_directory_uri();
         </section>
 
         <!-- =============================================================
-             2. THREE PRIMARY DEPARTMENTS
-        ============================================================== -->
-        <section style="margin-bottom: 40px;">
-            <div class="fd-section-header">
-                <div>
-                    <span class="fd-section-kicker">PRO CONTRACTOR DEPARTMENTS</span>
-                    <h2 class="fd-section-title">Shop by Department</h2>
-                </div>
-                <span style="font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 8px; border-radius: 2px;">100% CSL DRAW FINANCED</span>
-            </div>
-
-            <div class="fd-dept-grid">
-                <!-- Dept 1: Flooring -->
-                <a href="/commercial-flooring/" class="fd-dept-card is-featured">
-                    <div>
-                        <div class="fd-dept-kicker">
-                            <span>DEPARTMENT 01</span>
-                            <span style="color: #007bff; font-weight: 900;">25% PRO RATE</span>
-                        </div>
-                        <h3 class="fd-dept-title">Commercial Flooring</h3>
-                        <div class="fd-dept-tag">Wholesale from $3.56 / sq ft</div>
-                        <p class="fd-dept-desc">
-                            100% waterproof rigid core SPC vinyl plank and authentic engineered red &amp; white oak hardwoods designed for residential flips and rental turns.
-                        </p>
-                    </div>
-                    <div class="fd-dept-btn">
-                        <span>Browse 16 Flooring SKUs</span>
-                        <span>&rarr;</span>
-                    </div>
-                </a>
-
-                <!-- Dept 2: Appliances -->
-                <a href="/appliances/" class="fd-dept-card">
-                    <div>
-                        <div class="fd-dept-kicker">
-                            <span>DEPARTMENT 02</span>
-                            <span style="background: #007bff; color: #ffffff; padding: 2px 6px; font-size: 8.5px; font-weight: 900; border-radius: 2px;">COMING SOON</span>
-                        </div>
-                        <h3 class="fd-dept-title">Pro Builder Appliances</h3>
-                        <div class="fd-dept-tag">4-Piece Kitchen Packages</div>
-                        <p class="fd-dept-desc">
-                            Turnkey stainless steel kitchen suites, French door refrigerators, slide-in ranges, dishwashers, and laundry pairs ready to roll into your rehab draw.
-                        </p>
-                    </div>
-                    <div class="fd-dept-btn">
-                        <span>View Appliance Program</span>
-                        <span>&rarr;</span>
-                    </div>
-                </a>
-
-                <!-- Dept 3: Draw Financing -->
-                <a href="/how-it-works/" class="fd-dept-card">
-                    <div>
-                        <div class="fd-dept-kicker">
-                            <span>DEPARTMENT 03</span>
-                            <span style="color: #16a34a; font-weight: 900;">$0 OUT-OF-POCKET</span>
-                        </div>
-                        <h3 class="fd-dept-title">Center Street Draw Financing</h3>
-                        <div class="fd-dept-tag">Direct Rehab Loan Roll-In</div>
-                        <p class="fd-dept-desc">
-                            Finance 100% of materials and jobsite freight directly through your active rehab loan draw. Zero paperwork hassle, fast automated verification.
-                        </p>
-                    </div>
-                    <div class="fd-dept-btn">
-                        <span>How Financing Works</span>
-                        <span>&rarr;</span>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <!-- =============================================================
-             3. VISUAL FLOORING COLLECTIONS
+             2. VISUAL FLOORING COLLECTIONS
         ============================================================== -->
         <section style="margin-bottom: 44px;">
             <div class="fd-section-header">
@@ -1187,7 +1115,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <button type="button" class="fd-tab-btn" data-filter="best" style="border-color: #007bff; color: #007bff; font-weight: 800;">Best Tier White Oak &bull; $9.00 (5) 🔒</button>
                 <a href="/member-login/" class="fd-tab-btn" style="background: <?php echo is_user_logged_in() ? '#f0fdf4' : '#0f172a'; ?>; color: <?php echo is_user_logged_in() ? '#166534' : '#ffffff'; ?>; border-color: <?php echo is_user_logged_in() ? '#86efac' : '#0f172a'; ?>; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-left: auto;">
                     <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2.4;fill:none;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    <span><?php echo is_user_logged_in() ? 'Trade Dashboard' : 'Member Login 🔒'; ?></span>
+                    <span><?php echo is_user_logged_in() ? 'Project Management 🔒' : 'Member Login 🔒'; ?></span>
                 </a>
             </div>
 

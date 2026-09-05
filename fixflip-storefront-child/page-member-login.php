@@ -187,22 +187,34 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
             $company = get_user_meta( $user_id, 'billing_company', true ) ?: get_user_meta( $user_id, 'fixflip_company_name', true );
             $phone = get_user_meta( $user_id, 'billing_phone', true ) ?: get_user_meta( $user_id, 'fixflip_phone', true );
             $license = get_user_meta( $user_id, 'fixflip_license_loan', true );
+            $project_address = get_user_meta( $user_id, 'fixflip_project_address', true ) ?: get_user_meta( $user_id, 'billing_address_1', true );
             ?>
-            <!-- LOGGED-IN MEMBER DASHBOARD -->
+            <!-- LOGGED-IN MEMBER & PROJECT MANAGEMENT DASHBOARD -->
             <div class="fd-member-header">
                 <div style="font-size: 11px; font-weight: 900; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
-                    TRADE PARTNER ACCOUNT
+                    PROJECT MANAGEMENT &amp; TRADE DASHBOARD
                 </div>
                 <h1 style="font-size: 24px; font-weight: 900; margin: 0 0 6px 0; letter-spacing: -0.3px;">
                     Welcome back, <?php echo esc_html( $current_user->first_name ?: $current_user->display_name ); ?>!
                 </h1>
                 <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 11.5px; font-weight: 800; padding: 4px 12px; border-radius: 20px; margin-top: 6px;">
-                    <span>🔒 Verified Trade Member</span> &bull; <span>Best Tier Unlocked ($9.00/sqft)</span>
+                    <span>🔒 Active Project Manager &amp; Trade Member</span> &bull; <span>Best Tier Unlocked ($9.00/sqft)</span>
                 </div>
             </div>
 
             <div class="fd-member-body">
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 18px 20px; margin-bottom: 28px;">
+                <!-- Project Management Overview Box -->
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 20px; margin-bottom: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#007bff;stroke-width:2.2;fill:none;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                            <span style="font-size: 12px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">Active Project Management</span>
+                        </div>
+                        <span style="font-size: 10.5px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 3px 8px; border-radius: 2px;">
+                            CSL DRAW INTEGRATION ACTIVE
+                        </span>
+                    </div>
+
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; font-size: 13px;">
                         <div>
                             <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Account Email</span>
@@ -210,8 +222,14 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                         </div>
                         <?php if ( ! empty( $company ) ) : ?>
                         <div>
-                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Company Name</span>
+                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Company / Builder</span>
                             <strong><?php echo esc_html( $company ); ?></strong>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ( ! empty( $project_address ) ) : ?>
+                        <div>
+                            <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Active Flip Project</span>
+                            <strong><?php echo esc_html( $project_address ); ?></strong>
                         </div>
                         <?php endif; ?>
                         <?php if ( ! empty( $phone ) ) : ?>
@@ -225,28 +243,28 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
 
                 <!-- Member Quick Actions -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px;">
-                    <a href="/category/hardwood-best/" style="background: #0f172a; color: #ffffff; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #0f172a; transition: all 0.2s ease;">
-                        <span style="color: #38bdf8; font-size: 10px; font-weight: 900; text-transform: uppercase;">MEMBER EXCLUSIVE</span>
-                        <span style="margin: 8px 0 4px 0; font-size: 15px;">Shop Best Tier White Oak</span>
-                        <span style="font-size: 12px; color: #94a3b8; font-weight: 500;">ShawContract® CA399 &bull; $9.00/sqft &rarr;</span>
+                    <a href="<?php echo wc_get_account_endpoint_url('orders'); ?>" style="background: #0f172a; color: #ffffff; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #0f172a; transition: all 0.2s ease;">
+                        <span style="color: #38bdf8; font-size: 10px; font-weight: 900; text-transform: uppercase;">PROJECT DRAWS &amp; ORDERS</span>
+                        <span style="margin: 8px 0 4px 0; font-size: 15px;">Project Draw Invoices</span>
+                        <span style="font-size: 12px; color: #94a3b8; font-weight: 500;">View material order receipts &amp; CSL draw documentation &rarr;</span>
                     </a>
 
-                    <a href="<?php echo wc_get_account_endpoint_url('orders'); ?>" style="background: #ffffff; color: #0f172a; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #cbd5e1; transition: all 0.2s ease;">
-                        <span style="color: #64748b; font-size: 10px; font-weight: 900; text-transform: uppercase;">ORDER TRACKING</span>
-                        <span style="margin: 8px 0 4px 0; font-size: 15px;">Recent Orders &amp; Swatches</span>
-                        <span style="font-size: 12px; color: #64748b; font-weight: 500;">View Invoices &amp; Tracking &rarr;</span>
+                    <a href="<?php echo wc_get_account_endpoint_url('edit-address'); ?>" style="background: #ffffff; color: #0f172a; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #cbd5e1; transition: all 0.2s ease;">
+                        <span style="color: #64748b; font-size: 10px; font-weight: 900; text-transform: uppercase;">JOBSITE MANAGEMENT</span>
+                        <span style="margin: 8px 0 4px 0; font-size: 15px;">Project Delivery Addresses</span>
+                        <span style="font-size: 12px; color: #64748b; font-weight: 500;">Manage jobsite freight drop locations &rarr;</span>
+                    </a>
+
+                    <a href="/category/hardwood-best/" style="background: #eff6ff; color: #1e40af; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #bfdbfe; transition: all 0.2s ease;">
+                        <span style="color: #007bff; font-size: 10px; font-weight: 900; text-transform: uppercase;">MEMBER EXCLUSIVE</span>
+                        <span style="margin: 8px 0 4px 0; font-size: 15px;">Shop Best Tier White Oak</span>
+                        <span style="font-size: 12px; color: #3b82f6; font-weight: 500;">ShawContract® CA399 &bull; $9.00/sqft Unlocked &rarr;</span>
                     </a>
 
                     <a href="/commercial-flooring/" style="background: #ffffff; color: #0f172a; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #cbd5e1; transition: all 0.2s ease;">
                         <span style="color: #64748b; font-size: 10px; font-weight: 900; text-transform: uppercase;">FULL CATALOG</span>
                         <span style="margin: 8px 0 4px 0; font-size: 15px;">All 16 Flooring Planks</span>
-                        <span style="font-size: 12px; color: #64748b; font-weight: 500;">SPC Vinyl &bull; Red &amp; White Oak &rarr;</span>
-                    </a>
-
-                    <a href="<?php echo wc_get_account_endpoint_url('edit-address'); ?>" style="background: #ffffff; color: #0f172a; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #cbd5e1; transition: all 0.2s ease;">
-                        <span style="color: #64748b; font-size: 10px; font-weight: 900; text-transform: uppercase;">JOB SITES</span>
-                        <span style="margin: 8px 0 4px 0; font-size: 15px;">Delivery Addresses</span>
-                        <span style="font-size: 12px; color: #64748b; font-weight: 500;">Manage Freight Drop Locations &rarr;</span>
+                        <span style="font-size: 12px; color: #64748b; font-weight: 500;">SPC Vinyl &bull; Red &amp; White Oak Hardwoods &rarr;</span>
                     </a>
                 </div>
 
@@ -261,13 +279,13 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
             <!-- GUEST LOGIN & REGISTRATION DUAL-TAB PORTAL -->
             <div class="fd-member-header">
                 <div style="font-size: 11px; font-weight: 900; color: #38bdf8; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">
-                    CONTRACTOR &amp; TRADE MEMBER PORTAL
+                    PROJECT MANAGEMENT &amp; CONTRACTOR PORTAL
                 </div>
                 <h1 style="font-size: 24px; font-weight: 900; margin: 0 0 8px 0; letter-spacing: -0.3px;">
-                    Trade Member Access
+                    Project Management &amp; Trade Access
                 </h1>
                 <p style="font-size: 13px; color: #94a3b8; margin: 0; line-height: 1.4;">
-                    Sign in or create a free membership account to unlock Best Tier wholesale flooring pricing ($9.00/sqft) and Center Street Lending draw benefits.
+                    Sign in or create a free contractor account to access project management tools, property draw schedules, Best Tier wholesale pricing ($9.00/sqft), and Center Street Lending rehab benefits.
                 </p>
             </div>
 
@@ -332,7 +350,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                         </div>
 
                         <button type="submit" class="fd-submit-btn">
-                            Sign In to Trade Portal &rarr;
+                            Sign In to Project Portal &rarr;
                         </button>
                     </form>
 
@@ -356,19 +374,19 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                     <!-- Membership Benefits Highlights -->
                     <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 16px; margin-bottom: 24px;">
                         <span style="font-size: 11px; font-weight: 900; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">
-                            Trade Member Privileges Include:
+                            Project Management &amp; Trade Member Privileges:
                         </span>
                         <div class="fd-perk-item">
                             <span class="fd-perk-check">✓</span>
-                            <span><strong>Best Tier European White Oak (\$9.00/sqft):</strong> ShawContract® CA399 7.5" pro rate access.</span>
+                            <span><strong>Flip Project Management:</strong> Assign material orders and scheduled freight drops directly by active property jobsite address.</span>
                         </div>
                         <div class="fd-perk-item">
                             <span class="fd-perk-check">✓</span>
-                            <span><strong>100% CSL Rehab Draw Financing:</strong> Roll material orders into your active construction draw with \$0 down today.</span>
+                            <span><strong>100% CSL Rehab Draw Financing:</strong> Roll project material costs into your active construction draw with \$0 down today.</span>
                         </div>
                         <div class="fd-perk-item">
                             <span class="fd-perk-check">✓</span>
-                            <span><strong>Jobsite Delivery &amp; Sample Swatches:</strong> Direct freight tracking and saved project addresses.</span>
+                            <span><strong>Best Tier European White Oak (\$9.00/sqft):</strong> Unlocked member access to ShawContract® CA399 7.5" pro rate.</span>
                         </div>
                     </div>
 
@@ -401,6 +419,13 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                                 <label class="fd-form-label" for="reg_phone">Direct Phone *</label>
                                 <input type="tel" id="reg_phone" name="reg_phone" class="fd-form-input" placeholder="(949) 555-0199" required>
                             </div>
+                        </div>
+
+                        <div class="fd-form-group">
+                            <label class="fd-form-label" for="reg_project_address">
+                                Active Flip Project Address <span style="color: #64748b; font-weight: 500; text-transform: none;">(Optional - for Project Management setup)</span>
+                            </label>
+                            <input type="text" id="reg_project_address" name="reg_project_address" class="fd-form-input" placeholder="e.g. 1420 Ocean Ave, Newport Beach, CA">
                         </div>
 
                         <div class="fd-form-group">
