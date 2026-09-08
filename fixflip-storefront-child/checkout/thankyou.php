@@ -214,7 +214,7 @@ foreach ( $order->get_items() as $item_id => $item ) {
             </p>
         </div>
         <div>
-            <a href="/" style="display: inline-block; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 14px 26px; border-radius: 4px; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,123,255,0.3); transition: all 0.2s ease;">
+            <a href="/" style="display: inline-block; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 14px 26px; border-radius: 4px; text-decoration: none; white-space: nowrap; box-shadow: none; transition: all 0.2s ease;">
                 Return to Storefront &rarr;
             </a>
         </div>

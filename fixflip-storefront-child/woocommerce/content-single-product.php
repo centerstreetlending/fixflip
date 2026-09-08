@@ -495,7 +495,7 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         
                         <!-- Primary CTA: ADD TO ORDER (Full Width Top Button) -->
-                        <button type="button" onclick="window.fdSubmitAddToCart(event)" id="fd-main-add-btn" style="width: 100%; height: 56px; padding: 0 24px; background: #007bff; color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.2px; border: none; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 16px rgba(0,123,255,0.3); display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;" onmouseover="this.style.background='#0056b3'; this.style.boxShadow='0 6px 20px rgba(0,123,255,0.4)';" onmouseout="this.style.background='#007bff'; this.style.boxShadow='0 4px 16px rgba(0,123,255,0.3)';">
+                        <button type="button" onclick="window.fdSubmitAddToCart(event)" id="fd-main-add-btn" style="width: 100%; height: 56px; padding: 0 24px; background: #007bff; color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.2px; border: none; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; box-shadow: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;" onmouseover="this.style.background='#0056b3'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.12)';" onmouseout="this.style.background='#007bff'; this.style.boxShadow='none';">
                             <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#ffffff;stroke-width:2.2;fill:none;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                             <span>ADD TO ORDER</span>
                             <span style="opacity: 0.7;">&bull;</span>
@@ -622,7 +622,188 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
 
     </div>
 
+    <?php 
+    $coordinating_trims = function_exists('fixflip_get_coordinating_trims') ? fixflip_get_coordinating_trims( $sku ) : array();
+    if ( ! empty( $coordinating_trims ) ) :
+    ?>
+    <!-- COORDINATING TRIMS & MOLDINGS SECTION -->
+    <section class="fd-coordinating-trims-module" style="margin-top: 48px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 28px 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+        
+        <!-- Section Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid #0f172a; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <span style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;">
+                    MATCHING JOB-SITE ACCESSORIES
+                </span>
+                <h2 style="font-size: 22px; font-weight: 900; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: -0.2px;">
+                    Coordinating Trims &amp; Moldings
+                </h2>
+            </div>
+            <div style="text-align: right;">
+                <span style="display: inline-block; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-size: 11.5px; font-weight: 800; padding: 4px 10px; border-radius: 2px; text-transform: uppercase;">
+                    Factory-Matched to <?php echo esc_html($title); ?> &bull; Sold by the Single Piece
+                </span>
+            </div>
+        </div>
 
+        <p style="font-size: 13.5px; color: #475569; margin: 0 0 20px 0; line-height: 1.5;">
+            Add factory-finished moldings and stair transitions to your order. Trims are shipped with your material freight delivery and roll 100% into your active Center Street Lending loan advance.
+        </p>
+
+        <!-- Trims Cards Grid -->
+        <div class="fd-trims-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+            <?php foreach ( $coordinating_trims as $trim_sku => $trim ) : 
+                // Determine SVG Icon based on type
+                $type_icon = '';
+                if ( $trim['type'] === 'stairnose' ) {
+                    $type_icon = '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#0f172a;stroke-width:2.2;fill:none;"><path d="M3 5h5v5h5v5h5v5h3"/></svg>';
+                } elseif ( $trim['type'] === 'reducer' ) {
+                    $type_icon = '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#0f172a;stroke-width:2.2;fill:none;"><path d="M3 7h7l10 8v4H3V7z"/></svg>';
+                } elseif ( $trim['type'] === 'quarter_round' ) {
+                    $type_icon = '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#0f172a;stroke-width:2.2;fill:none;"><path d="M5 19V7a12 12 0 0 1 12 12H5z"/></svg>';
+                } else {
+                    $type_icon = '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#0f172a;stroke-width:2.2;fill:none;"><path d="M3 10h18v4h-6v5h-6v-5H3z"/></svg>';
+                }
+            ?>
+                <div class="fd-trim-item-card" data-trim-sku="<?php echo esc_attr($trim_sku); ?>" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.15s ease;">
+                    
+                    <div>
+                        <!-- Card Header with Icon & SKU -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div style="width: 38px; height: 38px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                                <?php echo $type_icon; ?>
+                            </div>
+                            <span style="font-size: 11px; font-weight: 800; color: #475569; background: #ffffff; border: 1px solid #e2e8f0; padding: 2px 7px; border-radius: 2px;">
+                                SKU: <?php echo esc_html($trim_sku); ?>
+                            </span>
+                        </div>
+
+                        <!-- Profile Title & Length -->
+                        <h4 style="font-size: 15px; font-weight: 900; color: #0f172a; margin: 0 0 4px 0; line-height: 1.3;">
+                            <?php echo esc_html($trim['title']); ?>
+                        </h4>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 14px;">
+                            Length: <strong style="color: #0f172a;"><?php echo esc_html($trim['length']); ?> piece</strong> &bull; Sold by the stick
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- Price & Wholesale Badge -->
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; padding-top: 10px; border-top: 1px solid #e2e8f0;">
+                            <div>
+                                <span style="font-size: 20px; font-weight: 900; color: #0f172a;">$<?php echo number_format($trim['price'], 2); ?></span>
+                                <span style="font-size: 12px; font-weight: 700; color: #64748b;">/ piece</span>
+                            </div>
+                            <span style="font-size: 10px; font-weight: 900; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 2px; text-transform: uppercase;">
+                                WHOLESALE RATE
+                            </span>
+                        </div>
+
+                        <!-- Stepper & Add Button -->
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <!-- Quantity Stepper -->
+                            <div style="display: flex; align-items: center; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 3px; height: 38px; width: 105px; flex-shrink: 0;">
+                                <button type="button" class="fd-trim-dec-btn" style="width: 32px; height: 100%; background: none; border: none; font-size: 16px; font-weight: 900; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: center;">-</button>
+                                <input type="number" class="fd-trim-qty-input" value="1" min="1" max="999" style="width: 41px; height: 100%; border: none; text-align: center; font-size: 13.5px; font-weight: 800; color: #0f172a; -moz-appearance: textfield; padding: 0;">
+                                <button type="button" class="fd-trim-inc-btn" style="width: 32px; height: 100%; background: none; border: none; font-size: 16px; font-weight: 900; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                            </div>
+
+                            <!-- Add Button -->
+                            <button type="button" class="fd-add-trim-btn" data-sku="<?php echo esc_attr($trim_sku); ?>" style="flex: 1; height: 38px; background: #0f172a; color: #ffffff; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-radius: 3px; cursor: pointer; transition: all 0.15s ease; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px;" onmouseover="this.style.background='#007bff';" onmouseout="this.style.background='#0f172a';">
+                                <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#ffffff;stroke-width:2.2;fill:none;"><path d="M12 5v14M5 12h14"/></svg>
+                                <span>Add to Order</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+    </section>
+
+    <!-- Coordinating Trims Interaction Script -->
+    <script>
+    (function() {
+        document.querySelectorAll('.fd-trim-item-card').forEach(function(card) {
+            const decBtn = card.querySelector('.fd-trim-dec-btn');
+            const incBtn = card.querySelector('.fd-trim-inc-btn');
+            const qtyInput = card.querySelector('.fd-trim-qty-input');
+            const addBtn = card.querySelector('.fd-add-trim-btn');
+
+            if (decBtn && qtyInput) {
+                decBtn.addEventListener('click', function() {
+                    let val = parseInt(qtyInput.value) || 1;
+                    if (val > 1) qtyInput.value = val - 1;
+                });
+            }
+            if (incBtn && qtyInput) {
+                incBtn.addEventListener('click', function() {
+                    let val = parseInt(qtyInput.value) || 1;
+                    qtyInput.value = val + 1;
+                });
+            }
+
+            if (addBtn && qtyInput) {
+                addBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const trimSku = this.getAttribute('data-sku');
+                    const qty = parseInt(qtyInput.value) || 1;
+                    const colorName = '<?php echo esc_js($title); ?>';
+                    const origHtml = this.innerHTML;
+
+                    this.disabled = true;
+                    this.style.opacity = '0.7';
+                    this.innerHTML = '<span>Adding...</span>';
+
+                    const formData = new FormData();
+                    formData.append('action', 'fixflip_ajax_add_trim');
+                    formData.append('trim_sku', trimSku);
+                    formData.append('quantity', qty);
+                    formData.append('color_name', colorName);
+
+                    fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        addBtn.disabled = false;
+                        addBtn.style.opacity = '1';
+                        if (data && data.success) {
+                            addBtn.style.background = '#16a34a';
+                            addBtn.innerHTML = '<span>✓ Added (' + qty + ')</span>';
+                            setTimeout(() => {
+                                addBtn.style.background = '#0f172a';
+                                addBtn.innerHTML = origHtml;
+                            }, 2000);
+
+                            const itemsContainer = document.getElementById('fd-cart-drawer-items');
+                            if (itemsContainer && data.data && data.data.drawer_html) {
+                                itemsContainer.innerHTML = data.data.drawer_html;
+                            }
+                            const badges = document.querySelectorAll('.cart-badge, .cart-contents .count, #site-header-cart-icon .count, .cart-wrapper .count');
+                            badges.forEach(b => b.textContent = (data.data && data.data.cart_count) ? data.data.cart_count : '1');
+                            if (typeof window.fdOpenCartDrawer === 'function') {
+                                window.fdOpenCartDrawer();
+                            }
+                        } else {
+                            addBtn.innerHTML = origHtml;
+                            alert((data && data.data && data.data.message) ? data.data.message : 'Could not add trim to order.');
+                        }
+                    })
+                    .catch(err => {
+                        addBtn.disabled = false;
+                        addBtn.style.opacity = '1';
+                        addBtn.innerHTML = origHtml;
+                        alert('Error adding trim to order. Please try again.');
+                    });
+                });
+            }
+        });
+    })();
+    </script>
+    <?php endif; ?>
 
     <!-- PRODUCT SPECIFICATIONS & TECHNICAL DATA TABLE -->
     <div style="margin-top: 48px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 28px 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
@@ -711,6 +892,18 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
             'post_type'      => 'product',
             'posts_per_page' => 4,
             'post__not_in'   => array( $product->get_id() ),
+            'meta_query'     => array(
+                'relation' => 'OR',
+                array(
+                    'key'     => 'is_trim',
+                    'compare' => 'NOT EXISTS',
+                ),
+                array(
+                    'key'     => 'is_trim',
+                    'value'   => 'yes',
+                    'compare' => '!=',
+                ),
+            ),
         );
         $related_query = new WP_Query( $related_args );
 
@@ -718,6 +911,12 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
             while ( $related_query->have_posts() ) : $related_query->the_post();
                 global $product;
                 $rel_sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
+                if ( function_exists('fixflip_is_trim_sku') && fixflip_is_trim_sku( $rel_sku ) ) {
+                    continue;
+                }
+                if ( $product && ( $product->get_meta('is_trim') === 'yes' || ! $product->is_visible() ) ) {
+                    continue;
+                }
                 $rel_price = (float)($product->get_price() ?: 3.56);
                 
                 if ( in_array($rel_sku, array('56103', '56140', '56240', '56516')) ) {

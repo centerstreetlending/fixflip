@@ -174,7 +174,7 @@ function fixflip_force_lululemon_styles() {
             box-sizing: border-box !important;
             white-space: nowrap !important;
             border: 2px solid #ffffff !important;
-            box-shadow: 0 2px 6px rgba(0,123,255,0.3) !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important;
             z-index: 5 !important;
         }
     </style>';
@@ -522,6 +522,14 @@ function fixflip_calculate_box_cart_price( $cart ) {
     foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
         $product = $cart_item['data'];
         if ( ! $product ) continue;
+
+        // Skip sample items
+        if ( ! empty( $cart_item['is_sample'] ) ) continue;
+
+        // Skip trim and molding accessories (sold by the piece at exact wholesale rate)
+        if ( ! empty( $cart_item['is_trim'] ) || $product->get_meta( 'is_trim' ) === 'yes' ) {
+            continue;
+        }
 
         $coverage = (float) $product->get_meta( 'custom_coverage' );
         if ( $coverage > 0 ) {
@@ -1000,10 +1008,17 @@ function fixflip_output_cart_drawer_items_html() {
             $subtotal      = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
             $remove_url    = wc_get_cart_remove_url( $cart_item_key );
             $is_sample     = ! empty( $cart_item['is_sample'] );
+            $is_trim       = ( ! empty( $cart_item['is_trim'] ) || $_product->get_meta('is_trim') === 'yes' );
 
             if ( $is_sample ) {
                 $item_badge = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">SAMPLE</span>';
                 $line_desc  = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample ($5.00 ea)';
+            } elseif ( $is_trim ) {
+                $item_badge = ' <span style="background: #f1f5f9; color: #0f172a; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px; border: 1px solid #cbd5e1;">MOLDING / TRIM</span>';
+                $pieces = (int) $cart_item['quantity'];
+                $piece_unit = $pieces === 1 ? 'piece' : 'pieces';
+                $matching_note = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
+                $line_desc  = $pieces . ' ' . $piece_unit . ' ($' . number_format((float)$_product->get_price(), 2) . ' / pc)' . $matching_note;
             } else {
                 $item_badge = '';
                 $boxes = (int) $cart_item['quantity'];
@@ -1044,10 +1059,13 @@ function fixflip_output_cart_drawer_items_html() {
         if ( empty( $c_item['is_sample'] ) ) {
             $has_bulk   = true;
             $p_id       = isset( $c_item['product_id'] ) ? $c_item['product_id'] : 0;
-            $q_boxes    = isset( $c_item['quantity'] ) ? (int) $c_item['quantity'] : 1;
-            $cov        = (float) get_post_meta( $p_id, 'custom_coverage', true );
-            if ( empty($cov) ) $cov = 27.73;
-            $total_sqft += ($q_boxes * $cov);
+            $is_tr      = ( ! empty( $c_item['is_trim'] ) || get_post_meta( $p_id, 'is_trim', true ) === 'yes' );
+            if ( ! $is_tr ) {
+                $q_boxes    = isset( $c_item['quantity'] ) ? (int) $c_item['quantity'] : 1;
+                $cov        = (float) get_post_meta( $p_id, 'custom_coverage', true );
+                if ( empty($cov) ) $cov = 27.73;
+                $total_sqft += ($q_boxes * $cov);
+            }
         }
     }
     $freight_cost = $has_bulk ? (450.00 + ($total_sqft * 0.40)) : 0.00;
@@ -1370,14 +1388,16 @@ function fixflip_add_guaranteed_freight_fee( $cart ) {
             if ( empty( $item['is_sample'] ) ) {
                 $has_bulk   = true;
                 $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
-                $qty_boxes  = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
-                
-                $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
-                if ( empty( $coverage ) ) {
-                    $coverage = 27.73; // Default SPC box coverage
-                }
+                $is_trim    = ( ! empty( $item['is_trim'] ) || get_post_meta( $product_id, 'is_trim', true ) === 'yes' );
 
-                $total_sqft += ($qty_boxes * $coverage);
+                if ( ! $is_trim ) {
+                    $qty_boxes  = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
+                    $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
+                    if ( empty( $coverage ) ) {
+                        $coverage = 27.73; // Default SPC box coverage
+                    }
+                    $total_sqft += ($qty_boxes * $coverage);
+                }
             }
         }
 
@@ -1681,11 +1701,11 @@ function fixflip_checkout_dropdown_styles() {
                 border-radius: 4px !important;
                 cursor: pointer !important;
                 transition: all 0.2s ease !important;
-                box-shadow: 0 4px 16px rgba(0,123,255,0.3) !important;
+                box-shadow: none !important;
             }
             #place_order:hover {
                 background: #0056b3 !important;
-                box-shadow: 0 6px 20px rgba(0,123,255,0.4) !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
             }
             /* Clean Thank You / Order Received Page Container */
             .woocommerce-order {
@@ -1945,12 +1965,12 @@ function fixflip_checkout_payment_button_morpher() {
                     btn.value = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
                     btn.textContent = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
                     btn.style.setProperty('background', '#0f172a', 'important');
-                    btn.style.setProperty('box-shadow', '0 4px 16px rgba(15,23,42,0.3)', 'important');
+                    btn.style.setProperty('box-shadow', 'none', 'important');
                 } else {
                     btn.value = 'PAY WITH CARD & PLACE ORDER \u2192';
                     btn.textContent = 'PAY WITH CARD & PLACE ORDER \u2192';
                     btn.style.setProperty('background', '#007bff', 'important');
-                    btn.style.setProperty('box-shadow', '0 4px 16px rgba(0,123,255,0.3)', 'important');
+                    btn.style.setProperty('box-shadow', 'none', 'important');
                 }
             }
 
@@ -2072,10 +2092,26 @@ function fixflip_add_loan_number_to_order_email( $order, $sent_to_admin, $plain_
  * Smart SKU Resolver for FixFlip Products (handles WC_Product, Post ID, Slug, or Title)
  */
 function fixflip_resolve_sku( $input = '' ) {
+    $known_skus = array(
+        '56103', '56140', '56240', '56516',
+        '00135', '01102', '07087', '07091',
+        '01015', '02012', '05014',
+        '11100', '11101', '11102', '15041', '17065'
+    );
+    if ( is_string( $input ) && in_array( trim( $input ), $known_skus, true ) ) {
+        return trim( $input );
+    }
+    if ( is_string( $input ) && function_exists('fixflip_is_trim_sku') && fixflip_is_trim_sku( trim( $input ) ) ) {
+        return trim( $input );
+    }
+
     if ( is_a( $input, 'WC_Product' ) ) {
         $slug = $input->get_slug();
         $title = $input->get_name();
         $sku = $input->get_sku();
+        if ( in_array( $sku, $known_skus, true ) ) {
+            return $sku;
+        }
         $text = strtolower( $slug . ' ' . $title . ' ' . $sku );
     } elseif ( is_numeric( $input ) && intval( $input ) > 0 ) {
         $post = get_post( $input );
@@ -2848,4 +2884,520 @@ function fixflip_ensure_best_tier_products() {
             }
         }
     }
+}
+
+/* ==========================================================================
+   COORDINATING TRIMS & MOLDINGS ARCHITECTURE (27 ITEMS)
+   ========================================================================== */
+
+/**
+ * Master Dictionary of Coordinating Trims & Moldings (27 Total Products)
+ */
+function fixflip_get_all_trims_data() {
+    return array(
+        // Group 1: 4308V Branching Out (SPC Vinyl Plank)
+        '375VS' => array(
+            'sku'         => '375VS',
+            'title'       => 'Quarter Round',
+            'full_name'   => '375VS Branching Out Quarter Round - 94.5"',
+            'type'        => 'quarter_round',
+            'length'      => '94.5"',
+            'price'       => 16.85,
+            'description' => '375VS Branching Out Quarter Round - sold by the single 94.5" piece.',
+            'group'       => 'branching_out',
+        ),
+        '377VS' => array(
+            'sku'         => '377VS',
+            'title'       => 'Baby Threshold',
+            'full_name'   => '377VS Branching Out Baby Threshold - 94.5"',
+            'type'        => 'threshold',
+            'length'      => '94.5"',
+            'price'       => 46.33,
+            'description' => '377VS Branching Out Baby Threshold - sold by the single 94.5" piece.',
+            'group'       => 'branching_out',
+        ),
+        '378VS' => array(
+            'sku'         => '378VS',
+            'title'       => 'Multi-Reducer',
+            'full_name'   => '378VS Branching Out Multi-Reducer - 94.5"',
+            'type'        => 'reducer',
+            'length'      => '94.5"',
+            'price'       => 40.72,
+            'description' => '378VS Branching Out Multi-Reducer - sold by the single 94.5" piece.',
+            'group'       => 'branching_out',
+        ),
+        '379VS' => array(
+            'sku'         => '379VS',
+            'title'       => 'Flush Stairnose',
+            'full_name'   => '379VS Branching Out Flush Stairnose - 94.5"',
+            'type'        => 'stairnose',
+            'length'      => '94.5"',
+            'price'       => 60.37,
+            'description' => '379VS Branching Out Flush Stairnose - sold by the single 94.5" piece.',
+            'group'       => 'branching_out',
+        ),
+
+        // Group 2: CA399 Provincial Plank 7.5" (Best Tier White Oak)
+        '175QR' => array(
+            'sku'         => '175QR',
+            'title'       => 'Provincial Quarter Round',
+            'full_name'   => '175QR Provincial Quarter Round - 78"',
+            'type'        => 'quarter_round',
+            'length'      => '78"',
+            'price'       => 29.86,
+            'description' => '175QR Provincial Quarter Round - sold by the single 78" piece.',
+            'group'       => 'provincial',
+        ),
+        '175FR' => array(
+            'sku'         => '175FR',
+            'title'       => 'Provincial Flush Reducer',
+            'full_name'   => '175FR Provincial Flush Reducer - 78"',
+            'type'        => 'reducer',
+            'length'      => '78"',
+            'price'       => 62.99,
+            'description' => '175FR Provincial Flush Reducer - sold by the single 78" piece.',
+            'group'       => 'provincial',
+        ),
+        '1750S' => array(
+            'sku'         => '1750S',
+            'title'       => 'Provincial Overlap Stairnose',
+            'full_name'   => '1750S Provincial Overlap Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 82.34,
+            'description' => '1750S Provincial Overlap Stairnose - sold by the single 78" piece.',
+            'group'       => 'provincial',
+        ),
+        '175FS' => array(
+            'sku'         => '175FS',
+            'title'       => 'Provincial Flush Stairnose',
+            'full_name'   => '175FS Provincial Flush Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 81.55,
+            'description' => '175FS Provincial Flush Stairnose - sold by the single 78" piece.',
+            'group'       => 'provincial',
+        ),
+        '175SQ' => array(
+            'sku'         => '175SQ',
+            'title'       => 'Provincial Square Stairnose',
+            'full_name'   => '175SQ Provincial Square Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 81.13,
+            'description' => '175SQ Provincial Square Stairnose sold by the single 78" piece.',
+            'group'       => 'provincial',
+        ),
+        '175TH' => array(
+            'sku'         => '175TH',
+            'title'       => 'Provincial Threshold',
+            'full_name'   => '175TH Provincial Threshold - 78"',
+            'type'        => 'threshold',
+            'length'      => '78"',
+            'price'       => 62.99,
+            'description' => '175TH Provincial Threshold - sold by the single 78" piece.',
+            'group'       => 'provincial',
+        ),
+
+        // Group 3: CA303 Oak Traditions & CA308 Refined Oak (Engineered Hardwood Good & Better)
+        'CAQTR' => array(
+            'sku'         => 'CAQTR',
+            'title'       => 'Hardwood Quarter Round',
+            'full_name'   => 'CAQTR Engineered Hardwood Quarter Round - 78"',
+            'type'        => 'quarter_round',
+            'length'      => '78"',
+            'price'       => 22.10,
+            'description' => 'CAQTR Engineered Hardwood Quarter Round - sold by the single 78" piece.',
+            'group'       => 'hardwood_ca',
+        ),
+        'CRH12' => array(
+            'sku'         => 'CRH12',
+            'title'       => 'Hardwood Flush Reducer',
+            'full_name'   => 'CRH12 Engineered Hardwood Flush Reducer - 78"',
+            'type'        => 'reducer',
+            'length'      => '78"',
+            'price'       => 77.12,
+            'description' => 'CRH12 Engineered Hardwood Flush Reducer - sold by the single 78" piece.',
+            'group'       => 'hardwood_ca',
+        ),
+        'CCH12' => array(
+            'sku'         => 'CCH12',
+            'title'       => 'Hardwood Threshold',
+            'full_name'   => 'CCH12 Engineered Hardwood Threshold - 78"',
+            'type'        => 'threshold',
+            'length'      => '78"',
+            'price'       => 55.25,
+            'description' => 'CCH12 Engineered Hardwood Threshold - sold by the single 78" piece.',
+            'group'       => 'hardwood_ca',
+        ),
+        'COSH2' => array(
+            'sku'         => 'COSH2',
+            'title'       => 'Hardwood Overlap Stairnose',
+            'full_name'   => 'COSH2 Engineered Hardwood Overlap Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 76.05,
+            'description' => 'COSH2 Engineered Hardwood Overlap Stairnose - sold by the single 78" piece.',
+            'group'       => 'hardwood_ca',
+        ),
+        'CSH12' => array(
+            'sku'         => 'CSH12',
+            'title'       => 'Hardwood Flush Stairnose',
+            'full_name'   => 'CSH12 Engineered Hardwood Flush Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 71.50,
+            'description' => 'CSH12 Engineered Hardwood Flush Stairnose sold by the single 78" piece.',
+            'group'       => 'hardwood_ca',
+        ),
+        'CFS18' => array(
+            'sku'         => 'CFS18',
+            'title'       => 'Hardwood Flush Stairnose (1/2")',
+            'full_name'   => 'CFS18 FLUSH STAIRNOSE - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 66.95,
+            'description' => 'CFS18 FLUSH STAIRNOSE sold by the single 78" piece.',
+            'group'       => 'hardwood_ca',
+        ),
+        'CSO18' => array(
+            'sku'         => 'CSO18',
+            'title'       => 'Hardwood Overlap Stairnose (1/2")',
+            'full_name'   => 'CSO18 O STAIRNOSE - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 82.47,
+            'description' => 'CSO18 O STAIRNOSE.',
+            'group'       => 'hardwood_ca',
+        ),
+
+        // Group 4: Camaret (Shaw Hardwood Collection 203UV)
+        '03W07' => array(
+            'sku'         => '03W07',
+            'title'       => 'Camaret Quarter Round',
+            'full_name'   => '03W07 Camaret Quarter Round - 78"',
+            'type'        => 'quarter_round',
+            'length'      => '78"',
+            'price'       => 19.50,
+            'description' => '03W07 Camaret Quarter Round - sold by the single 78" piece.',
+            'group'       => 'camaret',
+        ),
+        '03W38' => array(
+            'sku'         => '03W38',
+            'title'       => 'Camaret Flush Reducer',
+            'full_name'   => '03W38 Camaret Flush Reducer - 78"',
+            'type'        => 'reducer',
+            'length'      => '78"',
+            'price'       => 80.08,
+            'description' => '03W38 Camaret Flush Reducer - sold by the single 78" piece.',
+            'group'       => 'camaret',
+        ),
+        '03W73' => array(
+            'sku'         => '03W73',
+            'title'       => 'Camaret Flush Stairnose',
+            'full_name'   => '03W73 Camaret Flush Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 102.78,
+            'description' => '03W73 Camaret Flush Stairnose sold by the single 78" piece.',
+            'group'       => 'camaret',
+        ),
+        '02W74' => array(
+            'sku'         => '02W74',
+            'title'       => 'Camaret Threshold',
+            'full_name'   => '02W74 Camaret Threshold - 78"',
+            'type'        => 'threshold',
+            'length'      => '78"',
+            'price'       => 64.08,
+            'description' => '02W74 Camaret Threshold - sold by the single 78" piece.',
+            'group'       => 'camaret',
+        ),
+
+        // Group 5: European Ash (Shaw Hardwood Collection 176)
+        '176QR' => array(
+            'sku'         => '176QR',
+            'title'       => 'European Ash Quarter Round',
+            'full_name'   => '176QR European Ash Quarter Round - 78"',
+            'type'        => 'quarter_round',
+            'length'      => '78"',
+            'price'       => 29.89,
+            'description' => '176QR European Ash Quarter Round - sold by the single 78" piece.',
+            'group'       => 'european_ash',
+        ),
+        '176FR' => array(
+            'sku'         => '176FR',
+            'title'       => 'European Ash Flush Reducer',
+            'full_name'   => '176FR European Ash Flush Reducer - 78"',
+            'type'        => 'reducer',
+            'length'      => '78"',
+            'price'       => 71.01,
+            'description' => '176FR European Ash Flush Reducer - sold by the single 78" piece.',
+            'group'       => 'european_ash',
+        ),
+        '176FN' => array(
+            'sku'         => '176FN',
+            'title'       => 'European Ash Flush Stairnose',
+            'full_name'   => '176FN European Ash Flush Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 90.74,
+            'description' => '176FN European Ash Flush Stairnose - sold by the single 78" piece.',
+            'group'       => 'european_ash',
+        ),
+        '176OS' => array(
+            'sku'         => '176OS',
+            'title'       => 'European Ash Overlap Stairnose',
+            'full_name'   => '176OS European Ash Overlap Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 122.07,
+            'description' => '176OS European Ash Overlap Stairnose - sold by the single 78" piece.',
+            'group'       => 'european_ash',
+        ),
+        '176SQ' => array(
+            'sku'         => '176SQ',
+            'title'       => 'European Ash Square Stairnose',
+            'full_name'   => '176SQ European Ash Square Stairnose - 78"',
+            'type'        => 'stairnose',
+            'length'      => '78"',
+            'price'       => 90.74,
+            'description' => '176SQ European Ash Square Stairnose - sold by the single 78" piece.',
+            'group'       => 'european_ash',
+        ),
+        '176TH' => array(
+            'sku'         => '176TH',
+            'title'       => 'European Ash Threshold',
+            'full_name'   => '176TH European Ash Threshold - 78"',
+            'type'        => 'threshold',
+            'length'      => '78"',
+            'price'       => 67.85,
+            'description' => '176TH European Ash Threshold - sold by the single 78" piece.',
+            'group'       => 'european_ash',
+        ),
+    );
+}
+
+/**
+ * Get Coordinating Trims Matching the Active Material Page
+ */
+function fixflip_get_coordinating_trims( $sku_or_product ) {
+    if ( is_string( $sku_or_product ) && ! empty( $sku_or_product ) ) {
+        $sku = trim( $sku_or_product );
+    } else {
+        $sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $sku_or_product ) : ( is_object($sku_or_product) ? $sku_or_product->get_sku() : (string)$sku_or_product );
+    }
+    $all = fixflip_get_all_trims_data();
+    $matched = array();
+
+    // 1. SPC Vinyl: 4308V Branching Out
+    if ( in_array( $sku, array( '56103', '56140', '56240', '56516' ) ) ) {
+        $target_skus = array( '379VS', '378VS', '377VS', '375VS' );
+        foreach ( $target_skus as $tsku ) {
+            if ( isset( $all[$tsku] ) ) {
+                $matched[$tsku] = $all[$tsku];
+            }
+        }
+    }
+    // 2. Best Tier White Oak: CA399 Provincial Plank
+    elseif ( in_array( $sku, array( '11100', '11101', '11102', '15041', '17065' ) ) ) {
+        $target_skus = array( '175FS', '175SQ', '1750S', '175FR', '175TH', '175QR' );
+        foreach ( $target_skus as $tsku ) {
+            if ( isset( $all[$tsku] ) ) {
+                $matched[$tsku] = $all[$tsku];
+            }
+        }
+    }
+    // 3. Good & Better Tier Hardwood: CA303 Oak Traditions & CA308 Refined Oak
+    elseif ( in_array( $sku, array( '00135', '01102', '07087', '07091', '01015', '02012', '05014' ) ) ) {
+        $target_skus = array( 'CSH12', 'COSH2', 'CRH12', 'CCH12', 'CAQTR', 'CFS18', 'CSO18' );
+        foreach ( $target_skus as $tsku ) {
+            if ( isset( $all[$tsku] ) ) {
+                $matched[$tsku] = $all[$tsku];
+            }
+        }
+    }
+
+    return $matched;
+}
+
+/**
+ * Check if a SKU belongs to the trims & moldings collection
+ */
+function fixflip_is_trim_sku( $sku ) {
+    $all = fixflip_get_all_trims_data();
+    return isset( $all[$sku] );
+}
+
+/**
+ * Strictly exclude trims from all frontend catalog, archive, search, and tax queries
+ */
+add_action( 'pre_get_posts', 'fixflip_exclude_trims_from_catalog' );
+function fixflip_exclude_trims_from_catalog( $query ) {
+    if ( is_admin() ) {
+        return;
+    }
+    // Check if querying products
+    $post_type = $query->get( 'post_type' );
+    if ( $post_type === 'product' || ( is_array($post_type) && in_array('product', $post_type) ) || $query->is_search() || $query->is_tax( 'product_cat' ) || $query->is_post_type_archive( 'product' ) ) {
+        $meta_query = (array) $query->get( 'meta_query' );
+        $meta_query[] = array(
+            'relation' => 'OR',
+            array(
+                'key'     => 'is_trim',
+                'compare' => 'NOT EXISTS',
+            ),
+            array(
+                'key'     => 'is_trim',
+                'value'   => 'yes',
+                'compare' => '!=',
+            ),
+        );
+        $query->set( 'meta_query', $meta_query );
+    }
+}
+
+/**
+ * Ensure Trims Exist in WooCommerce Database With Catalog Visibility Set to Hidden
+ */
+add_action( 'init', 'fixflip_ensure_trim_products', 25 );
+function fixflip_ensure_trim_products() {
+    if ( ! class_exists( 'WooCommerce' ) ) return;
+
+    $all_trims = fixflip_get_all_trims_data();
+
+    foreach ( $all_trims as $sku => $data ) {
+        $product_id = wc_get_product_id_by_sku( $sku );
+
+        if ( ! $product_id ) {
+            $post_id = wp_insert_post( array(
+                'post_title'   => $data['full_name'],
+                'post_name'    => sanitize_title( $data['full_name'] ),
+                'post_content' => $data['description'],
+                'post_excerpt' => $data['title'] . ' - Wholesale contractor trim accessory. Sold by the single ' . $data['length'] . ' piece.',
+                'post_status'  => 'publish',
+                'post_type'    => 'product',
+            ) );
+
+            if ( $post_id && ! is_wp_error( $post_id ) ) {
+                $product_id = $post_id;
+                wp_set_object_terms( $product_id, 'simple', 'product_type' );
+
+                // Strictly hide from all shop catalogs and search queries
+                wp_set_object_terms( $product_id, array( 'exclude-from-catalog', 'exclude-from-search' ), 'product_visibility' );
+
+                update_post_meta( $product_id, '_visibility', 'hidden' );
+                update_post_meta( $product_id, '_stock_status', 'instock' );
+                update_post_meta( $product_id, 'total_sales', '0' );
+                update_post_meta( $product_id, '_downloadable', 'no' );
+                update_post_meta( $product_id, '_virtual', 'no' );
+                update_post_meta( $product_id, '_sku', $sku );
+                update_post_meta( $product_id, '_regular_price', (string)$data['price'] );
+                update_post_meta( $product_id, '_price', (string)$data['price'] );
+                update_post_meta( $product_id, 'is_trim', 'yes' );
+                update_post_meta( $product_id, 'custom_unit', 'piece' );
+                update_post_meta( $product_id, 'custom_length', $data['length'] );
+                update_post_meta( $product_id, 'custom_trim_type', $data['type'] );
+            }
+        } else {
+            // Strictly enforce hidden visibility, piece rate, and trim flag
+            wp_set_object_terms( $product_id, array( 'exclude-from-catalog', 'exclude-from-search' ), 'product_visibility' );
+            update_post_meta( $product_id, '_visibility', 'hidden' );
+            update_post_meta( $product_id, '_regular_price', (string)$data['price'] );
+            update_post_meta( $product_id, '_price', (string)$data['price'] );
+            update_post_meta( $product_id, 'is_trim', 'yes' );
+            update_post_meta( $product_id, 'custom_unit', 'piece' );
+            update_post_meta( $product_id, 'custom_length', $data['length'] );
+            update_post_meta( $product_id, 'custom_trim_type', $data['type'] );
+        }
+    }
+}
+
+/**
+ * AJAX Handler to Add Coordinating Trim to Order by the Single Piece
+ */
+add_action( 'wp_ajax_fixflip_ajax_add_trim', 'fixflip_ajax_add_trim_handler' );
+add_action( 'wp_ajax_nopriv_fixflip_ajax_add_trim', 'fixflip_ajax_add_trim_handler' );
+function fixflip_ajax_add_trim_handler() {
+    if ( defined( 'WC_ABSPATH' ) ) {
+        if ( is_null( WC()->session ) ) {
+            $session_class = apply_filters( 'woocommerce_session_handler', 'WC_Session_Handler' );
+            WC()->session = new $session_class();
+            WC()->session->init();
+        }
+        if ( is_null( WC()->customer ) ) {
+            WC()->customer = new WC_Customer( get_current_user_id(), true );
+        }
+        if ( is_null( WC()->cart ) ) {
+            WC()->cart = new WC_Cart();
+        }
+        if ( ! WC()->session->has_session() ) {
+            WC()->session->set_customer_session_cookie( true );
+        }
+    }
+
+    $sku      = isset( $_POST['trim_sku'] ) ? sanitize_text_field( $_POST['trim_sku'] ) : '';
+    $quantity = isset( $_POST['quantity'] ) ? max( 1, absint( $_POST['quantity'] ) ) : 1;
+    $color    = isset( $_POST['color_name'] ) ? sanitize_text_field( $_POST['color_name'] ) : '';
+
+    $all_trims = fixflip_get_all_trims_data();
+    if ( ! isset( $all_trims[$sku] ) ) {
+        wp_send_json_error( array( 'message' => 'Invalid trim SKU' ) );
+        return;
+    }
+
+    $trim_data = $all_trims[$sku];
+    $product_id = wc_get_product_id_by_sku( $sku );
+
+    if ( ! $product_id ) {
+        fixflip_ensure_trim_products();
+        $product_id = wc_get_product_id_by_sku( $sku );
+    }
+
+    if ( ! $product_id ) {
+        wp_send_json_error( array( 'message' => 'Could not locate trim product ID' ) );
+        return;
+    }
+
+    $cart_item_data = array(
+        'is_trim'        => true,
+        'trim_sku'       => $sku,
+        'trim_length'    => $trim_data['length'],
+        'trim_price'     => $trim_data['price'],
+        'matching_color' => $color,
+        'unique_key'     => md5( $product_id . '_' . $sku . '_' . $color . '_' . microtime() )
+    );
+
+    $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $cart_item_data );
+
+    if ( ! $cart_item_key ) {
+        $cart_item_key = WC()->cart->generate_cart_id( $product_id, 0, array(), $cart_item_data );
+        $product_obj   = wc_get_product( $product_id );
+        if ( $product_obj ) {
+            $product_obj->set_price( (float)$trim_data['price'] );
+            WC()->cart->cart_contents[ $cart_item_key ] = array_merge( $cart_item_data, array(
+                'key'          => $cart_item_key,
+                'product_id'   => $product_id,
+                'variation_id' => 0,
+                'variation'    => array(),
+                'quantity'     => $quantity,
+                'data'         => $product_obj,
+                'data_hash'    => wc_get_cart_item_data_hash( $product_obj ),
+            ) );
+            WC()->cart->set_session();
+        }
+    }
+
+    WC()->cart->calculate_totals();
+
+    ob_start();
+    fixflip_output_cart_drawer_items_html();
+    $drawer_html = ob_get_clean();
+
+    wp_send_json_success( array(
+        'drawer_html' => $drawer_html,
+        'cart_count'  => count( WC()->cart->get_cart() ),
+        'box_count'   => WC()->cart->get_cart_contents_count(),
+        'trim_title'  => $trim_data['title'],
+        'quantity'    => $quantity
+    ) );
 }

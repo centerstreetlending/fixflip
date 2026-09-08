@@ -109,7 +109,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
 .fd-form-input:focus {
     outline: none;
     border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
+    box-shadow: none;
 }
 .fd-submit-btn {
     width: 100%;

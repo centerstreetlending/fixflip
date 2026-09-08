@@ -73,12 +73,12 @@ $is_logged_in = is_user_logged_in();
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 14px rgba(0, 123, 255, 0.2);
+    box-shadow: none;
 }
 .fd-btn-primary:hover {
     background: #0069d9;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     color: #ffffff !important;
 }
 

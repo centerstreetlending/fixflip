@@ -953,7 +953,7 @@ div:has(> label > span > input[data-filter-type="feature"]),
 .woocommerce-checkout .form-row textarea:focus,
 .woocommerce-checkout .form-row select:focus {
     border-color: #007bff !important;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12) !important;
+    box-shadow: none !important;
     outline: none !important;
 }
 
@@ -1055,7 +1055,7 @@ div:has(> label > span > input[data-filter-type="feature"]),
     background: #007bff !important;
     border-color: #007bff !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.25) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
 }
 
 .woocommerce-terms-and-conditions-wrapper {

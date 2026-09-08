@@ -367,6 +367,18 @@ $theme_uri = get_stylesheet_directory_uri();
                     $args = array(
                         'post_type'      => 'product',
                         'posts_per_page' => 24,
+                        'meta_query'     => array(
+                            'relation' => 'OR',
+                            array(
+                                'key'     => 'is_trim',
+                                'compare' => 'NOT EXISTS',
+                            ),
+                            array(
+                                'key'     => 'is_trim',
+                                'value'   => 'yes',
+                                'compare' => '!=',
+                            ),
+                        ),
                     );
                     if ( ! empty($tax_query) ) {
                         $args['tax_query'] = $tax_query;
@@ -381,6 +393,12 @@ $theme_uri = get_stylesheet_directory_uri();
                                 continue;
                             }
                             $sku   = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : ( $product->get_sku() ?: '56103' );
+                            if ( function_exists('fixflip_is_trim_sku') && fixflip_is_trim_sku( $sku ) ) {
+                                continue;
+                            }
+                            if ( $product && ( $product->get_meta('is_trim') === 'yes' || ! $product->is_visible() ) ) {
+                                continue;
+                            }
                             if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) && ! is_user_logged_in() ) {
                                 continue;
                             }

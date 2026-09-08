@@ -30,9 +30,9 @@ $theme_uri = get_stylesheet_directory_uri();
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 123, 255, 0.15);
-    border: 1px solid #007bff;
-    color: #60a5fa;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #007bff;
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
@@ -111,7 +111,7 @@ $theme_uri = get_stylesheet_directory_uri();
 
 .fd-step-card:hover {
     border-color: #007bff;
-    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .fd-step-num-badge {
@@ -340,7 +340,7 @@ $theme_uri = get_stylesheet_directory_uri();
     padding: 14px 28px;
     border-radius: 4px;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    box-shadow: none;
     transition: background 0.15s ease;
 }
 

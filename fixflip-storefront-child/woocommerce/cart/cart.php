@@ -50,6 +50,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                     $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
                                     $sku = fixflip_resolve_sku( $_product );
                                     $is_sample = ! empty( $cart_item['is_sample'] );
+                                    $is_trim = ! empty( $cart_item['is_trim'] ) || get_post_meta( $product_id, 'is_trim', true ) === 'yes' || ( isset($cart_item['variation_id']) && get_post_meta( $cart_item['variation_id'], 'is_trim', true ) === 'yes' );
                                     $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
                                     if ( empty($coverage) ) {
                                         if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) {
@@ -97,7 +98,11 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                     <span style="font-size: 10.5px; font-weight: 800; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 2px; border: 1px solid #e2e8f0;">
                                                         SKU: <?php echo esc_html( $sku ); ?>
                                                     </span>
-                                                    <?php if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) : ?>
+                                                    <?php if ( $is_trim ) : ?>
+                                                        <span style="font-size: 10px; font-weight: 900; color: #92400e; background: #fef3c7; border: 1px solid #fde68a; padding: 2px 6px; border-radius: 2px;">
+                                                            MOLDING / TRIM
+                                                        </span>
+                                                    <?php elseif ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) : ?>
                                                         <span style="font-size: 10px; font-weight: 900; color: #38bdf8; background: #0f172a; padding: 2px 6px; border-radius: 2px;">
                                                             BEST TIER 🔒
                                                         </span>
@@ -108,7 +113,11 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                     <?php endif; ?>
                                                 </div>
 
-                                                <?php if ( ! $is_sample ) : ?>
+                                                <?php if ( $is_trim ) : ?>
+                                                    <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">
+                                                        Jobsite Molding &bull; <strong style="color: #007bff;"><?php echo esc_html( $cart_item['quantity'] ); ?> piece<?php echo $cart_item['quantity'] > 1 ? 's' : ''; ?> total</strong>
+                                                    </div>
+                                                <?php elseif ( ! $is_sample ) : ?>
                                                     <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">
                                                         <?php echo esc_html( $coverage ); ?> sq ft / box &bull; <strong style="color: #007bff;"><?php echo number_format( $total_sqft, 1 ); ?> sq ft total</strong>
                                                     </div>
@@ -135,7 +144,9 @@ do_action( 'woocommerce_before_cart' ); ?>
                                             <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">
                                                 <?php echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key ); // PHPCS: XSS ok. ?>
                                             </div>
-                                            <?php if ( ! $is_sample ) : ?>
+                                            <?php if ( $is_trim ) : ?>
+                                                <div style="font-size: 11px; color: #64748b; font-weight: 600;">/ piece</div>
+                                            <?php elseif ( ! $is_sample ) : ?>
                                                 <div style="font-size: 11px; color: #64748b; font-weight: 600;">/ box</div>
                                             <?php endif; ?>
                                         </td>
@@ -167,7 +178,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                 echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item ); // PHPCS: XSS ok.
                                                 ?>
                                                 <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">
-                                                    <?php echo $is_sample ? 'swatches' : 'boxes'; ?>
+                                                    <?php echo $is_trim ? 'pieces' : ($is_sample ? 'swatches' : 'boxes'); ?>
                                                 </span>
                                             </div>
                                         </td>

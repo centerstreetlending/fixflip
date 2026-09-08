@@ -25,11 +25,22 @@ defined( 'ABSPATH' ) || exit;
             if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
                 $sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $_product ) : ( $_product->get_sku() ?: '56103' );
                 $theme_dir = get_stylesheet_directory_uri();
-                $img_url = $theme_dir . '/images/hero_' . $sku . '.webp?v=' . time();
-
                 $is_sample = ! empty( $cart_item['is_sample'] );
+                $is_trim   = ( ! empty( $cart_item['is_trim'] ) || ( $_product && $_product->get_meta('is_trim') === 'yes' ) );
+
+                if ( file_exists( get_stylesheet_directory() . '/images/hero_' . $sku . '.webp' ) ) {
+                    $img_url = $theme_dir . '/images/hero_' . $sku . '.webp?v=' . time();
+                } else {
+                    $thumb_id = $_product->get_image_id();
+                    $img_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'thumbnail' ) : ( $theme_dir . '/images/hero_56103.webp' );
+                }
+
                 if ( $is_sample ) {
                     $coverage_text = '1 Sample Swatch &bull; Fast Courier Dispatch';
+                } elseif ( $is_trim ) {
+                    $length = $_product->get_meta('custom_length') ?: 'Piece';
+                    $matching = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
+                    $coverage_text = $length . ' Piece &bull; Sold by the Stick' . $matching;
                 } else {
                     $coverage = (float) get_post_meta( $_product->get_id(), 'custom_coverage', true );
                     if ( empty( $coverage ) ) {
@@ -59,13 +70,17 @@ defined( 'ABSPATH' ) || exit;
                                     <span style="font-size: 10px; font-weight: 800; background: #f1f5f9; color: #475569; padding: 1px 5px; border-radius: 2px;">
                                         SKU: <?php echo esc_html( $sku ); ?>
                                     </span>
-                                    <?php if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) : ?>
+                                    <?php if ( $is_trim ) : ?>
+                                        <span style="font-size: 9.5px; font-weight: 900; background: #fef3c7; color: #92400e; padding: 1px 5px; border-radius: 2px;">
+                                            MOLDING / TRIM
+                                        </span>
+                                    <?php elseif ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) : ?>
                                         <span style="font-size: 9.5px; font-weight: 900; background: #eff6ff; color: #1e40af; padding: 1px 5px; border-radius: 2px;">
                                             BEST TIER 🔒
                                         </span>
                                     <?php endif; ?>
                                     <span style="font-size: 11.5px; font-weight: 800; color: #007bff;">
-                                        &times; <?php echo esc_html( $cart_item['quantity'] ); ?> <?php echo $is_sample ? 'sample' : 'boxes'; ?>
+                                        &times; <?php echo esc_html( $cart_item['quantity'] ); ?> <?php echo $is_trim ? ( $cart_item['quantity'] > 1 ? 'pieces' : 'piece' ) : ( $is_sample ? 'sample' : 'boxes' ); ?>
                                     </span>
                                 </div>
                                 <div style="font-size: 11px; color: #64748b; margin-top: 2px; font-weight: 500;">
