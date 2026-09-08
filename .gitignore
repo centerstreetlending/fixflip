@@ -3,3 +3,5 @@ fixflip-storefront-child/stripe-config.php
 *.key
 *.pem
 .env
+fixflip-storefront-child/py_modules/
+backups/

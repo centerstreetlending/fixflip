@@ -221,9 +221,12 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
             $extra_thumbs  = array_slice($thumbs, 4);
             ?>
             <div class="fd-gallery-grid-2x2">
-                <?php foreach ( $main_4_thumbs as $idx => $t_url ) : ?>
+                <?php foreach ( $main_4_thumbs as $idx => $t_url ) : 
+                    $is_plank = ( strpos($t_url, 'plank_') !== false || strpos($t_url, '1TO1') !== false || strpos($t_url, '5x70_1') !== false || strpos($t_url, '7x48_1') !== false );
+                    $box_img_style = $is_plank ? 'width: 100%; height: 100%; object-fit: contain; background: #f8fafc; padding: 12px; box-sizing: border-box;' : 'width: 100%; height: 100%; object-fit: cover;';
+                ?>
                     <div class="fd-gallery-box" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #e2e8f0; border-radius: 0px; background: #f8fafc; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $idx; ?>)">
-                        <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $idx + 1; ?>" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s ease; display: block;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $idx + 1; ?>" style="<?php echo $box_img_style; ?> transition: transform 0.2s ease; display: block;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -238,9 +241,14 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
                         <?php foreach ( $extra_thumbs as $e_idx => $t_url ) : 
                             $real_idx = $e_idx + 4;
+                            $is_plank = ( strpos($t_url, 'plank_') !== false || strpos($t_url, '1TO1') !== false || strpos($t_url, '5x70_1') !== false || strpos($t_url, '7x48_1') !== false );
+                            $mini_style = $is_plank ? 'width: 100%; height: 100%; object-fit: contain; background: #ffffff; padding: 4px; box-sizing: border-box;' : 'width: 100%; height: 100%; object-fit: cover;';
                         ?>
                             <div class="fd-gallery-thumb-mini" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #cbd5e1; background: #ffffff; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $real_idx; ?>)" onmouseover="this.style.borderColor='#007bff'" onmouseout="this.style.borderColor='#cbd5e1'">
-                                <img src="<?php echo esc_url($t_url); ?>" alt="Extra View <?php echo $e_idx+1; ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="<?php echo esc_url($t_url); ?>" alt="Extra View <?php echo $e_idx+1; ?>" style="<?php echo $mini_style; ?>">
+                                <?php if ( $is_plank ) : ?>
+                                    <span style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15,23,42,0.85); color: #ffffff; font-size: 8px; font-weight: 900; text-align: center; padding: 2px 0; letter-spacing: 0.5px; text-transform: uppercase;">FULL PLANK</span>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -249,7 +257,7 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
         </div>
 
         <!-- LIGHTBOX POPUP MODAL -->
-        <div id="fd-lightbox-modal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; padding: 40px;">
+        <div id="fd-lightbox-modal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.95); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; padding: 40px;" onclick="if(event.target===this) window.fdCloseLightbox();">
             <!-- Close Button -->
             <button type="button" onclick="window.fdCloseLightbox()" style="position: absolute; top: 24px; right: 28px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 50px; height: 50px; color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; padding: 0;" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
                 <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; stroke: #ffffff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -261,7 +269,9 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
             </button>
             
             <!-- Main Photo -->
-            <img id="fd-lightbox-img" src="" alt="Full Screen View" style="max-width: 88vw; max-height: 85vh; object-fit: contain; border-radius: 4px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            <div style="max-width: 88vw; max-height: 85vh; display: flex; align-items: center; justify-content: center; background: #ffffff; border-radius: 6px; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.5);">
+                <img id="fd-lightbox-img" src="" alt="Full Screen View" style="max-width: 85vw; max-height: 82vh; object-fit: contain; display: block;">
+            </div>
             
             <!-- Right Arrow Button -->
             <button type="button" onclick="window.fdNavLightbox(1)" style="position: absolute; right: 36px; top: 50%; transform: translateY(-50%); background: #ffffff; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; color: #0f172a; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(0,0,0,0.45); transition: all 0.2s ease; z-index: 100000; padding: 0;" onmouseover="this.style.transform='translateY(-50%) scale(1.1)'; this.style.background='#f1f5f9';" onmouseout="this.style.transform='translateY(-50%) scale(1)'; this.style.background='#ffffff';">

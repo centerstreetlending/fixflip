@@ -2159,67 +2159,77 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
             '/images/FixFlip.com - Products/4308V Branching Out_color 56103 Zion Oak/4308V_56103 Guest Room 1.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56103 Zion Oak/4256V_56103_FEATURE.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56103 Zion Oak/4308V_56103 Public Space 1.webp',
-            '/images/FixFlip.com - Products/4308V Branching Out_color 56103 Zion Oak/4308V_56103_7x48_1.webp'
+            '/images/plank_56103_studio.webp'
         ),
         '56140' => array(
             '/images/hero_56140.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56140 Riverside Oak/4308V_56140 Guest Room 1.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56140 Riverside Oak/4256V_56140_FEATURE.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56140 Riverside Oak/4308V_56140 Public Space 1.webp',
-            '/images/FixFlip.com - Products/4308V Branching Out_color 56140 Riverside Oak/4308V_56140_7x48_1.webp'
+            '/images/plank_56140_studio.webp'
         ),
         '56240' => array(
             '/images/hero_56240.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56240 Prairie Oak/4308V_56240 Guest Room 1.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56240 Prairie Oak/4308V_56240 Public Space 1.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56240 Prairie Oak/4308V_56240 Public Space 2.webp',
-            '/images/FixFlip.com - Products/4308V Branching Out_color 56240 Prairie Oak/4308V_56240_7x48_1.webp'
+            '/images/plank_56240_studio.webp'
         ),
         '56516' => array(
             '/images/hero_56516.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56516 Smokey Oak/4308V_56516 Guest Room 1.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56516 Smokey Oak/4256V_56516_FEATURE.webp',
             '/images/FixFlip.com - Products/4308V Branching Out_color 56516 Smokey Oak/4308V_56516 Public Space 1.webp',
-            '/images/FixFlip.com - Products/4308V Branching Out_color 56516 Smokey Oak/4308V_56516_7x48_1.webp'
+            '/images/plank_56516_studio.webp'
         ),
         '00135' => array(
             '/images/hero_00135.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/0294W_00135_ROOM.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/0294W_00135_1TO1.webp'
+            '/images/oak_living_room.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_00135 Rustic Natural/CA303_00135_MAIN.webp',
+            '/images/plank_00135_studio.webp'
         ),
         '01102' => array(
             '/images/hero_01102.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/0353W_01102_ROOM2.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/0353W_01102_1TO1.webp'
+            '/images/product_01102_img2.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_01102 Biscuit Lg/CA303_01102_MAIN.webp',
+            '/images/plank_01102_studio.webp'
         ),
         '07087' => array(
             '/images/hero_07087.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/0353W_07087_ROOM2.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/0353W_07087_1TO1.webp'
+            '/images/product_07087_img2.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07087 Flax Seed Lg/CA303_07087_MAIN.webp',
+            '/images/plank_07087_studio.webp'
         ),
         '07091' => array(
             '/images/hero_07091.webp',
             '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/0353W_07091_ROOM2.webp',
-            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/0353W_07091_1TO1.webp'
+            '/images/product_07091_img2.webp',
+            '/images/FixFlip.com - Products/CA303 Oak Traditions 5 (All In II)_07091 Kona Lg/CA303_07091_MAIN.webp',
+            '/images/plank_07091_studio.webp'
         ),
         '01015' => array(
             '/images/hero_01015.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_01015 Exquisite Oak/EmpireOak-SW583-01015-Vanderbilt-Rug-V.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_01015 Exquisite Oak/CA308_01015_FEATURE1.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_01015 Exquisite Oak/EmpireOak-SW583-01015-Vanderbilt-5in-V.webp',
-            '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_01015 Exquisite Oak/CA308_01015_5x70_1.webp'
+            '/images/plank_01015_studio.webp'
         ),
         '02012' => array(
             '/images/hero_02012.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_02012 Sophisticated Oak/EmpireOak-SW583-02012-Hearst-5in-V.webp',
-            '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_02012 Sophisticated Oak/CA308_02012_5x70_1.webp'
+            '/images/product_02012_img1.webp',
+            '/images/product_02012_img4.webp',
+            '/images/plank_02012_studio.webp'
         ),
         '05014' => array(
             '/images/hero_05014.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/EmpireOak-SW583-05014-Roosevelt-RUG-V.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/1767U_05014_ROOM.webp',
             '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/EmpireOak-SW583-05014-Roosevelt-5in-V.webp',
-            '/images/FixFlip.com - Products/CA308 Refined Oak (Empire Oak)_05014 Cultivated Oak/CA308_05014_5x70_1.webp'
+            '/images/plank_05014_studio.webp'
         ),
         '11100' => array(
             '/images/hero_11100.webp',
