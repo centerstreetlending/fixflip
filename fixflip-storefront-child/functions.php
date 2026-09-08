@@ -2190,6 +2190,22 @@ function fixflip_policy_page_status_header() {
 }
 
 /**
+ * Prevent 404 status header for custom routed policy pages
+ */
+add_filter( 'pre_handle_404', 'fixflip_prevent_policy_404', 10, 2 );
+function fixflip_prevent_policy_404( $preempt, $wp_query ) {
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    if ( preg_match( '#/(privacy-policy|privacy|shipping-delivery|shipping-policy|delivery|returns-unopened-box-credit|returns-refunds|return-policy|cancellation-refund-policy|cancellation-policy|terms)#i', $uri ) ) {
+        if ( is_object( $wp_query ) ) {
+            $wp_query->is_404 = false;
+        }
+        status_header( 200 );
+        return true;
+    }
+    return $preempt;
+}
+
+/**
  * Template routing for legal & policy pages
  */
 add_filter( 'template_include', 'fixflip_policy_page_templates', 99 );
@@ -2199,16 +2215,36 @@ function fixflip_policy_page_templates( $template ) {
 
     if ( preg_match( '#/(privacy-policy|privacy)#i', $uri ) ) {
         $file = $theme_dir . '/page-privacy.php';
-        if ( file_exists( $file ) ) return $file;
+        if ( file_exists( $file ) ) {
+            status_header( 200 );
+            global $wp_query;
+            if ( is_object( $wp_query ) ) { $wp_query->is_404 = false; }
+            return $file;
+        }
     } elseif ( preg_match( '#/(shipping-delivery|shipping-policy|delivery)#i', $uri ) ) {
         $file = $theme_dir . '/page-shipping.php';
-        if ( file_exists( $file ) ) return $file;
+        if ( file_exists( $file ) ) {
+            status_header( 200 );
+            global $wp_query;
+            if ( is_object( $wp_query ) ) { $wp_query->is_404 = false; }
+            return $file;
+        }
     } elseif ( preg_match( '#/(returns-unopened-box-credit|returns-refunds|return-policy)#i', $uri ) ) {
         $file = $theme_dir . '/page-returns.php';
-        if ( file_exists( $file ) ) return $file;
+        if ( file_exists( $file ) ) {
+            status_header( 200 );
+            global $wp_query;
+            if ( is_object( $wp_query ) ) { $wp_query->is_404 = false; }
+            return $file;
+        }
     } elseif ( preg_match( '#/(cancellation-refund-policy|cancellation-policy)#i', $uri ) ) {
         $file = $theme_dir . '/page-cancellation.php';
-        if ( file_exists( $file ) ) return $file;
+        if ( file_exists( $file ) ) {
+            status_header( 200 );
+            global $wp_query;
+            if ( is_object( $wp_query ) ) { $wp_query->is_404 = false; }
+            return $file;
+        }
     } elseif ( preg_match( '#/(terms|terms-and-conditions)#i', $uri ) ) {
         $file = $theme_dir . '/page-terms.php';
         if ( file_exists( $file ) ) return $file;
