@@ -2061,6 +2061,22 @@ function fixflip_restrict_to_two_payment_gateways( $gateways ) {
 add_filter( 'woocommerce_terms_is_checked_default', '__return_false', 999 );
 
 /**
+ * Clean customer-facing Stripe gateway description (removes test notices and test card instructions)
+ */
+add_filter( 'wc_stripe_description', 'fixflip_clean_stripe_description', 999, 2 );
+add_filter( 'woocommerce_gateway_description', 'fixflip_clean_stripe_description', 999, 2 );
+function fixflip_clean_stripe_description( $description, $gateway_id = '' ) {
+    $description = preg_replace( '/TEST MODE ENABLED.*?(\.|$)/si', '', $description );
+    $description = preg_replace( '/In test mode, you can use the card number.*?(\.|$)/si', '', $description );
+    $description = preg_replace( '/or check the <a.*?<\/a> for more card numbers\./si', '', $description );
+    $description = trim( $description );
+    if ( empty( $description ) || strip_tags( $description ) === '' ) {
+        $description = '<p>Pay securely using Visa, MasterCard, Amex, Discover, Apple Pay, or Google Pay.</p>';
+    }
+    return $description;
+}
+
+/**
  * Server-Side Validation on Checkout Submission
  * Strictly enforces $2,000 material minimum and required loan number for CSL Draw Advance
  */
