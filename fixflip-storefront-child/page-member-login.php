@@ -22,7 +22,7 @@ $is_logged_in = is_user_logged_in();
 $current_user = wp_get_current_user();
 $auth_error = isset( $_GET['auth_error'] ) ? sanitize_text_field( $_GET['auth_error'] ) : '';
 $auth_success = isset( $_GET['registered'] ) && $_GET['registered'] === '1';
-$active_tab = ( isset( $_GET['tab'] ) && $_GET['tab'] === 'register' ) ? 'register' : 'login';
+$active_tab = ( ( isset( $_GET['tab'] ) && $_GET['tab'] === 'register' ) || ( isset( $_GET['action'] ) && $_GET['action'] === 'register' ) ) ? 'register' : 'login';
 $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to'] ) : home_url( '/category/hardwood-best/' );
 ?>
 
@@ -382,11 +382,11 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                         </div>
                         <div class="fd-perk-item">
                             <span class="fd-perk-check">✓</span>
-                            <span><strong>100% CSL Rehab Draw Financing:</strong> Roll project material costs into your active construction draw with \$0 down today.</span>
+                            <span><strong>100% CSL Rehab Draw Financing:</strong> Roll project material costs into your active construction draw with $0 down today.</span>
                         </div>
                         <div class="fd-perk-item">
                             <span class="fd-perk-check">✓</span>
-                            <span><strong>Best Tier European White Oak (\$9.00/sqft):</strong> Unlocked member access to ShawContract® CA399 7.5" pro rate.</span>
+                            <span><strong>Best Tier European White Oak ($9.00/sqft):</strong> Unlocked member access to ShawContract® CA399 7.5" pro rate.</span>
                         </div>
                     </div>
 

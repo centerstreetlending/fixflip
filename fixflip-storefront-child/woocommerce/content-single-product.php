@@ -42,25 +42,24 @@ $title_lower = strtolower(get_the_title());
 
 $is_best_tier_product = in_array( $sku, array('11100', '11101', '11102', '15041', '17065') ) || ( has_term( 'hardwood-best', 'product_cat', $product->get_id() ) );
 
+$coverage = function_exists('fixflip_get_product_coverage') ? fixflip_get_product_coverage( $product ) : 27.73;
+$price = function_exists('fixflip_get_product_sqft_price') ? fixflip_get_product_sqft_price( $product ) : (float)$product->get_price();
+
 if ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
     $price = 3.56;
     $reg_price = 4.81;
-    $coverage = 15.5;
 } elseif ( $is_best_tier_product ) {
     $price = 9.00;
     $reg_price = 12.15;
-    $coverage = 23.31;
 } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
     $price = 5.97;
     $reg_price = 8.06;
-    $coverage = 15.5;
 } else {
     $price = 5.12;
     $reg_price = 6.91;
-    $coverage = 15.5;
 }
 $unit  = $product->get_meta('custom_unit') ?: 'sqft';
-$box_price = $price * $coverage;
+$box_price = round( $price * $coverage, 2 );
 
 // Gallery Thumbnails via Curated High-Definition SKU Mapping
 if ( function_exists('fixflip_get_curated_product_images') ) {
@@ -505,13 +504,16 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         
                         <!-- Primary CTA: ADD TO ORDER (Full Width Top Button) -->
-                        <button type="button" onclick="window.fdSubmitAddToCart(event)" id="fd-main-add-btn" style="width: 100%; height: 56px; padding: 0 24px; background: #007bff; color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.2px; border: none; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; box-shadow: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;" onmouseover="this.style.background='#0056b3'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.12)';" onmouseout="this.style.background='#007bff'; this.style.boxShadow='none';">
+                        <button type="button" onclick="window.fdSubmitAddToCart(event)" id="fd-main-add-btn" disabled style="width: 100%; height: 56px; padding: 0 24px; background: #94a3b8; color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.2px; border: none; border-radius: 0px; cursor: not-allowed; transition: all 0.2s ease; box-shadow: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box; opacity: 0.7;">
                             <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#ffffff;stroke-width:2.2;fill:none;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                             <span>ADD TO ORDER</span>
                             <span style="opacity: 0.7;">&bull;</span>
-                            <span id="fd-btn-subtotal">$<?php echo number_format($box_price, 2); ?></span>
+                            <span id="fd-btn-subtotal">$0.00</span>
                             <span style="font-size: 18px; margin-left: 4px;">&rarr;</span>
                         </button>
+                        <div id="fd-qty-validation-msg" style="font-size: 12px; color: #64748b; margin-top: -4px; margin-bottom: 2px; font-weight: 600; text-align: center;">
+                            Enter your project square footage or box quantity above to calculate order.
+                        </div>
 
                         <!-- Secondary CTA: ORDER A SAMPLE ($5.00) -->
                         <button type="button" onclick="window.fdSubmitAddSample(event)" id="fd-main-sample-btn" style="width: 100%; height: 50px; padding: 0 20px; background: #ffffff; color: #0f172a; font-size: 14.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border: 2px solid #0f172a; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;" onmouseover="this.style.background='#0f172a'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#0f172a';">
@@ -528,8 +530,19 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     if (e) e.preventDefault();
                     const btn = document.getElementById('fd-main-add-btn');
                     const boxesInput = document.getElementById('fd-calc-boxes-output');
-                    const qty = boxesInput ? (parseInt(boxesInput.value) || 1) : 1;
+                    const qty = boxesInput ? parseInt(boxesInput.value) : 0;
+                    const msg = document.getElementById('fd-qty-validation-msg');
                     const productId = '<?php echo esc_js($product->get_id()); ?>';
+
+                    if (!qty || qty < 1 || isNaN(qty)) {
+                        if (msg) {
+                            msg.style.display = 'block';
+                            msg.textContent = 'Please specify at least 1 box to add to your order.';
+                            msg.style.color = '#dc2626';
+                        }
+                        if (boxesInput) boxesInput.focus();
+                        return false;
+                    }
 
                     if (btn) {
                         btn.style.opacity = '0.6';
@@ -1191,11 +1204,40 @@ document.addEventListener('DOMContentLoaded', function() {
         if (bkFormula) bkFormula.textContent = wholeBoxes + ' boxes \u00D7 $' + pricePerSqft.toFixed(2) + '/sqft';
         if (bkSubtotalVal) bkSubtotalVal.textContent = formattedTotal;
 
-        if (subtotalDisplay) subtotalDisplay.textContent = formattedTotal;
-        if (btnSubtotalDisplay) btnSubtotalDisplay.textContent = formattedTotal;
-        if (hiddenWcQty) hiddenWcQty.value = Math.max(1, wholeBoxes);
+        const addBtn = document.getElementById('fd-main-add-btn');
+        const validationMsg = document.getElementById('fd-qty-validation-msg');
 
-        if (summaryQtyDesc) summaryQtyDesc.textContent = wholeBoxes + ' boxes (' + (wholeBoxes * sqftPerBox).toFixed(1) + ' sqft)';
+        if (wholeBoxes >= 1) {
+            if (addBtn) {
+                addBtn.disabled = false;
+                addBtn.style.background = '#007bff';
+                addBtn.style.opacity = '1';
+                addBtn.style.cursor = 'pointer';
+            }
+            if (btnSubtotalDisplay) btnSubtotalDisplay.textContent = formattedTotal;
+            if (hiddenWcQty) hiddenWcQty.value = wholeBoxes;
+            if (validationMsg) {
+                validationMsg.style.display = 'none';
+            }
+        } else {
+            if (addBtn) {
+                addBtn.disabled = true;
+                addBtn.style.background = '#94a3b8';
+                addBtn.style.opacity = '0.7';
+                addBtn.style.cursor = 'not-allowed';
+            }
+            if (btnSubtotalDisplay) btnSubtotalDisplay.textContent = '$0.00';
+            if (hiddenWcQty) hiddenWcQty.value = 0;
+            if (validationMsg) {
+                validationMsg.style.display = 'block';
+                validationMsg.textContent = 'Enter your project square footage or box quantity above to calculate order.';
+                validationMsg.style.color = '#64748b';
+            }
+        }
+
+        if (subtotalDisplay) subtotalDisplay.textContent = formattedTotal;
+        const boxWord = wholeBoxes === 1 ? 'box' : 'boxes';
+        if (summaryQtyDesc) summaryQtyDesc.textContent = wholeBoxes + ' ' + boxWord + ' (' + (wholeBoxes * sqftPerBox).toFixed(1) + ' sqft)';
         if (summaryTotalVal) summaryTotalVal.textContent = formattedTotal;
 
         const liveShipping = document.getElementById('fd-live-shipping');
@@ -1222,7 +1264,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function calculateFromBoxes() {
-        let b = parseInt(boxesOutput.value) || 0;
+        let raw = boxesOutput ? boxesOutput.value.trim() : '';
+        let b = parseInt(raw);
+        if (isNaN(b) || b < 0) {
+            b = 0;
+            if (boxesOutput) boxesOutput.value = '';
+        } else if (raw.indexOf('.') !== -1) {
+            b = Math.floor(parseFloat(raw)) || 0;
+            if (boxesOutput) boxesOutput.value = b > 0 ? b : '';
+        }
         if (b > 0) {
             let totalCov = b * sqftPerBox;
             let baseSqft = (wasteCheck && wasteCheck.checked) ? (totalCov / 1.10) : totalCov;
@@ -1264,6 +1314,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (wasteCheck) wasteCheck.addEventListener('change', function() { calculateValues(false); });
     if (lenInput) lenInput.addEventListener('input', calculateFromLW);
     if (widInput) widInput.addEventListener('input', calculateFromLW);
+
+    // Initial run to ensure zero-quantity state is active
+    calculateValues(true);
 });
 </script>
 

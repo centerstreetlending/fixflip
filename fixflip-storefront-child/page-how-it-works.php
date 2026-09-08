@@ -443,7 +443,7 @@ $theme_uri = get_stylesheet_directory_uri();
                 <span>Contractor-Direct Pricing</span>
             </div>
             <div class="fd-hiw-metric-pill">
-                <span>2–5 Day Jobsite Delivery</span>
+                <span>Scheduled 1-Week Direct Jobsite Delivery</span>
             </div>
         </div>
     </section>
@@ -495,12 +495,12 @@ $theme_uri = get_stylesheet_directory_uri();
                     <span class="step-digit">03</span>
                 </div>
                 <div class="fd-step-content">
-                    <h3>3. Fast Automated Draw Approval</h3>
+                    <h3>3. Fast Integrated Draw Verification</h3>
                     <p class="fd-step-main-text">
-                        Direct lender integration for rapid order processing.
+                        Direct lender integration with Center Street Lending for streamlined order processing.
                     </p>
                     <p class="fd-step-sub-text">
-                        Our system confirms your active loan status with Center Street Lending within 2–4 hours. Once verified, materials are released immediately from the warehouse for direct liftgate freight delivery to your jobsite curb in 1 week.
+                        Our system confirms your active loan status and available draw budget with Center Street Lending. Once verified, materials are released immediately from the warehouse for scheduled 1-week direct jobsite freight delivery.
                     </p>
                 </div>
             </div>
@@ -576,7 +576,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         <tr>
                             <td><strong>Material Pricing</strong></td>
                             <td>Standard retail markups</td>
-                            <td class="ff-col"><strong>25% Wholesale Pro Discount</strong> pre-negotiated</td>
+                            <td class="ff-col"><strong>Commercial Wholesale Rates</strong> pre-negotiated</td>
                         </tr>
                         <tr>
                             <td><strong>Draw Reimbursement Hassle</strong></td>

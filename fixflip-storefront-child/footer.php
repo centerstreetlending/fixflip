@@ -29,7 +29,7 @@ $theme_uri = get_stylesheet_directory_uri();
 }
 </style>
     <!-- CLEAN AUTHENTIC B2B FOOTER -->
-    <footer id="colophon" class="site-footer" style="background: #0f172a; color: #94a3b8; font-size: 14px; border-top: 3px solid #007bff; margin-top: 60px;">
+    <footer id="colophon" class="site-footer" style="background: #0f172a; color: #94a3b8; font-size: 14px; border-top: 3px solid #007bff; margin-top: 0;">
         
         <!-- TOP FOOTER CONTENT (4 COLUMNS ON DESKTOP, 1 COLUMN ON MOBILE) -->
         <div class="fd-footer-grid" style="max-width: 1240px; margin: 0 auto; padding: 48px 20px 36px;">
@@ -66,16 +66,18 @@ $theme_uri = get_stylesheet_directory_uri();
                 </ul>
             </div>
 
-            <!-- COLUMN 3: QUICK LINKS -->
+            <!-- COLUMN 3: POLICIES & ACCOUNT -->
             <div>
                 <h4 style="font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0;">
-                    Account &amp; Order
+                    Policies &amp; Orders
                 </h4>
-                <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.1; font-size: 13.5px;">
+                <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.1; font-size: 13px;">
                     <li><a href="/how-it-works/" style="color: #38bdf8; text-decoration: none; font-weight: 700;">How It Works &rarr;</a></li>
-                    <li><a href="/cart/" style="color: #cbd5e1; text-decoration: none;">View Cart</a></li>
-                    <li><a href="/checkout/" style="color: #cbd5e1; text-decoration: none;">Checkout</a></li>
-                    <li><a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" style="color: #cbd5e1; text-decoration: none;">My Account</a></li>
+                    <li><a href="/shipping-delivery/" style="color: #cbd5e1; text-decoration: none;">Shipping &amp; Delivery</a></li>
+                    <li><a href="/returns-unopened-box-credit/" style="color: #cbd5e1; text-decoration: none;">Returns &amp; Box Credit</a></li>
+                    <li><a href="/cancellation-refund-policy/" style="color: #cbd5e1; text-decoration: none;">Cancellation &amp; Refunds</a></li>
+                    <li><a href="/terms/" style="color: #cbd5e1; text-decoration: none;">Terms &amp; Conditions</a></li>
+                    <li><a href="/privacy-policy/" style="color: #cbd5e1; text-decoration: none;">Privacy Policy</a></li>
                 </ul>
             </div>
 
@@ -84,18 +86,19 @@ $theme_uri = get_stylesheet_directory_uri();
                 <h4 style="font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0;">
                     Order Desk &amp; Financing
                 </h4>
-                <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6;">
-                    <div style="margin-bottom: 12px;">
-                        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
-                            <img src="<?php echo $theme_uri; ?>/images/center_street_lending_logo_white.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 18px; width: auto; display: block;">
-                        </a>
+                <div style="font-size: 13px; color: #94a3b8; line-height: 1.6;">
+                    <p style="margin: 0 0 8px 0; color: #cbd5e1; font-weight: 700;">
+                        Direct Jobsite Support:
+                    </p>
+                    <p style="margin: 0 0 10px 0; color: #94a3b8;">
+                        Phone: <a href="tel:9497054300" style="color: #38bdf8; text-decoration: none; font-weight: 700;">(949) 705-4300</a><br>
+                        Support: <a href="mailto:support@fixflip.com" style="color: #38bdf8; text-decoration: none;">support@fixflip.com</a><br>
+                        Orders: <a href="mailto:orders@fixflip.com" style="color: #38bdf8; text-decoration: none;">orders@fixflip.com</a>
+                    </p>
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1e293b;">
+                        <span style="font-size: 11px; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">CSL Loan Advance Desk:</span>
+                        <a href="mailto:sscouig@centerstreetlending.com" style="color: #cbd5e1; text-decoration: none; font-size: 12px;">sscouig@centerstreetlending.com</a>
                     </div>
-                    <p style="margin: 0 0 6px 0; color: #cbd5e1; font-weight: 600;">
-                        Rehab Material Procurement &amp; Draw Approvals
-                    </p>
-                    <p style="margin: 0; color: #94a3b8; font-size: 12.5px;">
-                        Email: <a href="mailto:sscouig@centerstreetlending.com" style="color: #38bdf8; text-decoration: underline;">sscouig@centerstreetlending.com</a>
-                    </p>
                 </div>
             </div>
 
@@ -105,10 +108,14 @@ $theme_uri = get_stylesheet_directory_uri();
         <div style="background: #020617; border-top: 1px solid #1e293b; padding: 20px; font-size: 12px; color: #64748b;">
             <div style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div>
-                    &copy; <?php echo date('Y'); ?> <strong>FixFlip.com</strong> &bull; In Partnership with <strong>Center Street Lending</strong>.
+                    &copy; <?php echo date('Y'); ?> <strong>FixFlip.com</strong> &bull; In Partnership with <strong>Center Street Lending</strong>. All rights reserved.
                 </div>
-                <div style="color: #94a3b8; font-weight: 600;">
-                    100% Rehab Loan Draw Financing ($0 Out-of-Pocket Cash Today)
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <a href="/terms/" style="color: #94a3b8; text-decoration: none;">Terms</a>
+                    <a href="/privacy-policy/" style="color: #94a3b8; text-decoration: none;">Privacy</a>
+                    <a href="/shipping-delivery/" style="color: #94a3b8; text-decoration: none;">Shipping</a>
+                    <a href="/returns-unopened-box-credit/" style="color: #94a3b8; text-decoration: none;">Returns</a>
+                    <a href="/cancellation-refund-policy/" style="color: #94a3b8; text-decoration: none;">Refunds</a>
                 </div>
             </div>
         </div>

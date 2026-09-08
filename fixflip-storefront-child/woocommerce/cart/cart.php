@@ -51,18 +51,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                     $sku = fixflip_resolve_sku( $_product );
                                     $is_sample = ! empty( $cart_item['is_sample'] );
                                     $is_trim = ! empty( $cart_item['is_trim'] ) || get_post_meta( $product_id, 'is_trim', true ) === 'yes' || ( isset($cart_item['variation_id']) && get_post_meta( $cart_item['variation_id'], 'is_trim', true ) === 'yes' );
-                                    $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
-                                    if ( empty($coverage) ) {
-                                        if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) {
-                                            $coverage = 23.31;
-                                        } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
-                                            $coverage = 24.57;
-                                        } elseif ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
-                                            $coverage = 27.73;
-                                        } else {
-                                            $coverage = 20.00;
-                                        }
-                                    }
+                                    $coverage = function_exists('fixflip_get_product_coverage') ? fixflip_get_product_coverage( $_product ) : 20.00;
                                     $total_sqft = round($cart_item['quantity'] * $coverage, 1);
                                     ?>
                                     <tr class="woocommerce-cart-form__cart-item <?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>" style="border-bottom: 1px solid #f1f5f9;">
@@ -178,7 +167,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                 echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item ); // PHPCS: XSS ok.
                                                 ?>
                                                 <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">
-                                                    <?php echo $is_trim ? 'pieces' : ($is_sample ? 'swatches' : 'boxes'); ?>
+                                                    <?php echo $is_trim ? ( $cart_item['quantity'] === 1 ? 'piece' : 'pieces' ) : ( $is_sample ? ( $cart_item['quantity'] === 1 ? 'swatch' : 'swatches' ) : ( $cart_item['quantity'] === 1 ? 'box' : 'boxes' ) ); ?>
                                                 </span>
                                             </div>
                                         </td>

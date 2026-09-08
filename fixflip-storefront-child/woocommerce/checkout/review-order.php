@@ -42,19 +42,9 @@ defined( 'ABSPATH' ) || exit;
                     $matching = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
                     $coverage_text = $length . ' Piece &bull; Sold by the Stick' . $matching;
                 } else {
-                    $coverage = (float) get_post_meta( $_product->get_id(), 'custom_coverage', true );
-                    if ( empty( $coverage ) ) {
-                        if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) ) {
-                            $coverage = 23.31;
-                        } elseif ( in_array($sku, array('01015', '02012', '05014')) ) {
-                            $coverage = 24.57;
-                        } elseif ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
-                            $coverage = 27.73;
-                        } else {
-                            $coverage = 20.00;
-                        }
-                    }
+                    $coverage = function_exists('fixflip_get_product_coverage') ? fixflip_get_product_coverage( $_product ) : 20.00;
                     $total_sqft = round( $cart_item['quantity'] * $coverage, 1 );
+                    $box_label = ( $cart_item['quantity'] === 1 ) ? 'box' : 'boxes';
                     $coverage_text = $coverage . ' sq ft / box &bull; ' . number_format($total_sqft, 1) . ' sq ft total';
                 }
                 ?>
@@ -80,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
                                         </span>
                                     <?php endif; ?>
                                     <span style="font-size: 11.5px; font-weight: 800; color: #007bff;">
-                                        &times; <?php echo esc_html( $cart_item['quantity'] ); ?> <?php echo $is_trim ? ( $cart_item['quantity'] > 1 ? 'pieces' : 'piece' ) : ( $is_sample ? 'sample' : 'boxes' ); ?>
+                                        &times; <?php echo esc_html( $cart_item['quantity'] ); ?> <?php echo $is_trim ? ( $cart_item['quantity'] === 1 ? 'piece' : 'pieces' ) : ( $is_sample ? ( $cart_item['quantity'] === 1 ? 'sample' : 'samples' ) : ( $cart_item['quantity'] === 1 ? 'box' : 'boxes' ) ); ?>
                                     </span>
                                 </div>
                                 <div style="font-size: 11px; color: #64748b; margin-top: 2px; font-weight: 500;">

@@ -580,7 +580,7 @@
 <div id="account-drawer-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; backdrop-filter: blur(2px);"></div>
 <div id="account-drawer" style="position: fixed; top: 0; right: -500px; width: 450px; max-width: 100%; height: 100vh; background: #fff; z-index: 9999; transition: right 0.3s ease-in-out; box-shadow: -5px 0 15px rgba(0,0,0,0.1); overflow-y: auto; display: flex; flex-direction: column;">
   <div style="padding: 32px 40px; position: relative;">
-    <button id="account-drawer-close" style="position: absolute; top: 24px; right: 24px; background: none; border: none; cursor: pointer; color: #111;">
+    <button id="account-drawer-close" aria-label="Close Account Panel" style="position: absolute; top: 24px; right: 24px; background: none; border: none; cursor: pointer; color: #111;">
       <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:currentColor;stroke-width:1.5;fill:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
     
@@ -603,8 +603,8 @@
     </div>
     
     <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
-      <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>" style="background: #111; color: #fff; text-decoration: none; text-align: center; padding: 14px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Login</a>
-      <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>?action=register" style="background: #fff; color: #111; border: 2px solid #111; text-decoration: none; text-align: center; padding: 12px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Create Account</a>
+      <a href="/member-login/" style="background: #111; color: #fff; text-decoration: none; text-align: center; padding: 14px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Login</a>
+      <a href="/member-login/?tab=register" style="background: #fff; color: #111; border: 2px solid #111; text-decoration: none; text-align: center; padding: 12px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Create Account</a>
     </div>
   </div>
   
@@ -734,7 +734,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $curr_u = wp_get_current_user();
             $u_name = $curr_u->first_name ?: $curr_u->display_name;
           ?>
-            <a href="/member-login/" class="account-link" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+            <a href="/member-login/" class="account-link" aria-label="Hello, <?php echo esc_attr($u_name); ?> - Member Account" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
               <div style="display: flex; align-items: center; justify-content: center; color: #16a34a;">
                 <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </div>
@@ -744,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
               </div>
             </a>
           <?php else : ?>
-            <a href="/member-login/" class="account-link" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+            <a href="/member-login/" class="account-link" aria-label="Member Login - Projects and Trade Access" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
               <div style="display: flex; align-items: center; justify-content: center; color: #007bff;">
                 <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </div>
@@ -756,7 +756,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <?php endif; ?>
 
           <div class="cart-container" style="position: relative; height: 100%;">
-            <a href="<?php echo wc_get_cart_url(); ?>" class="cart-wrapper" id="header-cart-toggle" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center; height: 100%; margin-left: 16px; padding-left: 24px; border-left: 1px solid #cbd5e1;">
+            <a href="<?php echo wc_get_cart_url(); ?>" class="cart-wrapper" id="header-cart-toggle" aria-label="View Shopping Cart Drawer" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center; height: 100%; margin-left: 16px; padding-left: 24px; border-left: 1px solid #cbd5e1;">
               <div class="cart-icon-container" id="site-header-cart-icon" style="position: relative; display: flex; align-items: center; justify-content: center; color: #007bff;">
                 <svg class="header-icon" viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#007bff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 <div class="cart-badge" style="position: absolute; top: -8px; right: -14px; background: #007bff; color: #ffffff; font-size: 10.5px; font-weight: 900; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; line-height: 1; box-sizing: border-box; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,0.15); border: 2px solid #ffffff; z-index: 5;">

@@ -1099,7 +1099,7 @@ $is_logged_in = is_user_logged_in();
                                 <span class="fd-prod-unit">/ sq ft</span>
                                 <span class="fd-prod-retail-price">Retail $4.81</span>
                             </div>
-                            <div class="fd-prod-box-note">$55.18 / box &bull; 15.5 sq ft per carton</div>
+                            <div class="fd-prod-box-note">$98.72 / box &bull; 27.73 sq ft per carton</div>
                         </div>
                         <div class="fd-prod-actions">
                             <a href="/product/zion-oak-spc-vinyl-plank/#sample" class="fd-btn-sample">Order Sample</a>
@@ -1123,7 +1123,7 @@ $is_logged_in = is_user_logged_in();
                                 <span class="fd-prod-unit">/ sq ft</span>
                                 <span class="fd-prod-retail-price">Retail $4.81</span>
                             </div>
-                            <div class="fd-prod-box-note">$55.18 / box &bull; 15.5 sq ft per carton</div>
+                            <div class="fd-prod-box-note">$98.72 / box &bull; 27.73 sq ft per carton</div>
                         </div>
                         <div class="fd-prod-actions">
                             <a href="/product/riverside-oak-spc-vinyl-plank/#sample" class="fd-btn-sample">Order Sample</a>
@@ -1147,7 +1147,7 @@ $is_logged_in = is_user_logged_in();
                                 <span class="fd-prod-unit">/ sq ft</span>
                                 <span class="fd-prod-retail-price">Retail $6.91</span>
                             </div>
-                            <div class="fd-prod-box-note">$79.36 / box &bull; 15.5 sq ft per carton</div>
+                            <div class="fd-prod-box-note">$125.44 / box &bull; 24.50 sq ft per carton</div>
                         </div>
                         <div class="fd-prod-actions">
                             <a href="/product/rustic-natural-red-oak/#sample" class="fd-btn-sample">Order Sample</a>
@@ -1171,7 +1171,7 @@ $is_logged_in = is_user_logged_in();
                                 <span class="fd-prod-unit">/ sq ft</span>
                                 <span class="fd-prod-retail-price">Retail $6.91</span>
                             </div>
-                            <div class="fd-prod-box-note">$79.36 / box &bull; 15.5 sq ft per carton</div>
+                            <div class="fd-prod-box-note">$125.44 / box &bull; 24.50 sq ft per carton</div>
                         </div>
                         <div class="fd-prod-actions">
                             <a href="/product/biscuit-red-oak/#sample" class="fd-btn-sample">Order Sample</a>
@@ -1195,7 +1195,7 @@ $is_logged_in = is_user_logged_in();
                                 <span class="fd-prod-unit">/ sq ft</span>
                                 <span class="fd-prod-retail-price">Retail $8.06</span>
                             </div>
-                            <div class="fd-prod-box-note">$92.54 / box &bull; 15.5 sq ft per carton</div>
+                            <div class="fd-prod-box-note">$141.25 / box &bull; 23.66 sq ft per carton</div>
                         </div>
                         <div class="fd-prod-actions">
                             <a href="/product/exquisite-oak-engineered-hardwood/#sample" class="fd-btn-sample">Order Sample</a>
@@ -1244,7 +1244,7 @@ $is_logged_in = is_user_logged_in();
                                 <span class="fd-prod-unit">/ sq ft</span>
                                 <span class="fd-prod-retail-price">Retail $8.06</span>
                             </div>
-                            <div class="fd-prod-box-note">$92.54 / box &bull; 15.5 sq ft per carton</div>
+                            <div class="fd-prod-box-note">$141.25 / box &bull; 23.66 sq ft per carton</div>
                         </div>
                         <div class="fd-prod-actions">
                             <a href="/product/sophisticated-oak-engineered-hardwood/#sample" class="fd-btn-sample">Order Sample</a>
@@ -1258,7 +1258,7 @@ $is_logged_in = is_user_logged_in();
             <!-- Central Full Catalog Link -->
             <div style="text-align: center;">
                 <a href="/commercial-flooring/" class="fd-btn-primary" style="padding: 14px 32px;">
-                    <span>View Full Commercial Flooring Catalog (16 Planks)</span>
+                    <span>View Full Commercial Flooring Catalog (<?php echo $is_logged_in ? '16 Planks' : '11 Planks'; ?>)</span>
                     <span>&rarr;</span>
                 </a>
             </div>
@@ -1572,4 +1572,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php get_footer(); ?>\n
+<?php get_footer(); ?>

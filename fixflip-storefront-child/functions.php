@@ -55,6 +55,9 @@ add_action( 'wp_enqueue_scripts', 'fixflip_enqueue_styles', 20 );
 // 1. Enable Instant Live Updates & Prevent Cloudflare HTML Stale Lock
 add_action('send_headers', 'fixflip_enable_fast_edge_caching_headers', 9999);
 function fixflip_enable_fast_edge_caching_headers() {
+    if ( function_exists('header_remove') ) {
+        header_remove('Cache-Control');
+    }
     header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0');
     header('Pragma: no-cache');
     header('Expires: Wed, 11 Jan 1984 05:00:00 GMT');
@@ -63,6 +66,18 @@ function fixflip_enable_fast_edge_caching_headers() {
     header('Surrogate-Control: no-store');
     header('X-Accelerated-By: FixFlip-LiveSync');
 }
+add_filter( 'wp_headers', 'fixflip_force_nocache_wp_headers', 9999 );
+function fixflip_force_nocache_wp_headers( $headers ) {
+    $headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0';
+    $headers['Pragma'] = 'no-cache';
+    $headers['Expires'] = 'Wed, 11 Jan 1984 05:00:00 GMT';
+    $headers['Cloudflare-CDN-Cache-Control'] = 'no-cache';
+    $headers['CDN-Cache-Control'] = 'no-cache';
+    $headers['Surrogate-Control'] = 'no-store';
+    $headers['X-Accelerated-By'] = 'FixFlip-LiveSync';
+    return $headers;
+}
+
 
 // 2. Disable Heavy Unnecessary WordPress Bloat (Emojis, WP Embeds)
 add_action('init', 'fixflip_disable_wp_bloat');
@@ -511,6 +526,105 @@ function fixflip_seed_mock_products_once() {
    ========================================================================== */
 
 /**
+ * Authoritative Carton Coverage Mapping by SKU
+ */
+function fixflip_get_authoritative_sku_coverage( $sku = '' ) {
+    $sku = (string) $sku;
+    $map = array(
+        // Vinyl Plank (SPC 4308V Branching Out 7" x 48" - 14 planks/box = 27.73 sqft)
+        '56103' => 27.73,
+        '56140' => 27.73,
+        '56240' => 27.73,
+        '56516' => 27.73,
+
+        // Good Tier Engineered Hardwood (CA303 Oak Traditions 5" Red Oak = 24.50 sqft)
+        '00135' => 24.50,
+        '01102' => 24.50,
+        '07087' => 24.50,
+        '07091' => 24.50,
+
+        // Better Tier Engineered Hardwood (CA308 Refined Oak 7.5" White Oak = 23.66 sqft)
+        '01015' => 23.66,
+        '02012' => 23.66,
+        '05014' => 23.66,
+
+        // Best Tier Engineered Hardwood (CA399 Provincial Plank 7.5" White Oak = 23.31 sqft)
+        '11100' => 23.31,
+        '11101' => 23.31,
+        '11102' => 23.31,
+        '15041' => 23.31,
+        '17065' => 23.31,
+    );
+
+    return isset( $map[ $sku ] ) ? $map[ $sku ] : 0;
+}
+
+/**
+ * Get Product Carton Coverage
+ * Checks product meta with automatic authoritative SKU fallback
+ */
+function fixflip_get_product_coverage( $product ) {
+    if ( is_numeric( $product ) ) {
+        $product = wc_get_product( $product );
+    }
+    if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+        return 27.73;
+    }
+
+    $sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : $product->get_sku();
+    $auth_cov = fixflip_get_authoritative_sku_coverage( $sku );
+
+    $meta_cov = (float) $product->get_meta( 'custom_coverage' );
+    if ( $meta_cov > 0 ) {
+        if ( $auth_cov > 0 && abs($meta_cov - $auth_cov) > 0.01 ) {
+            $product->update_meta_data( 'custom_coverage', (string) $auth_cov );
+            $product->save_meta_data();
+            return $auth_cov;
+        }
+        return $meta_cov;
+    }
+
+    if ( $auth_cov > 0 ) {
+        $product->update_meta_data( 'custom_coverage', (string) $auth_cov );
+        $product->save_meta_data();
+        return $auth_cov;
+    }
+
+    return 27.73;
+}
+
+/**
+ * Get Product Per-Sqft Price
+ */
+function fixflip_get_product_sqft_price( $product ) {
+    if ( is_numeric( $product ) ) {
+        $product = wc_get_product( $product );
+    }
+    if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+        return 3.56;
+    }
+    $price = (float) $product->get_price();
+    if ( $price > 0 && $price < 20.00 ) {
+        return $price;
+    }
+    $sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $product ) : $product->get_sku();
+    if ( in_array( $sku, array('56103', '56140', '56240', '56516') ) ) return 3.56;
+    if ( in_array( $sku, array('00135', '01102', '07087', '07091') ) ) return 5.12;
+    if ( in_array( $sku, array('01015', '02012', '05014') ) ) return 5.97;
+    if ( in_array( $sku, array('11100', '11101', '11102', '15041', '17065') ) ) return 9.00;
+    return 3.56;
+}
+
+/**
+ * Get Full Carton Price
+ */
+function fixflip_get_product_carton_price( $product ) {
+    $cov = fixflip_get_product_coverage( $product );
+    $price = fixflip_get_product_sqft_price( $product );
+    return round( $cov * $price, 2 );
+}
+
+/**
  * Custom WooCommerce Cart Price Calculation for Boxed Flooring
  * Converts price per sqft to price per box (price_per_sqft * custom_coverage)
  */
@@ -531,11 +645,10 @@ function fixflip_calculate_box_cart_price( $cart ) {
             continue;
         }
 
-        $coverage = (float) $product->get_meta( 'custom_coverage' );
+        $coverage = fixflip_get_product_coverage( $product );
         if ( $coverage > 0 ) {
-            // Price per sqft * Coverage per box = Full Box Price
-            $price_per_sqft = (float) $product->get_price();
-            $price_per_box  = $price_per_sqft * $coverage;
+            $price_per_sqft = (float) fixflip_get_product_sqft_price( $product );
+            $price_per_box  = round( $price_per_sqft * $coverage, 2 );
             $product->set_price( $price_per_box );
         }
     }
@@ -951,13 +1064,11 @@ function fixflip_checkout_custom_qty( $qty_html, $cart_item, $cart_item_key ) {
     }
     $boxes = isset($cart_item['quantity']) ? (int) $cart_item['quantity'] : 1;
     $product_id = isset($cart_item['product_id']) ? $cart_item['product_id'] : 0;
-    $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
-    if ( empty($coverage) ) {
-        $coverage = 27.73;
-    }
+    $coverage = fixflip_get_product_coverage( $product_id );
     $sqft = round($boxes * $coverage, 1);
+    $box_label = $boxes === 1 ? '1 box' : $boxes . ' boxes';
     
-    return ' <span class="product-quantity" style="font-weight: 700; color: #007bff; font-size: 13px;">&times; 1 item (' . $boxes . ' boxes &bull; ' . number_format($sqft, 1) . ' sq ft)</span>';
+    return ' <span class="product-quantity" style="font-weight: 700; color: #007bff; font-size: 13px;">&times; 1 item (' . $box_label . ' &bull; ' . number_format($sqft, 1) . ' sq ft)</span>';
 }
 
 /**
@@ -1022,12 +1133,11 @@ function fixflip_output_cart_drawer_items_html() {
             } else {
                 $item_badge = '';
                 $boxes = (int) $cart_item['quantity'];
-                $coverage = (float) get_post_meta( $_product->get_id(), 'custom_coverage', true );
-                if ( empty($coverage) ) {
-                    $coverage = 27.73;
-                }
+                $coverage = fixflip_get_product_coverage( $_product );
                 $total_sqft = round($boxes * $coverage, 1);
-                $line_desc  = '1 item &bull; ' . $boxes . ' boxes (' . number_format($total_sqft, 1) . ' sq ft)';
+                $carton_price = fixflip_get_product_carton_price( $_product );
+                $box_label = $boxes === 1 ? '1 box' : $boxes . ' boxes';
+                $line_desc  = $box_label . ' (' . number_format($total_sqft, 1) . ' sq ft) &bull; $' . number_format($carton_price, 2) . '/box';
             }
 
             echo '<div style="display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">';
@@ -1062,8 +1172,7 @@ function fixflip_output_cart_drawer_items_html() {
             $is_tr      = ( ! empty( $c_item['is_trim'] ) || get_post_meta( $p_id, 'is_trim', true ) === 'yes' );
             if ( ! $is_tr ) {
                 $q_boxes    = isset( $c_item['quantity'] ) ? (int) $c_item['quantity'] : 1;
-                $cov        = (float) get_post_meta( $p_id, 'custom_coverage', true );
-                if ( empty($cov) ) $cov = 27.73;
+                $cov        = fixflip_get_product_coverage( $p_id );
                 $total_sqft += ($q_boxes * $cov);
             }
         }
@@ -1151,7 +1260,7 @@ function fixflip_render_ajax_cart_drawer() {
                 <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#007bff;stroke-width:2;fill:none;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">YOUR ORDER CART</h3>
             </div>
-            <button type="button" id="fd-close-cart-drawer" style="background: none; border: none; color: #64748b; font-size: 24px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+            <button type="button" id="fd-close-cart-drawer" aria-label="Close Shopping Cart Drawer" style="background: none; border: none; color: #64748b; font-size: 24px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
         </div>
 
         <!-- Drawer Body Content (Dynamic Cart Items Container) -->
@@ -1321,8 +1430,13 @@ function fixflip_ajax_add_to_cart_handler() {
     }
 
     $product_id = isset($_POST['add-to-cart']) ? absint($_POST['add-to-cart']) : (isset($_POST['product_id']) ? absint($_POST['product_id']) : 0);
-    $quantity   = isset($_POST['quantity']) ? absint($_POST['quantity']) : 1;
+    $quantity   = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
     $is_sample  = (isset($_POST['is_sample']) && $_POST['is_sample'] === '1') || (isset($_REQUEST['is_sample']) && $_REQUEST['is_sample'] == '1');
+
+    if ( ! $is_sample && $quantity < 1 ) {
+        wp_send_json_error( array( 'message' => 'Please select a valid quantity of at least 1 box.' ) );
+        wp_die();
+    }
 
     if ( $product_id ) {
         $cart_item_data = array();
@@ -1392,10 +1506,7 @@ function fixflip_add_guaranteed_freight_fee( $cart ) {
 
                 if ( ! $is_trim ) {
                     $qty_boxes  = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
-                    $coverage = (float) get_post_meta( $product_id, 'custom_coverage', true );
-                    if ( empty( $coverage ) ) {
-                        $coverage = 27.73; // Default SPC box coverage
-                    }
+                    $coverage   = fixflip_get_product_coverage( $product_id );
                     $total_sqft += ($qty_boxes * $coverage);
                 }
             }
@@ -1765,9 +1876,13 @@ function fixflip_auto_recalculate_checkout_on_state_change() {
  */
 add_action('woocommerce_before_checkout_form', 'fixflip_checkout_clean_header_title', 1);
 function fixflip_checkout_clean_header_title() {
+    // Suppress duplicate heading on page-checkout.php which already renders the primary H1 hero banner
+    if ( is_page_template('page-checkout.php') ) {
+        return;
+    }
     ?>
     <div class="fd-checkout-header-block" style="text-align: center; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 2px solid #e2e8f0;">
-        <h1 style="font-size: 36px; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px;">Checkout</h1>
+        <h2 style="font-size: 32px; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.5px;">Checkout</h2>
     </div>
     <?php
 }
@@ -1853,8 +1968,32 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function payment_fields() {
+            $material_subtotal = 0;
+            if ( class_exists('WooCommerce') && WC()->cart ) {
+                foreach ( WC()->cart->get_cart() as $item ) {
+                    if ( empty( $item['is_sample'] ) ) {
+                        $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
+                    }
+                }
+                if ( $material_subtotal <= 0 ) {
+                    $material_subtotal = (float) WC()->cart->get_subtotal();
+                }
+            }
+            $is_under_min = ( $material_subtotal < 2000.00 );
+            $remaining = 2000.00 - $material_subtotal;
             ?>
-            <div class="csl-draw-info-box" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 18px; margin-top: 8px;">
+            <div class="csl-draw-info-box" style="background: <?php echo $is_under_min ? '#fffbeb' : '#f0fdf4'; ?>; border: 1.5px solid <?php echo $is_under_min ? '#fde68a' : '#86efac'; ?>; border-radius: 6px; padding: 18px; margin-top: 8px;">
+                <?php if ( $is_under_min ) : ?>
+                    <div style="background: #fef2f2; border: 1.5px solid #fca5a5; border-radius: 4px; padding: 12px 14px; margin-bottom: 14px;">
+                        <div style="font-size: 13px; font-weight: 800; color: #991b1b; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span>⚠️ $2,000 Minimum for CSL Draw Advance</span>
+                        </div>
+                        <div style="font-size: 12px; color: #b91c1c; line-height: 1.45; font-weight: 500;">
+                            Material Draw Advances require a minimum order of $2,000.00. Current material subtotal: <strong>$<?php echo number_format($material_subtotal, 2); ?></strong> (<strong>$<?php echo number_format(max(0, $remaining), 2); ?></strong> remaining).<br>
+                            To complete this order now, choose <strong>Credit Card / Debit Card</strong> above, or add more cartons to your order.
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <div style="font-size: 13.5px; font-weight: 800; color: #166534; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
                     100% Construction Draw Financing (CSL Borrowers)
                 </div>
@@ -1918,8 +2057,164 @@ function fixflip_restrict_to_two_payment_gateways( $gateways ) {
     return ! empty( $filtered ) ? $filtered : $gateways;
 }
 
-// Auto-check terms and conditions by default for seamless checkout
-add_filter( 'woocommerce_terms_is_checked_default', '__return_true', 999 );
+// Uncheck terms and conditions by default so customers actively provide affirmative consent
+add_filter( 'woocommerce_terms_is_checked_default', '__return_false', 999 );
+
+/**
+ * Server-Side Validation on Checkout Submission
+ * Strictly enforces $2,000 material minimum and required loan number for CSL Draw Advance
+ */
+add_action( 'woocommerce_checkout_process', 'fixflip_validate_checkout_csl_rules' );
+function fixflip_validate_checkout_csl_rules() {
+    $chosen_gateway = ( class_exists('WooCommerce') && WC()->session ) ? WC()->session->get( 'chosen_payment_method' ) : '';
+    if ( empty( $chosen_gateway ) && isset( $_POST['payment_method'] ) ) {
+        $chosen_gateway = sanitize_text_field( $_POST['payment_method'] );
+    }
+
+    if ( 'csl_draw_advance' === $chosen_gateway ) {
+        // Calculate material subtotal (excluding samples)
+        $material_subtotal = 0;
+        if ( class_exists('WooCommerce') && WC()->cart ) {
+            foreach ( WC()->cart->get_cart() as $item ) {
+                if ( empty( $item['is_sample'] ) ) {
+                    $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
+                }
+            }
+            if ( $material_subtotal <= 0 ) {
+                $material_subtotal = (float) WC()->cart->get_subtotal();
+            }
+        }
+
+        $min_csl = 2000.00;
+        if ( $material_subtotal < $min_csl ) {
+            $remaining = $min_csl - $material_subtotal;
+            wc_add_notice(
+                sprintf(
+                    __( '<strong>Center Street Lending Minimum:</strong> Material Draw Advances require a minimum order of $2,000.00. Your current material subtotal is <strong>$%s</strong> (<strong>$%s</strong> remaining to qualify for loan draw financing). Please select <strong>Credit Card / Debit Card</strong> to complete your order, or add additional cartons.', 'fixflip' ),
+                    number_format( $material_subtotal, 2 ),
+                    number_format( max(0, $remaining), 2 )
+                ),
+                'error'
+            );
+        }
+
+        // Enforce required loan number or property address
+        $loan_num = isset( $_POST['loan_number'] ) ? trim( sanitize_text_field( $_POST['loan_number'] ) ) : '';
+        if ( empty( $loan_num ) ) {
+            wc_add_notice(
+                __( '<strong>Active Loan # Required:</strong> Please provide your active Center Street Lending loan number or flip property address for draw financing.', 'fixflip' ),
+                'error'
+            );
+        }
+    }
+}
+
+/**
+ * Restrict Checkout Countries to United States
+ */
+add_filter( 'woocommerce_countries_allowed_countries', 'fixflip_restrict_checkout_countries' );
+add_filter( 'woocommerce_countries_shipping_countries', 'fixflip_restrict_checkout_countries' );
+function fixflip_restrict_checkout_countries( $countries ) {
+    return array( 'US' => 'United States (US)' );
+}
+
+/**
+ * Redirect My-Account Registration Requests to Dedicated Member Portal
+ */
+add_action( 'template_redirect', 'fixflip_redirect_account_register' );
+function fixflip_redirect_account_register() {
+    if ( function_exists('is_account_page') && is_account_page() && isset( $_GET['action'] ) && $_GET['action'] === 'register' ) {
+        wp_safe_redirect( home_url( '/member-login/?tab=register' ) );
+        exit;
+    }
+}
+
+/**
+ * Custom SEO Meta Descriptions & Homepage Canonical URL
+ */
+add_action( 'wp_head', 'fixflip_seo_meta_tags', 1 );
+function fixflip_seo_meta_tags() {
+    if ( is_front_page() || is_home() ) {
+        echo '<link rel="canonical" href="' . esc_url( home_url( '/' ) ) . '" />' . "\n";
+        echo '<meta name="description" content="FixFlip advances eligible renovation materials through your existing Center Street Lending loan at the same interest rate. Wholesale commercial flooring, direct jobsite delivery, and unopened box credits." />' . "\n";
+    } elseif ( is_product() ) {
+        $p_id = get_the_ID();
+        $prod_obj = ( $p_id && function_exists('wc_get_product') ) ? wc_get_product( $p_id ) : null;
+        if ( $prod_obj && is_a( $prod_obj, 'WC_Product' ) ) {
+            $desc = wp_strip_all_tags( $prod_obj->get_short_description() ?: $prod_obj->get_name() );
+            $clean_desc = esc_attr( substr( $desc, 0, 155 ) );
+            echo '<meta name="description" content="' . $clean_desc . ' - Available with 100% CSL rehab draw advance & direct jobsite delivery." />' . "\n";
+        }
+    } elseif ( is_page( 'commercial-flooring' ) || is_post_type_archive( 'product' ) ) {
+        echo '<meta name="description" content="Curated commercial wholesale flooring for real estate investors and contractors. Luxury vinyl plank and engineered hardwood eligible for 100% CSL draw financing." />' . "\n";
+    } elseif ( is_page( 'how-it-works' ) ) {
+        echo '<meta name="description" content="Learn how FixFlip material financing works with Center Street Lending loans: order materials with $0 upfront cash, direct jobsite delivery, and unopened box returns." />' . "\n";
+    } elseif ( is_page( 'member-login' ) ) {
+        echo '<meta name="description" content="Contractor & investor portal for FixFlip. Sign in to access project management tools, draw schedules, and unlocked wholesale material pricing." />' . "\n";
+    }
+}
+
+add_filter( 'status_header', 'fixflip_force_200_for_policy_pages', 99, 4 );
+function fixflip_force_200_for_policy_pages( $status_header, $code, $description, $protocol ) {
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    if ( preg_match( '#/(terms|privacy|shipping|delivery|returns|cancellation)#i', $uri ) ) {
+        return "$protocol 200 OK";
+    }
+    return $status_header;
+}
+
+add_filter( 'pre_handle_404', 'fixflip_intercept_policy_404', 10, 2 );
+function fixflip_intercept_policy_404( $preempt, $wp_query ) {
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    if ( preg_match( '#/(terms|privacy|shipping|delivery|returns|cancellation)#i', $uri ) ) {
+        if ( $wp_query ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+        return true;
+    }
+    return $preempt;
+}
+
+add_action( 'template_redirect', 'fixflip_policy_page_status_header' );
+function fixflip_policy_page_status_header() {
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    if ( preg_match( '#/(terms|privacy|shipping|delivery|returns|cancellation)#i', $uri ) ) {
+        status_header( 200 );
+        global $wp_query;
+        if ( $wp_query ) {
+            $wp_query->is_404 = false;
+            $wp_query->is_page = true;
+        }
+    }
+}
+
+/**
+ * Template routing for legal & policy pages
+ */
+add_filter( 'template_include', 'fixflip_policy_page_templates', 99 );
+function fixflip_policy_page_templates( $template ) {
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    $theme_dir = get_stylesheet_directory();
+
+    if ( preg_match( '#/(privacy-policy|privacy)#i', $uri ) ) {
+        $file = $theme_dir . '/page-privacy.php';
+        if ( file_exists( $file ) ) return $file;
+    } elseif ( preg_match( '#/(shipping-delivery|shipping-policy|delivery)#i', $uri ) ) {
+        $file = $theme_dir . '/page-shipping.php';
+        if ( file_exists( $file ) ) return $file;
+    } elseif ( preg_match( '#/(returns-unopened-box-credit|returns-refunds|return-policy)#i', $uri ) ) {
+        $file = $theme_dir . '/page-returns.php';
+        if ( file_exists( $file ) ) return $file;
+    } elseif ( preg_match( '#/(cancellation-refund-policy|cancellation-policy)#i', $uri ) ) {
+        $file = $theme_dir . '/page-cancellation.php';
+        if ( file_exists( $file ) ) return $file;
+    } elseif ( preg_match( '#/(terms|terms-and-conditions)#i', $uri ) ) {
+        $file = $theme_dir . '/page-terms.php';
+        if ( file_exists( $file ) ) return $file;
+    }
+    return $template;
+}
 
 add_filter( 'woocommerce_gateway_title', 'fixflip_custom_all_gateway_titles', 99, 2 );
 function fixflip_custom_all_gateway_titles( $title, $gateway_id ) {
@@ -1954,31 +2249,74 @@ function fixflip_checkout_payment_button_morpher() {
         ?>
         <script>
         (function() {
-            function updateCheckoutButton() {
+            function updateCheckoutUI() {
                 const btn = document.getElementById('place_order');
-                if (!btn) return;
-                
                 const selected = document.querySelector('input[name="payment_method"]:checked');
                 const method = selected ? selected.value : 'csl_draw_advance';
                 
+                const badge = document.getElementById('fd-checkout-method-badge');
+                const callout = document.getElementById('fd-checkout-payment-callout');
+                const calloutTitle = document.getElementById('fd-callout-title');
+                const calloutBody = document.getElementById('fd-callout-body');
+
                 if (method === 'csl_draw_advance') {
-                    btn.value = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
-                    btn.textContent = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
-                    btn.style.setProperty('background', '#0f172a', 'important');
-                    btn.style.setProperty('box-shadow', 'none', 'important');
+                    if (btn) {
+                        btn.value = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
+                        btn.textContent = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
+                        btn.style.setProperty('background', '#0f172a', 'important');
+                        btn.style.setProperty('box-shadow', 'none', 'important');
+                    }
+                    if (badge) {
+                        badge.textContent = 'CSL DRAW FINANCING';
+                        badge.style.background = '#eff6ff';
+                        badge.style.color = '#1e40af';
+                        badge.style.borderColor = '#bfdbfe';
+                    }
+                    if (callout) {
+                        callout.style.background = '#f0fdf4';
+                        callout.style.borderColor = '#86efac';
+                    }
+                    if (calloutTitle) {
+                        calloutTitle.innerHTML = '<span>\uD83D\uDD12 100% CSL Material Draw</span>';
+                        calloutTitle.style.color = '#166534';
+                    }
+                    if (calloutBody) {
+                        calloutBody.innerHTML = 'No upfront card charge today for approved Center Street Lending borrowers. Materials roll directly into your construction draw budget.';
+                        calloutBody.style.color = '#15803d';
+                    }
                 } else {
-                    btn.value = 'PAY WITH CARD & PLACE ORDER \u2192';
-                    btn.textContent = 'PAY WITH CARD & PLACE ORDER \u2192';
-                    btn.style.setProperty('background', '#007bff', 'important');
-                    btn.style.setProperty('box-shadow', 'none', 'important');
+                    if (btn) {
+                        btn.value = 'PAY WITH CARD & PLACE ORDER \u2192';
+                        btn.textContent = 'PAY WITH CARD & PLACE ORDER \u2192';
+                        btn.style.setProperty('background', '#007bff', 'important');
+                        btn.style.setProperty('box-shadow', 'none', 'important');
+                    }
+                    if (badge) {
+                        badge.textContent = 'INSTANT CARD CHECKOUT';
+                        badge.style.background = '#f0fdf4';
+                        badge.style.color = '#166534';
+                        badge.style.borderColor = '#bbf7d0';
+                    }
+                    if (callout) {
+                        callout.style.background = '#eff6ff';
+                        callout.style.borderColor = '#93c5fd';
+                    }
+                    if (calloutTitle) {
+                        calloutTitle.innerHTML = '<span>\uD83D\uDCB3 Secure Stripe Card Checkout</span>';
+                        calloutTitle.style.color = '#1e40af';
+                    }
+                    if (calloutBody) {
+                        calloutBody.innerHTML = 'Pay securely with credit card, debit card, or Apple Pay. Your material order will be processed and scheduled for direct jobsite dispatch immediately.';
+                        calloutBody.style.color = '#1e3a8a';
+                    }
                 }
             }
 
             document.addEventListener('DOMContentLoaded', function() {
-                updateCheckoutButton();
+                updateCheckoutUI();
                 document.body.addEventListener('change', function(e) {
                     if (e.target && e.target.name === 'payment_method') {
-                        updateCheckoutButton();
+                        updateCheckoutUI();
                     }
                 });
                 document.body.addEventListener('click', function(e) {
@@ -1991,17 +2329,17 @@ function fixflip_checkout_payment_button_morpher() {
                                 jQuery(radio).trigger('change');
                             }
                         }
-                        updateCheckoutButton();
+                        updateCheckoutUI();
                     }
                 });
 
                 if (typeof jQuery !== 'undefined') {
                     jQuery(document.body).on('updated_checkout payment_method_selected', function() {
-                        updateCheckoutButton();
+                        updateCheckoutUI();
                     });
                 }
 
-                setInterval(updateCheckoutButton, 300);
+                setInterval(updateCheckoutUI, 300);
             });
         })();
         </script>

@@ -332,6 +332,9 @@ $theme_uri = get_stylesheet_directory_uri();
                     <?php foreach ( $sub_cats as $sub ) : 
                         $sub_link = get_term_link( $sub, 'product_cat' );
                         $sub_count = $sub->count;
+                        if ( ! is_user_logged_in() && in_array( $sub->slug, array( 'hardwood-flooring', 'engineered-hardwood', 'hardwood' ) ) ) {
+                            $sub_count = 7;
+                        }
                         $is_locked_cat = ($sub->slug === 'hardwood-best');
                     ?>
                         <a href="<?php echo esc_url($sub_link); ?>" style="display: inline-flex; align-items: center; gap: 10px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 10px 18px; text-decoration: none; color: #0f172a; font-weight: 800; font-size: 14px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#007bff'; this.style.color='#007bff';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#0f172a';">
