@@ -1084,6 +1084,9 @@ function fixflip_enable_dynamic_taxes() {
     }
 }
 
+// Load FixFlip Destination Sales Tax Engine (City & Local Taxes by ZIP code)
+require_once get_stylesheet_directory() . '/fixflip-tax-engine.php';
+
 /**
  * Simple Pure Coming Soon Page for Live Site (DISABLED - LIVE SITE IS NOW PUBLIC)
  */
@@ -1178,7 +1181,8 @@ function fixflip_output_cart_drawer_items_html() {
         }
     }
     $freight_cost = $has_bulk ? (450.00 + ($total_sqft * 0.40)) : 0.00;
-    $est_total    = $subtotal_val + $freight_cost;
+    $tax_cost     = (float) WC()->cart->get_total_tax();
+    $est_total    = $subtotal_val + $freight_cost + $tax_cost;
 
     echo '<div style="padding-top: 16px; border-top: 2px solid #e2e8f0; margin-top: auto;">';
     
@@ -1225,6 +1229,13 @@ function fixflip_output_cart_drawer_items_html() {
         echo '<span style="color: #16a34a; font-weight: 800;">FREE</span>';
     }
     echo '</div>';
+
+    if ( $tax_cost > 0 ) {
+        echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
+        echo '<span>Jobsite Sales Tax:</span>';
+        echo '<span style="color: #0f172a; font-weight: 800;">$' . number_format($tax_cost, 2) . '</span>';
+        echo '</div>';
+    }
 
     echo '<div style="display: flex; justify-content: space-between; font-size: 15.5px; font-weight: 900; color: #0f172a; margin-bottom: 16px; padding-top: 8px; border-top: 1.5px dashed #cbd5e1;">';
     echo '<span>Estimated Total:</span>';
