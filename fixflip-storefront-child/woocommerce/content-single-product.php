@@ -892,16 +892,12 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
             'post_type'      => 'product',
             'posts_per_page' => 4,
             'post__not_in'   => array( $product->get_id() ),
-            'meta_query'     => array(
-                'relation' => 'OR',
+            'tax_query'      => array(
                 array(
-                    'key'     => 'is_trim',
-                    'compare' => 'NOT EXISTS',
-                ),
-                array(
-                    'key'     => 'is_trim',
-                    'value'   => 'yes',
-                    'compare' => '!=',
+                    'taxonomy' => 'product_visibility',
+                    'field'    => 'name',
+                    'terms'    => array( 'exclude-from-catalog' ),
+                    'operator' => 'NOT IN',
                 ),
             ),
         );

@@ -2254,9 +2254,11 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
 }
 
 /**
- * Auto-create 'how-it-works' and 'appliances' Pages in WordPress DB if not exists
+ * Auto-create 'how-it-works' and 'appliances' Pages in WordPress DB if not exists (Only on demand)
  */
-add_action( 'init', 'fixflip_ensure_custom_theme_pages' );
+if ( isset( $_GET['sync_pages'] ) ) {
+    add_action( 'init', 'fixflip_ensure_custom_theme_pages' );
+}
 function fixflip_ensure_custom_theme_pages() {
     $pages = array(
         'how-it-works' => array(
@@ -2484,51 +2486,6 @@ add_filter( 'site_icon_meta_tags', function( $meta_tags ) {
     );
 }, 99 );
 
-
-/**
- * Force no-cache headers on WooCommerce shop and category pages so GoDaddy gateway
- * and Cloudflare do not serve stale HTML after theme file updates.
- */
-function fixflip_nocache_shop_pages() {
-    if ( is_front_page() || is_home() || is_shop() || is_product_category() || is_product() || is_woocommerce() ) {
-        if ( ! headers_sent() ) {
-            header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0' );
-            header( 'Pragma: no-cache' );
-            header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
-            header( 'Surrogate-Control: no-store' );
-            header( 'CDN-Cache-Control: no-cache' );
-            header( 'Cloudflare-CDN-Cache-Control: no-cache' );
-            header( 'x-accel-expires: 0' );
-        }
-        // Tell WordPress object cache not to cache this request
-        if ( ! defined('DONOTCACHEPAGE') ) define( 'DONOTCACHEPAGE', true );
-        if ( ! defined('DONOTCACHEOBJECT') ) define( 'DONOTCACHEOBJECT', true );
-        if ( ! defined('DONOTMINIFY') ) define( 'DONOTMINIFY', true );
-    }
-}
-add_action( 'template_redirect', 'fixflip_nocache_shop_pages', 1 );
-add_action( 'send_headers', 'fixflip_nocache_shop_pages', 1 );
-
-
-/**
- * Automatically delete legacy Grand Oak mock seed duplicate products from WooCommerce
- */
-add_action( 'init', 'fixflip_cleanup_duplicate_grand_oak_products' );
-function fixflip_cleanup_duplicate_grand_oak_products() {
-    $grand_oaks = get_posts( array(
-        'post_type'   => 'product',
-        'numberposts' => -1,
-        'post_status' => 'any',
-        's'           => 'Grand Oak',
-    ) );
-    if ( ! empty( $grand_oaks ) ) {
-        foreach ( $grand_oaks as $go ) {
-            if ( stripos( $go->post_title, 'Grand Oak' ) !== false || $go->post_name === 'grand-oak-waterproof-laminate-plank' ) {
-                wp_delete_post( $go->ID, true );
-            }
-        }
-    }
-}
 
 /**
  * Check if the visitor has unlocked Best Tier trade access (Logged in member, cookie, or passcode)
@@ -2763,9 +2720,11 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
 }
 
 /**
- * Ensure Best Tier WooCommerce Categories and 5 Products Exist in DB
+ * Ensure Best Tier WooCommerce Categories and 5 Products Exist in DB (Only on demand)
  */
-add_action( 'init', 'fixflip_ensure_best_tier_products', 20 );
+if ( isset( $_GET['sync_best_tier'] ) ) {
+    add_action( 'init', 'fixflip_ensure_best_tier_products', 20 );
+}
 function fixflip_ensure_best_tier_products() {
     // 1. Ensure categories exist
     $parent_term = term_exists( 'hardwood-flooring', 'product_cat' );
@@ -3229,37 +3188,26 @@ function fixflip_is_trim_sku( $sku ) {
 }
 
 /**
- * Strictly exclude trims from all frontend catalog, archive, search, and tax queries
+ * Ensure Trims are excluded from WooCommerce catalog queries via indexed taxonomy
  */
-add_action( 'pre_get_posts', 'fixflip_exclude_trims_from_catalog' );
-function fixflip_exclude_trims_from_catalog( $query ) {
-    if ( is_admin() ) {
-        return;
-    }
-    // Check if querying products
-    $post_type = $query->get( 'post_type' );
-    if ( $post_type === 'product' || ( is_array($post_type) && in_array('product', $post_type) ) || $query->is_search() || $query->is_tax( 'product_cat' ) || $query->is_post_type_archive( 'product' ) ) {
-        $meta_query = (array) $query->get( 'meta_query' );
-        $meta_query[] = array(
-            'relation' => 'OR',
-            array(
-                'key'     => 'is_trim',
-                'compare' => 'NOT EXISTS',
-            ),
-            array(
-                'key'     => 'is_trim',
-                'value'   => 'yes',
-                'compare' => '!=',
-            ),
-        );
-        $query->set( 'meta_query', $meta_query );
-    }
+add_action( 'woocommerce_product_query', 'fixflip_exclude_trims_from_catalog' );
+function fixflip_exclude_trims_from_catalog( $q ) {
+    $tax_query = (array) $q->get( 'tax_query' );
+    $tax_query[] = array(
+        'taxonomy' => 'product_visibility',
+        'field'    => 'name',
+        'terms'    => array( 'exclude-from-catalog' ),
+        'operator' => 'NOT IN',
+    );
+    $q->set( 'tax_query', $tax_query );
 }
 
 /**
- * Ensure Trims Exist in WooCommerce Database With Catalog Visibility Set to Hidden
+ * Ensure Trims Exist in WooCommerce Database (Run only on demand to prevent blocking DB operations on page loads)
  */
-add_action( 'init', 'fixflip_ensure_trim_products', 25 );
+if ( isset( $_GET['sync_trims'] ) ) {
+    add_action( 'init', 'fixflip_ensure_trim_products', 25 );
+}
 function fixflip_ensure_trim_products() {
     if ( ! class_exists( 'WooCommerce' ) ) return;
 

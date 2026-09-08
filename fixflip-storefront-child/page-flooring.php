@@ -367,22 +367,14 @@ $theme_uri = get_stylesheet_directory_uri();
                     $args = array(
                         'post_type'      => 'product',
                         'posts_per_page' => 24,
-                        'meta_query'     => array(
-                            'relation' => 'OR',
-                            array(
-                                'key'     => 'is_trim',
-                                'compare' => 'NOT EXISTS',
-                            ),
-                            array(
-                                'key'     => 'is_trim',
-                                'value'   => 'yes',
-                                'compare' => '!=',
-                            ),
-                        ),
                     );
-                    if ( ! empty($tax_query) ) {
-                        $args['tax_query'] = $tax_query;
-                    }
+                    $tax_query[] = array(
+                        'taxonomy' => 'product_visibility',
+                        'field'    => 'name',
+                        'terms'    => array('exclude-from-catalog'),
+                        'operator' => 'NOT IN',
+                    );
+                    $args['tax_query'] = $tax_query;
 
                     $products_query = new WP_Query( $args );
 
