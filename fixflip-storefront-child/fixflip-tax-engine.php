@@ -75,8 +75,12 @@ function fixflip_lookup_zip_tax_rate( $postcode, $state = '', $city = '' ) {
     $state_upper = strtoupper( trim( (string) $state ) );
     $city_clean = ucwords( strtolower( trim( (string) $city ) ) );
 
-    if ( empty( $state_upper ) && ! empty( $clean_zip ) ) {
-        $state_upper = fixflip_zip_to_state( $clean_zip );
+    $zip_state = ! empty( $clean_zip ) ? fixflip_zip_to_state( $clean_zip ) : '';
+    if ( ! empty( $zip_state ) ) {
+        if ( empty( $state_upper ) || $state_upper !== $zip_state ) {
+            $state_upper = $zip_state;
+            $city_clean  = ''; // Prevent stale mismatched city from previous session/keystrokes
+        }
     }
 
     // 1. SPECIFIC 5-DIGIT LOCAL & MUNICIPAL TAX RATES (High-Volume Renovation Markets)
@@ -410,10 +414,10 @@ function fixflip_lookup_zip_tax_rate( $postcode, $state = '', $city = '' ) {
 
     if ( ! empty( $state_upper ) && isset( $state_baselines[ $state_upper ] ) ) {
         $sb = $state_baselines[ $state_upper ];
-        $loc_desc = ! empty( $city_clean ) ? $city_clean . ', ' . $state_upper : ( ! empty( $clean_zip ) ? $state_upper . ' ' . $clean_zip : $sb['name'] );
+        $loc_desc = ! empty( $clean_zip ) ? ( ! empty( $city_clean ) ? $city_clean . ', ' . $state_upper . ' ' . $clean_zip : $state_upper . ' ' . $clean_zip ) : ( ! empty( $city_clean ) ? $city_clean . ', ' . $state_upper : $sb['name'] );
         return array(
             'rate'  => (float) $sb['rate'],
-            'city'  => $city_clean,
+            'city'  => ! empty( $city_clean ) ? $city_clean : $sb['name'],
             'state' => $state_upper,
             'zip'   => $clean_zip,
             'label' => sprintf( 'Sales Tax (%s - %s%%)', $loc_desc, number_format( $sb['rate'], $sb['rate'] == (int)$sb['rate'] ? 1 : 2 ) ),
