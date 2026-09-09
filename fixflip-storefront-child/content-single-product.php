@@ -545,13 +545,16 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                             Enter your project square footage or box quantity above to calculate order.
                         </div>
 
-                        <!-- Secondary CTA: ORDER A SAMPLE ($5.00) -->
-                        <button type="button" onclick="window.fdSubmitAddSample(event)" id="fd-main-sample-btn" style="width: 100%; height: 50px; padding: 0 20px; background: #ffffff; color: #0f172a; font-size: 14.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border: 2px solid #0f172a; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;" onmouseover="this.style.background='#0f172a'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#0f172a';">
+                        <!-- Secondary CTA: ORDER FREE SAMPLE SWATCH ($0.00) -->
+                        <button type="button" onclick="window.fdSubmitAddSample(event)" id="fd-main-sample-btn" style="width: 100%; height: 50px; padding: 0 20px; background: #ffffff; color: #0f172a; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border: 2px solid #0f172a; border-radius: 0px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box;" onmouseover="this.style.background='#0f172a'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#0f172a';">
                             <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-                            <span>ORDER A SAMPLE SWATCH</span>
+                            <span>ORDER FREE SAMPLE SWATCH</span>
                             <span style="opacity: 0.5;">&bull;</span>
-                            <span style="color: #16a34a; font-weight: 900;">$5.00</span>
+                            <span style="color: #16a34a; font-weight: 900;">FREE ($0.00)</span>
                         </button>
+                        <div id="fd-sample-shipping-hint" style="font-size: 11.5px; color: #64748b; margin-top: -4px; margin-bottom: 2px; font-weight: 600; text-align: center; line-height: 1.4;">
+                            Free swatches ($0.00). Fixed $15.00 shipping per package of 3 samples via USPS Ground Advantage.
+                        </div>
                     </div>
                 </form>
 

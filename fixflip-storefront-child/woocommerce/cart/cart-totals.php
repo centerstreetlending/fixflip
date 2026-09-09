@@ -13,7 +13,7 @@ $has_bulk                 = false;
 if ( WC()->cart ) {
     foreach ( WC()->cart->get_cart() as $ci ) {
         if ( ! empty( $ci['is_sample'] ) ) {
-            $sample_total += (5.00 * (int) $ci['quantity']);
+            $sample_total += 0.00;
         } else {
             $has_bulk = true;
             if ( isset( $ci['line_total'] ) ) {
@@ -118,6 +118,12 @@ $is_csl_eligible = ( $has_bulk && $eligible_materials_total >= 2000.00 );
         <?php do_action( 'woocommerce_cart_totals_after_order_total' ); ?>
 
     </table>
+
+    <?php if ( $has_bulk ) : ?>
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 10px 12px; margin-bottom: 18px; font-size: 11px; color: #64748b; line-height: 1.45;">
+            ℹ️ <strong>Freight Delivery Notice:</strong> Jobsite freight is estimated using order square footage and standard delivery requirements ($450 base + $0.40/sqft). Additional limited-access, redelivery, address-change, residential, or unusual site-access charges may apply. FixFlip will communicate material adjustments before final settlement.
+        </div>
+    <?php endif; ?>
 
     <?php if ( $is_csl_eligible ) : ?>
         <!-- CSL FINANCING CALLOUT -->

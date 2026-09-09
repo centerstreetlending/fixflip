@@ -71,7 +71,7 @@ get_header();
                 <section>
                     <h2 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 10px 0;">5. Scheduled Jobsite Delivery &amp; Freight Receiving</h2>
                     <p style="margin: 0;">
-                        Freight is billed at a flat base of $450.00 plus $0.40 per square foot across the continental United States. Delivery is curbside direct to your specified jobsite with liftgate and power pallet-jack drop service. The receiving contractor must ensure adequate truck access, clear flat concrete or asphalt surfaces for pallet placement, and verify carton counts upon arrival. Swatch samples are dispatched via rapid courier for a flat $5.00 fee.
+                        Freight is billed at a flat base of $450.00 plus $0.40 per square foot across the continental United States. Delivery is curbside direct to your specified jobsite with liftgate and power pallet-jack drop service. The receiving contractor must ensure adequate truck access, clear flat concrete or asphalt surfaces for pallet placement, and verify carton counts upon arrival. Sample swatches are free ($0.00 each) with fixed shipping and handling of $15.00 per package of up to 3 samples dispatched via USPS Ground Advantage (typically 3–7 business days).
                     </p>
                 </section>
 

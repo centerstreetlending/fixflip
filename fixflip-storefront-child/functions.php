@@ -705,16 +705,43 @@ function fixflip_add_cart_item_data( $cart_item_data, $product_id, $variation_id
     return $cart_item_data;
 }
 
-// 4. Force $5.00 Price for Samples
+// 4. Force $0.00 Free Price & sample-parcel Shipping Class for Samples
+function fixflip_get_sample_shipping_class_id() {
+    static $sample_class_id = null;
+    if ( null === $sample_class_id ) {
+        $term = get_term_by( 'slug', 'sample-parcel', 'product_shipping_class' );
+        $sample_class_id = ( $term && ! is_wp_error( $term ) ) ? (int) $term->term_id : 0;
+    }
+    return $sample_class_id;
+}
+
 add_action( 'woocommerce_before_calculate_totals', 'fixflip_calculate_sample_and_custom_prices', 99, 1 );
 function fixflip_calculate_sample_and_custom_prices( $cart ) {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
 
+    $sample_class_id = fixflip_get_sample_shipping_class_id();
+
     foreach ( $cart->get_cart() as $cart_item ) {
         if ( ! empty( $cart_item['is_sample'] ) ) {
-            $cart_item['data']->set_price( 5.00 );
+            $cart_item['data']->set_price( 0.00 );
+            if ( $sample_class_id ) {
+                $cart_item['data']->set_shipping_class_id( $sample_class_id );
+            }
         }
     }
+}
+
+// 4b. Ensure cart item product object maintains $0.00 price and sample-parcel class
+add_filter( 'woocommerce_cart_item_product', 'fixflip_filter_cart_item_product_sample', 10, 3 );
+function fixflip_filter_cart_item_product_sample( $product, $cart_item, $cart_item_key ) {
+    if ( ! empty( $cart_item['is_sample'] ) && is_object( $product ) ) {
+        $product->set_price( 0.00 );
+        $sample_class_id = fixflip_get_sample_shipping_class_id();
+        if ( $sample_class_id ) {
+            $product->set_shipping_class_id( $sample_class_id );
+        }
+    }
+    return $product;
 }
 
 // 5. Display Calculated Sqft & Sample Info in Cart and Checkout
@@ -723,7 +750,7 @@ function fixflip_display_cart_item_data( $item_data, $cart_item ) {
     if ( ! empty( $cart_item['is_sample'] ) ) {
         $item_data[] = array(
             'key'     => __( 'Item Type', 'fixflip' ),
-            'value'   => 'Sample Swatch ($5.00)',
+            'value'   => 'Sample Swatch (FREE - $0.00)',
             'display' => ''
         );
     } elseif ( isset( $cart_item['calculated_sqft'] ) ) {
@@ -740,7 +767,7 @@ function fixflip_display_cart_item_data( $item_data, $cart_item ) {
 add_action( 'woocommerce_checkout_create_order_line_item', 'fixflip_save_order_line_item_data', 10, 4 );
 function fixflip_save_order_line_item_data( $item, $cart_item_key, $values, $order ) {
     if ( ! empty( $values['is_sample'] ) ) {
-        $item->add_meta_data( 'Order Type', 'Sample Swatch ($5.00)', true );
+        $item->add_meta_data( 'Order Type', 'Sample Swatch (FREE - $0.00)', true );
     } elseif ( isset( $values['calculated_sqft'] ) ) {
         $item->add_meta_data( 'Project Coverage', $values['calculated_sqft'] . ' sqft', true );
     }
@@ -1171,13 +1198,13 @@ function fixflip_output_cart_drawer_items_html() {
 
     // Calculate materials subtotal (excluding samples) for CSL financing threshold
     $materials_subtotal = 0.00;
-    $samples_subtotal   = 0.00;
+    $sample_count       = 0;
     $total_sqft         = 0;
     $has_bulk           = false;
 
     foreach ( WC()->cart->get_cart() as $c_item ) {
         if ( ! empty( $c_item['is_sample'] ) ) {
-            $samples_subtotal += (5.00 * (int) $c_item['quantity']);
+            $sample_count += (int) $c_item['quantity'];
         } else {
             $has_bulk = true;
             $p_id     = isset( $c_item['product_id'] ) ? $c_item['product_id'] : 0;
@@ -1193,20 +1220,30 @@ function fixflip_output_cart_drawer_items_html() {
         }
     }
 
-    $subtotal_val   = (float) WC()->cart->get_subtotal();
-    $min_target     = 2000.00;
-    $percent        = min(100, round(($materials_subtotal / $min_target) * 100));
-    $needed         = number_format(max(0, $min_target - $materials_subtotal), 2);
-    $distinct_count = count( WC()->cart->get_cart() );
-    $boxes_total    = WC()->cart->get_cart_contents_count();
-    $item_label     = $distinct_count === 1 ? '1 item' : $distinct_count . ' items';
+    $subtotal_val    = (float) WC()->cart->get_subtotal();
+    $min_target      = 2000.00;
+    $percent         = min(100, round(($materials_subtotal / $min_target) * 100));
+    $needed          = number_format(max(0, $min_target - $materials_subtotal), 2);
+    $distinct_count  = count( WC()->cart->get_cart() );
+    $boxes_total     = WC()->cart->get_cart_contents_count();
+    $item_label      = $distinct_count === 1 ? '1 item' : $distinct_count . ' items';
 
-    $freight_cost = $has_bulk ? (450.00 + ($total_sqft * 0.40)) : 0.00;
-    $tax_cost     = (float) WC()->cart->get_total_tax();
-    $est_total    = $subtotal_val + $freight_cost + $tax_cost;
+    $freight_cost    = $has_bulk ? (450.00 + ($total_sqft * 0.40)) : 0.00;
+    $sample_packages = $sample_count > 0 ? (int) ceil( $sample_count / 3 ) : 0;
+    $sample_shipping = $sample_packages * 15.00;
+    $total_shipping  = $freight_cost + $sample_shipping;
+    $tax_cost        = (float) WC()->cart->get_total_tax();
+    $est_total       = $subtotal_val + $total_shipping + $tax_cost;
 
     echo '<div style="padding-top: 16px; border-top: 2px solid #e2e8f0; margin-top: auto;">';
     
+    // Mixed Cart Notice
+    if ( $has_bulk && $sample_count > 0 ) {
+        echo '<div style="margin-bottom: 14px; background: #eff6ff; border: 1.5px solid #93c5fd; padding: 10px 12px; border-radius: 4px; font-size: 11.5px; color: #1e40af; line-height: 1.45; font-weight: 600;">';
+        echo '📦 <strong>Mixed Shipment:</strong> Samples ship separately via USPS Parcel ($15.00 per 3 samples). Flooring materials are delivered by commercial pallet freight.';
+        echo '</div>';
+    }
+
     // B2B Minimum Order Progress Bar
     if ( $has_bulk ) {
         echo '<div style="margin-bottom: 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 12px 14px; border-radius: 4px;">';
@@ -1231,7 +1268,7 @@ function fixflip_output_cart_drawer_items_html() {
         echo '</div>';
     } else {
         echo '<div style="margin-bottom: 16px; background: #f0fdf4; border: 1.5px solid #86efac; padding: 10px 12px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">';
-        echo '<div style="font-size: 11.5px; font-weight: 700; color: #166534;">Sample Swatch Order &bull; Free Courier Shipping Included</div>';
+        echo '<div style="font-size: 11.5px; font-weight: 700; color: #166534;">Free Sample Swatches ($0.00) &bull; Fixed $15.00 Shipping / 3 Samples (USPS)</div>';
         echo '</div>';
     }
 
@@ -1241,15 +1278,19 @@ function fixflip_output_cart_drawer_items_html() {
     echo '<span style="font-weight: 800; color: #0f172a;">' . WC()->cart->get_cart_subtotal() . '</span>';
     echo '</div>';
 
-    echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
-    if ($has_bulk) {
+    if ( $has_bulk ) {
+        echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
         echo '<span>Direct Jobsite Freight:</span>';
         echo '<span style="color: #007bff; font-weight: 800;">$' . number_format($freight_cost, 2) . '</span>';
-    } else {
-        echo '<span>Sample Courier Shipping:</span>';
-        echo '<span style="color: #16a34a; font-weight: 800;">FREE</span>';
+        echo '</div>';
     }
-    echo '</div>';
+    if ( $sample_count > 0 ) {
+        $pkg_word = $sample_packages === 1 ? '1 package' : $sample_packages . ' packages';
+        echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
+        echo '<span>Sample Shipping (' . $pkg_word . '):</span>';
+        echo '<span style="color: #007bff; font-weight: 800;">$' . number_format($sample_shipping, 2) . '</span>';
+        echo '</div>';
+    }
 
     if ( $tax_cost > 0 ) {
         echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
@@ -1265,7 +1306,7 @@ function fixflip_output_cart_drawer_items_html() {
     
     // Dynamic Dual Actions: Never trap customer with a disabled button
     if ( ! $has_bulk || $materials_subtotal >= $min_target ) {
-        $btn_label = $has_bulk ? 'PROCEED TO CHECKOUT &rarr;' : 'CHECKOUT SAMPLES ($5.00 EA) &rarr;';
+        $btn_label = $has_bulk ? 'PROCEED TO CHECKOUT &rarr;' : 'ORDER FREE SAMPLES &rarr;';
         echo '<a href="' . esc_url( wc_get_checkout_url() ) . '" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 14px 16px; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">' . $btn_label . '</a>';
     } else {
         // Dual actions for orders under $2,000:
@@ -1529,46 +1570,612 @@ function fixflip_ajax_add_to_cart_handler() {
 }
 
 /**
- * 100% Guaranteed Direct Jobsite Freight Delivery & Sample Shipping Calculation
+ * ==========================================================================
+ * NATIVE WOOCOMMERCE SHIPPING ENGINE: PALLET FREIGHT & SAMPLE PARCEL
+ * ==========================================================================
  */
-add_action( 'woocommerce_cart_calculate_fees', 'fixflip_add_guaranteed_freight_fee', 20, 1 );
-function fixflip_add_guaranteed_freight_fee( $cart ) {
-    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
 
-    $total_sqft = 0;
-    $has_bulk   = false;
+// Re-enable native WooCommerce shipping calculation
+add_filter( 'woocommerce_cart_needs_shipping_address', '__return_true', 999 );
+add_filter( 'woocommerce_ship_to_different_address_checked', '__return_false' );
 
-    if ( $cart && ! $cart->is_empty() ) {
-        foreach ( $cart->get_cart() as $item ) {
-            if ( empty( $item['is_sample'] ) ) {
-                $has_bulk   = true;
-                $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
-                $is_trim    = ( ! empty( $item['is_trim'] ) || get_post_meta( $product_id, 'is_trim', true ) === 'yes' );
+/**
+ * Register Native FixFlip Shipping Methods
+ */
+add_action( 'woocommerce_shipping_init', 'fixflip_register_shipping_classes' );
+function fixflip_register_shipping_classes() {
+    if ( ! class_exists( 'WC_Shipping_Method' ) ) {
+        return;
+    }
 
-                if ( ! $is_trim ) {
-                    $qty_boxes  = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
-                    $coverage   = fixflip_get_product_coverage( $product_id );
-                    $total_sqft += ($qty_boxes * $coverage);
-                }
-            }
+    /**
+     * Native Jobsite Pallet Freight Shipping Method
+     */
+    class WC_Shipping_FixFlip_Pallet_Freight extends WC_Shipping_Method {
+        public function __construct( $instance_id = 0 ) {
+            $this->id                 = 'fixflip_pallet_freight';
+            $this->instance_id        = absint( $instance_id );
+            $this->method_title       = __( 'Estimated Jobsite Freight', 'fixflip' );
+            $this->method_description = __( 'Direct jobsite commercial freight delivery with hydraulic liftgate and electric pallet jack ($450 base + $0.40/sqft).', 'fixflip' );
+            $this->supports           = array(
+                'shipping-zones',
+                'instance-settings',
+                'instance-settings-modal',
+            );
+            $this->tax_status         = 'taxable';
+            $this->init();
         }
 
-        if ( $has_bulk ) {
-            $freight_cost = 450.00 + ($total_sqft * 0.40);
-            $cart->add_fee( 'Direct Jobsite Freight Delivery (Liftgate & Power Pallet Jack)', $freight_cost, false );
-        } else {
-            $cart->add_fee( 'Standard Sample Courier Shipping (USPS / FedEx)', 0.00, false );
+        public function init() {
+            $this->init_form_fields();
+            $this->init_settings();
+            $this->title      = $this->get_option( 'title', __( 'Estimated Jobsite Freight', 'fixflip' ) );
+            $this->tax_status = 'taxable';
+            add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+        }
+
+        public function init_form_fields() {
+            $this->instance_form_fields = array(
+                'title' => array(
+                    'title'       => __( 'Method Title', 'fixflip' ),
+                    'type'        => 'text',
+                    'description' => __( 'Title displayed to customers during cart & checkout.', 'fixflip' ),
+                    'default'     => __( 'Estimated Jobsite Freight', 'fixflip' ),
+                    'desc_tip'    => true,
+                ),
+            );
+        }
+
+        public function calculate_shipping( $package = array() ) {
+            $total_sqft        = 0.00;
+            $has_freight_items = false;
+
+            if ( ! empty( $package['contents'] ) ) {
+                foreach ( $package['contents'] as $item ) {
+                    if ( ! empty( $item['is_sample'] ) ) {
+                        continue;
+                    }
+                    if ( isset( $item['data'] ) && is_object( $item['data'] ) && $item['data']->get_shipping_class() === 'sample-parcel' ) {
+                        continue;
+                    }
+
+                    $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
+                    $is_trim    = ( ! empty( $item['is_trim'] ) || get_post_meta( $product_id, 'is_trim', true ) === 'yes' );
+                    $has_freight_items = true;
+
+                    if ( ! $is_trim ) {
+                        $qty_boxes = isset( $item['quantity'] ) ? (int) $item['quantity'] : 1;
+                        $coverage  = function_exists( 'fixflip_get_product_coverage' ) ? fixflip_get_product_coverage( $product_id ) : 20.00;
+                        $total_sqft += ( $qty_boxes * $coverage );
+                    }
+                }
+            }
+
+            if ( $has_freight_items ) {
+                $cost = 450.00 + ( $total_sqft * 0.40 );
+                $this->add_rate( array(
+                    'id'       => $this->get_rate_id(),
+                    'label'    => $this->title,
+                    'cost'     => $cost,
+                    'taxes'    => '',
+                    'calc_tax' => 'per_order',
+                ) );
+            }
+        }
+    }
+
+    /**
+     * Native Sample Parcel Shipping Method (USPS Ground Advantage)
+     */
+    class WC_Shipping_FixFlip_Sample_Parcel extends WC_Shipping_Method {
+        public function __construct( $instance_id = 0 ) {
+            $this->id                 = 'fixflip_sample_parcel';
+            $this->instance_id        = absint( $instance_id );
+            $this->method_title       = __( 'Sample Shipping & Handling', 'fixflip' );
+            $this->method_description = __( 'USPS Ground Advantage parcel shipping (typically 3–7 business days). Fixed $15.00 per package of up to 3 samples.', 'fixflip' );
+            $this->supports           = array(
+                'shipping-zones',
+                'instance-settings',
+                'instance-settings-modal',
+            );
+            $this->tax_status         = 'taxable';
+            $this->init();
+        }
+
+        public function init() {
+            $this->init_form_fields();
+            $this->init_settings();
+            $this->title      = $this->get_option( 'title', __( 'Sample Shipping & Handling', 'fixflip' ) );
+            $this->tax_status = 'taxable';
+            add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+        }
+
+        public function init_form_fields() {
+            $this->instance_form_fields = array(
+                'title' => array(
+                    'title'       => __( 'Method Title', 'fixflip' ),
+                    'type'        => 'text',
+                    'description' => __( 'Title displayed to customers during cart & checkout.', 'fixflip' ),
+                    'default'     => __( 'Sample Shipping & Handling', 'fixflip' ),
+                    'desc_tip'    => true,
+                ),
+            );
+        }
+
+        public function calculate_shipping( $package = array() ) {
+            $sample_count = 0;
+
+            if ( ! empty( $package['contents'] ) ) {
+                foreach ( $package['contents'] as $item ) {
+                    if ( ! empty( $item['is_sample'] ) ) {
+                        $sample_count += (int) $item['quantity'];
+                    } elseif ( isset( $item['data'] ) && is_object( $item['data'] ) && $item['data']->get_shipping_class() === 'sample-parcel' ) {
+                        $sample_count += (int) $item['quantity'];
+                    }
+                }
+            }
+
+            if ( $sample_count > 0 ) {
+                $packages_needed = (int) ceil( $sample_count / 3 );
+                $cost            = $packages_needed * 15.00;
+                $pkg_label       = $packages_needed === 1 ? '1 package' : $packages_needed . ' packages';
+                $label           = $this->title . ' (' . $pkg_label . ')';
+
+                $this->add_rate( array(
+                    'id'       => $this->get_rate_id(),
+                    'label'    => $label,
+                    'cost'     => $cost,
+                    'taxes'    => '',
+                    'calc_tax' => 'per_order',
+                ) );
+            }
         }
     }
 }
 
+add_filter( 'woocommerce_shipping_methods', 'fixflip_add_shipping_methods' );
+function fixflip_add_shipping_methods( $methods ) {
+    $methods['fixflip_pallet_freight'] = 'WC_Shipping_FixFlip_Pallet_Freight';
+    $methods['fixflip_sample_parcel']  = 'WC_Shipping_FixFlip_Sample_Parcel';
+    return $methods;
+}
+
 /**
- * Disable standard WooCommerce shipping rates package to prevent duplicate shipping rows,
- * but enable separate shipping / jobsite delivery address on checkout
+ * Multi-Package Cart Routing for Mixed Carts (Samples via Parcel + Flooring via Freight)
  */
-add_filter( 'woocommerce_cart_needs_shipping', '__return_false', 999 );
-add_filter( 'woocommerce_cart_needs_shipping_address', '__return_true', 999 );
-add_filter( 'woocommerce_ship_to_different_address_checked', '__return_false' );
+add_filter( 'woocommerce_cart_shipping_packages', 'fixflip_split_shipping_packages', 10, 1 );
+function fixflip_split_shipping_packages( $packages ) {
+    if ( empty( $packages ) || ! is_array( $packages ) ) {
+        return $packages;
+    }
+
+    $first_package = reset( $packages );
+    $sample_items  = array();
+    $pallet_items  = array();
+    $pallet_cost   = 0.00;
+
+    foreach ( $first_package['contents'] as $item_key => $item ) {
+        if ( ! empty( $item['is_sample'] ) || ( isset( $item['data'] ) && is_object( $item['data'] ) && $item['data']->get_shipping_class() === 'sample-parcel' ) ) {
+            $sample_items[ $item_key ] = $item;
+        } else {
+            $pallet_items[ $item_key ] = $item;
+            $pallet_cost += isset( $item['line_total'] ) ? (float) $item['line_total'] : 0.00;
+        }
+    }
+
+    // Split into 2 distinct shipments if both samples and freight materials are present
+    if ( ! empty( $sample_items ) && ! empty( $pallet_items ) ) {
+        $packages = array();
+
+        // Shipment 1: Samples (USPS Ground Advantage Parcel)
+        $packages[0] = array(
+            'contents'        => $sample_items,
+            'contents_cost'   => 0.00,
+            'applied_coupons' => array(),
+            'user'            => $first_package['user'],
+            'destination'     => $first_package['destination'],
+            'package_name'    => __( 'Shipment 1: Sample Swatches (USPS Parcel)', 'fixflip' ),
+            'package_type'    => 'sample_parcel',
+        );
+
+        // Shipment 2: Flooring & Trim (Commercial Pallet Freight)
+        $packages[1] = array(
+            'contents'        => $pallet_items,
+            'contents_cost'   => $pallet_cost,
+            'applied_coupons' => $first_package['applied_coupons'],
+            'user'            => $first_package['user'],
+            'destination'     => $first_package['destination'],
+            'package_name'    => __( 'Shipment 2: Jobsite Flooring (Pallet Freight)', 'fixflip' ),
+            'package_type'    => 'pallet_freight',
+        );
+    } elseif ( ! empty( $sample_items ) ) {
+        $packages[0]['package_name'] = __( 'Sample Swatches (USPS Parcel)', 'fixflip' );
+        $packages[0]['package_type'] = 'sample_parcel';
+    } elseif ( ! empty( $pallet_items ) ) {
+        $packages[0]['package_name'] = __( 'Jobsite Flooring (Pallet Freight)', 'fixflip' );
+        $packages[0]['package_type'] = 'pallet_freight';
+    }
+
+    return $packages;
+}
+
+/**
+ * Filter Package Names Displayed on Cart & Checkout
+ */
+add_filter( 'woocommerce_shipping_package_name', 'fixflip_custom_shipping_package_name', 10, 3 );
+function fixflip_custom_shipping_package_name( $name, $i, $package ) {
+    if ( ! empty( $package['package_name'] ) ) {
+        return $package['package_name'];
+    }
+    return $name;
+}
+
+/**
+ * Custom Shipping Notices for Non-Contiguous US & International Destinations
+ */
+add_filter( 'woocommerce_no_shipping_available_html', 'fixflip_custom_no_shipping_message', 10, 1 );
+add_filter( 'woocommerce_cart_no_shipping_available_html', 'fixflip_custom_no_shipping_message', 10, 1 );
+function fixflip_custom_no_shipping_message( $message ) {
+    $destination = WC()->customer ? WC()->customer->get_shipping_country() : '';
+    $state       = WC()->customer ? WC()->customer->get_shipping_state() : '';
+
+    if ( $destination === 'US' && in_array( $state, array( 'AK', 'HI' ), true ) ) {
+        return '<div class="fixflip-no-shipping-notice ak-hi-notice" style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 4px; padding: 14px 16px; margin: 12px 0; font-size: 13.5px; color: #92400e; font-weight: 700; line-height: 1.5;">' .
+            '⚠️ <strong>Delivery to Alaska &amp; Hawaii:</strong><br>' .
+            'Please contact the FixFlip Order Desk for a delivery quote.<br>' .
+            '<span style="font-weight: 500; font-size: 12.5px; color: #78350f;">Direct commercial pallet and parcel rates to AK &amp; HI are custom quoted based on barge or air routing. Call <a href="tel:9497054300" style="color: #92400e; font-weight: 800; text-decoration: underline;">(949) 705-4300</a> or email <a href="mailto:orders@fixflip.com" style="color: #92400e; font-weight: 800; text-decoration: underline;">orders@fixflip.com</a>.</span>' .
+            '</div>';
+    }
+
+    return '<div class="fixflip-no-shipping-notice intl-notice" style="background: #fef2f2; border: 1.5px solid #fca5a5; border-radius: 4px; padding: 14px 16px; margin: 12px 0; font-size: 13.5px; color: #991b1b; font-weight: 700; line-height: 1.5;">' .
+        'Delivery is currently unavailable to this destination.<br>' .
+        '<span style="font-weight: 500; font-size: 12.5px; color: #7f1d1d;">FixFlip delivers pallet freight exclusively within the contiguous 48 United States. Please contact the FixFlip Order Desk for assistance: <a href="mailto:orders@fixflip.com" style="color: #991b1b; font-weight: 800; text-decoration: underline;">orders@fixflip.com</a>.</span>' .
+        '</div>';
+}
+
+/**
+ * Save Freight Calculations to Order Meta on Checkout
+ */
+add_action( 'woocommerce_checkout_order_processed', 'fixflip_record_order_shipping_meta', 10, 3 );
+function fixflip_record_order_shipping_meta( $order_id, $posted_data, $order ) {
+    if ( ! $order ) {
+        $order = wc_get_order( $order_id );
+    }
+    if ( ! $order ) {
+        return;
+    }
+
+    $total_sqft       = 0.00;
+    $sample_count     = 0;
+    $has_freight      = false;
+
+    foreach ( $order->get_items() as $item ) {
+        $product_id = $item->get_product_id();
+        $is_sample  = $item->get_meta( 'Order Type' ) && strpos( $item->get_meta( 'Order Type' ), 'Sample' ) !== false;
+
+        if ( $is_sample ) {
+            $sample_count += (int) $item->get_quantity();
+        } else {
+            $has_freight = true;
+            $is_trim     = get_post_meta( $product_id, 'is_trim', true ) === 'yes';
+            if ( ! $is_trim ) {
+                $qty      = (int) $item->get_quantity();
+                $coverage = function_exists( 'fixflip_get_product_coverage' ) ? fixflip_get_product_coverage( $product_id ) : 20.00;
+                $total_sqft += ( $qty * $coverage );
+            }
+        }
+    }
+
+    if ( $has_freight ) {
+        $est_freight = 450.00 + ( $total_sqft * 0.40 );
+        $order->update_meta_data( '_fixflip_freight_sqft', round( $total_sqft, 1 ) );
+        $order->update_meta_data( '_fixflip_freight_formula', '$450 base + ($0.40 × ' . round( $total_sqft, 1 ) . ' sqft)' );
+        $order->update_meta_data( '_fixflip_freight_estimated', number_format( $est_freight, 2, '.', '' ) );
+        $order->update_meta_data( '_fixflip_freight_final_amount', number_format( $est_freight, 2, '.', '' ) );
+    }
+
+    if ( $sample_count > 0 ) {
+        $sample_pkgs = (int) ceil( $sample_count / 3 );
+        $order->update_meta_data( '_fixflip_sample_count', $sample_count );
+        $order->update_meta_data( '_fixflip_sample_packages', $sample_pkgs );
+        $order->update_meta_data( '_fixflip_sample_carrier', 'USPS' );
+        $order->update_meta_data( '_fixflip_sample_service', 'Ground Advantage' );
+        $order->update_meta_data( '_fixflip_sample_status', 'Pending Dispatch' );
+    }
+
+    $order->save();
+}
+
+/**
+ * ==========================================================================
+ * ORDER FULFILLMENT & TRACKING METABOXES (ADMIN ORDER DESK)
+ * ==========================================================================
+ */
+
+add_action( 'add_meta_boxes', 'fixflip_add_order_fulfillment_metaboxes', 20 );
+function fixflip_add_order_fulfillment_metaboxes() {
+    $screens = array( 'shop_order', 'woocommerce_page_wc-orders' );
+
+    foreach ( $screens as $screen ) {
+        add_meta_box(
+            'fixflip_pallet_freight_metabox',
+            __( '📦 FixFlip Jobsite Pallet Freight Administration', 'fixflip' ),
+            'fixflip_render_pallet_freight_metabox',
+            $screen,
+            'normal',
+            'high'
+        );
+
+        add_meta_box(
+            'fixflip_sample_parcel_metabox',
+            __( '✉️ FixFlip Sample Parcel Fulfillment (USPS)', 'fixflip' ),
+            'fixflip_render_sample_parcel_metabox',
+            $screen,
+            'normal',
+            'high'
+        );
+    }
+}
+
+/**
+ * Render Pallet Freight Administration Metabox
+ */
+function fixflip_render_pallet_freight_metabox( $post_or_order ) {
+    $order = ( $post_or_order instanceof WC_Order ) ? $post_or_order : wc_get_order( $post_or_order->ID );
+    if ( ! $order ) return;
+
+    wp_nonce_field( 'fixflip_save_freight_meta', 'fixflip_freight_meta_nonce' );
+
+    $sqft               = $order->get_meta( '_fixflip_freight_sqft' );
+    $formula            = $order->get_meta( '_fixflip_freight_formula' ) ?: '$450 base + ($0.40 × sqft)';
+    $estimated_freight  = $order->get_meta( '_fixflip_freight_estimated' );
+    $actual_cost        = $order->get_meta( '_fixflip_freight_actual_carrier_cost' );
+    $liftgate           = $order->get_meta( '_fixflip_freight_liftgate_cost' );
+    $limited_access     = $order->get_meta( '_fixflip_freight_limited_access_cost' );
+    $residential        = $order->get_meta( '_fixflip_freight_residential_cost' );
+    $redelivery         = $order->get_meta( '_fixflip_freight_redelivery_cost' );
+    $adjustment         = $order->get_meta( '_fixflip_freight_adjustment' );
+    $carrier            = $order->get_meta( '_fixflip_freight_carrier' );
+    $bol                = $order->get_meta( '_fixflip_freight_bol' );
+    $pro                = $order->get_meta( '_fixflip_freight_pro' );
+    $final_freight      = $order->get_meta( '_fixflip_freight_final_amount' ) ?: $estimated_freight;
+    ?>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; padding: 10px 0;">
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Ordered Flooring Sqft:</label>
+            <input type="text" name="_fixflip_freight_sqft" value="<?php echo esc_attr( $sqft ); ?>" style="width:100%; font-weight:700;" placeholder="e.g. 582.3">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Calculation Formula:</label>
+            <input type="text" name="_fixflip_freight_formula" value="<?php echo esc_attr( $formula ); ?>" style="width:100%; background:#f8fafc;" readonly>
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Estimated Freight ($):</label>
+            <input type="text" name="_fixflip_freight_estimated" value="<?php echo esc_attr( $estimated_freight ); ?>" style="width:100%; font-weight:800; color:#007bff;" placeholder="0.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Actual Carrier Cost ($):</label>
+            <input type="text" name="_fixflip_freight_actual_carrier_cost" value="<?php echo esc_attr( $actual_cost ); ?>" style="width:100%;" placeholder="e.g. 520.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Liftgate Surcharge ($):</label>
+            <input type="text" name="_fixflip_freight_liftgate_cost" value="<?php echo esc_attr( $liftgate ); ?>" style="width:100%;" placeholder="0.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Limited-Access Surcharge ($):</label>
+            <input type="text" name="_fixflip_freight_limited_access_cost" value="<?php echo esc_attr( $limited_access ); ?>" style="width:100%;" placeholder="0.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Residential Fee ($):</label>
+            <input type="text" name="_fixflip_freight_residential_cost" value="<?php echo esc_attr( $residential ); ?>" style="width:100%;" placeholder="0.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Redelivery Fee ($):</label>
+            <input type="text" name="_fixflip_freight_redelivery_cost" value="<?php echo esc_attr( $redelivery ); ?>" style="width:100%;" placeholder="0.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Freight Adjustment / Markup ($):</label>
+            <input type="text" name="_fixflip_freight_adjustment" value="<?php echo esc_attr( $adjustment ); ?>" style="width:100%;" placeholder="+/- 0.00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Freight Carrier Name:</label>
+            <input type="text" name="_fixflip_freight_carrier" value="<?php echo esc_attr( $carrier ); ?>" style="width:100%;" placeholder="e.g. Estes Express / R+L / TForce">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Bill of Lading (BOL) #:</label>
+            <input type="text" name="_fixflip_freight_bol" value="<?php echo esc_attr( $bol ); ?>" style="width:100%; font-family:monospace;" placeholder="BOL-XXXXXX">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Carrier PRO / Tracking #:</label>
+            <input type="text" name="_fixflip_freight_pro" value="<?php echo esc_attr( $pro ); ?>" style="width:100%; font-family:monospace; font-weight:700;" placeholder="PRO-XXXXXXXXX">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Final Freight Total ($):</label>
+            <input type="text" name="_fixflip_freight_final_amount" value="<?php echo esc_attr( $final_freight ); ?>" style="width:100%; font-weight:800; color:#16a34a;" placeholder="0.00">
+        </div>
+    </div>
+    <div style="font-size:11.5px; color:#64748b; margin-top:8px; border-top:1px solid #e2e8f0; padding-top:6px;">
+        💡 <em>Adjusting freight and carrier fees here updates freight logistics records without modifying customer merchandise line prices.</em>
+    </div>
+    <?php
+}
+
+/**
+ * Render Sample Parcel Fulfillment Metabox
+ */
+function fixflip_render_sample_parcel_metabox( $post_or_order ) {
+    $order = ( $post_or_order instanceof WC_Order ) ? $post_or_order : wc_get_order( $post_or_order->ID );
+    if ( ! $order ) return;
+
+    wp_nonce_field( 'fixflip_save_sample_meta', 'fixflip_sample_meta_nonce' );
+
+    $weight     = $order->get_meta( '_fixflip_sample_weight' ) ?: '1.2 lbs';
+    $dimensions = $order->get_meta( '_fixflip_sample_dimensions' ) ?: '9 x 6 x 2 in';
+    $carrier    = $order->get_meta( '_fixflip_sample_carrier' ) ?: 'USPS';
+    $service    = $order->get_meta( '_fixflip_sample_service' ) ?: 'Ground Advantage';
+    $label_cost = $order->get_meta( '_fixflip_sample_label_cost' );
+    $tracking   = $order->get_meta( '_fixflip_sample_tracking' );
+    $ship_date  = $order->get_meta( '_fixflip_sample_ship_date' );
+    $status     = $order->get_meta( '_fixflip_sample_status' ) ?: 'Pending Dispatch';
+    ?>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; padding: 10px 0;">
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Parcel Weight:</label>
+            <input type="text" name="_fixflip_sample_weight" value="<?php echo esc_attr( $weight ); ?>" style="width:100%;" placeholder="e.g. 1.2 lbs">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Package Dimensions:</label>
+            <input type="text" name="_fixflip_sample_dimensions" value="<?php echo esc_attr( $dimensions ); ?>" style="width:100%;" placeholder="9 x 6 x 2 in">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Carrier:</label>
+            <input type="text" name="_fixflip_sample_carrier" value="<?php echo esc_attr( $carrier ); ?>" style="width:100%;" placeholder="USPS">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Service Level:</label>
+            <input type="text" name="_fixflip_sample_service" value="<?php echo esc_attr( $service ); ?>" style="width:100%;" placeholder="Ground Advantage">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Postage / Label Cost ($):</label>
+            <input type="text" name="_fixflip_sample_label_cost" value="<?php echo esc_attr( $label_cost ); ?>" style="width:100%;" placeholder="e.g. 5.85">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">USPS Tracking #:</label>
+            <input type="text" name="_fixflip_sample_tracking" value="<?php echo esc_attr( $tracking ); ?>" style="width:100%; font-family:monospace; font-weight:700; color:#007bff;" placeholder="9400 1000 0000 0000 0000 00">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Shipment Date:</label>
+            <input type="date" name="_fixflip_sample_ship_date" value="<?php echo esc_attr( $ship_date ); ?>" style="width:100%;">
+        </div>
+        <div>
+            <label style="display:block; font-weight:700; font-size:12px; margin-bottom:4px; color:#475569;">Fulfillment Status:</label>
+            <select name="_fixflip_sample_status" style="width:100%; font-weight:700;">
+                <option value="Pending Dispatch" <?php selected( $status, 'Pending Dispatch' ); ?>>Pending Dispatch</option>
+                <option value="Label Printed" <?php selected( $status, 'Label Printed' ); ?>>Label Printed</option>
+                <option value="In Transit" <?php selected( $status, 'In Transit' ); ?>>In Transit</option>
+                <option value="Delivered" <?php selected( $status, 'Delivered' ); ?>>Delivered</option>
+            </select>
+        </div>
+    </div>
+    <div style="font-size:11.5px; color:#64748b; margin-top:8px; border-top:1px solid #e2e8f0; padding-top:6px;">
+        ✉️ <em>Entering a USPS Tracking Number automatically includes a clickable tracking link in customer order notification emails.</em>
+    </div>
+    <?php
+}
+
+/**
+ * Save Fulfillment Metabox Fields
+ */
+add_action( 'woocommerce_process_shop_order_meta', 'fixflip_save_order_fulfillment_meta', 20, 1 );
+add_action( 'save_post_shop_order', 'fixflip_save_order_fulfillment_meta', 20, 1 );
+function fixflip_save_order_fulfillment_meta( $order_id ) {
+    $order = wc_get_order( $order_id );
+    if ( ! $order ) return;
+
+    // Freight fields
+    if ( isset( $_POST['fixflip_freight_meta_nonce'] ) && wp_verify_nonce( $_POST['fixflip_freight_meta_nonce'], 'fixflip_save_freight_meta' ) ) {
+        $freight_fields = array(
+            '_fixflip_freight_sqft',
+            '_fixflip_freight_formula',
+            '_fixflip_freight_estimated',
+            '_fixflip_freight_actual_carrier_cost',
+            '_fixflip_freight_liftgate_cost',
+            '_fixflip_freight_limited_access_cost',
+            '_fixflip_freight_residential_cost',
+            '_fixflip_freight_redelivery_cost',
+            '_fixflip_freight_adjustment',
+            '_fixflip_freight_carrier',
+            '_fixflip_freight_bol',
+            '_fixflip_freight_pro',
+            '_fixflip_freight_final_amount',
+        );
+
+        $old_pro = $order->get_meta( '_fixflip_freight_pro' );
+        foreach ( $freight_fields as $field ) {
+            if ( isset( $_POST[ $field ] ) ) {
+                $order->update_meta_data( $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
+            }
+        }
+
+        $new_pro = isset( $_POST['_fixflip_freight_pro'] ) ? sanitize_text_field( wp_unslash( $_POST['_fixflip_freight_pro'] ) ) : '';
+        if ( ! empty( $new_pro ) && $new_pro !== $old_pro ) {
+            $carrier_name = isset( $_POST['_fixflip_freight_carrier'] ) ? sanitize_text_field( wp_unslash( $_POST['_fixflip_freight_carrier'] ) ) : 'Commercial Carrier';
+            $order->add_order_note( sprintf( __( 'Jobsite Freight dispatched via %s with PRO # %s', 'fixflip' ), $carrier_name, $new_pro ), false, true );
+        }
+    }
+
+    // Sample Parcel fields
+    if ( isset( $_POST['fixflip_sample_meta_nonce'] ) && wp_verify_nonce( $_POST['fixflip_sample_meta_nonce'], 'fixflip_save_sample_meta' ) ) {
+        $sample_fields = array(
+            '_fixflip_sample_weight',
+            '_fixflip_sample_dimensions',
+            '_fixflip_sample_carrier',
+            '_fixflip_sample_service',
+            '_fixflip_sample_label_cost',
+            '_fixflip_sample_tracking',
+            '_fixflip_sample_ship_date',
+            '_fixflip_sample_status',
+        );
+
+        $old_tracking = $order->get_meta( '_fixflip_sample_tracking' );
+        foreach ( $sample_fields as $field ) {
+            if ( isset( $_POST[ $field ] ) ) {
+                $order->update_meta_data( $field, sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) );
+            }
+        }
+
+        $new_tracking = isset( $_POST['_fixflip_sample_tracking'] ) ? sanitize_text_field( wp_unslash( $_POST['_fixflip_sample_tracking'] ) ) : '';
+        if ( ! empty( $new_tracking ) && $new_tracking !== $old_tracking ) {
+            $order->add_order_note( sprintf( __( 'Sample Swatch parcel shipped via USPS Ground Advantage. Tracking # %s', 'fixflip' ), $new_tracking ), false, true );
+        }
+    }
+
+    $order->save();
+}
+
+/**
+ * Display Shipment Tracking Information in Customer Emails & Order Views
+ */
+add_action( 'woocommerce_email_order_meta', 'fixflip_email_shipping_tracking_info', 20, 3 );
+function fixflip_email_shipping_tracking_info( $order, $sent_to_admin, $plain_text ) {
+    if ( ! $order ) return;
+
+    $sample_tracking = $order->get_meta( '_fixflip_sample_tracking' );
+    $sample_carrier  = $order->get_meta( '_fixflip_sample_carrier' ) ?: 'USPS';
+    $freight_carrier = $order->get_meta( '_fixflip_freight_carrier' );
+    $freight_pro     = $order->get_meta( '_fixflip_freight_pro' );
+    $freight_bol     = $order->get_meta( '_fixflip_freight_bol' );
+
+    if ( $sample_tracking || $freight_pro ) {
+        if ( $plain_text ) {
+            echo "\n" . __( 'SHIPMENT TRACKING INFORMATION', 'fixflip' ) . "\n";
+            echo "----------------------------------------\n";
+            if ( $sample_tracking ) {
+                echo "Sample Swatches: " . $sample_carrier . " Tracking # " . $sample_tracking . "\n";
+            }
+            if ( $freight_pro ) {
+                echo "Jobsite Freight: " . ( $freight_carrier ?: 'Commercial Carrier' ) . " PRO # " . $freight_pro . ( $freight_bol ? " (BOL: {$freight_bol})" : "" ) . "\n";
+            }
+            echo "\n";
+        } else {
+            echo '<div style="margin: 20px 0; padding: 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: sans-serif;">';
+            echo '<h3 style="margin: 0 0 10px; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">📦 Shipment Tracking</h3>';
+            if ( $sample_tracking ) {
+                $usps_url = 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' . urlencode( str_replace( ' ', '', $sample_tracking ) );
+                echo '<p style="margin: 0 0 8px; font-size: 13.5px; color: #334155;"><strong>Sample Parcel (' . esc_html( $sample_carrier ) . '):</strong> <a href="' . esc_url( $usps_url ) . '" target="_blank" style="color: #007bff; font-weight: 700; text-decoration: underline;">' . esc_html( $sample_tracking ) . '</a></p>';
+            }
+            if ( $freight_pro ) {
+                echo '<p style="margin: 0; font-size: 13.5px; color: #334155;"><strong>Jobsite Freight (' . esc_html( $freight_carrier ?: 'Commercial Carrier' ) . '):</strong> PRO # <strong>' . esc_html( $freight_pro ) . '</strong>' . ( $freight_bol ? ' | BOL # <strong>' . esc_html( $freight_bol ) . '</strong>' : '' ) . '</p>';
+            }
+            echo '</div>';
+        }
+    }
+}
+
+add_action( 'woocommerce_order_details_after_order_table', 'fixflip_display_order_tracking_on_view_page', 20, 1 );
+function fixflip_display_order_tracking_on_view_page( $order ) {
+    fixflip_email_shipping_tracking_info( $order, false, false );
+}
 
 /**
  * Disable selectWoo / Select2 on Checkout for Clean Native HTML State Dropdowns
@@ -2009,19 +2616,16 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function payment_fields() {
-            $material_subtotal = 0;
+            $material_subtotal = 0.00;
             if ( class_exists('WooCommerce') && WC()->cart ) {
                 foreach ( WC()->cart->get_cart() as $item ) {
                     if ( empty( $item['is_sample'] ) ) {
                         $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
                     }
                 }
-                if ( $material_subtotal <= 0 ) {
-                    $material_subtotal = (float) WC()->cart->get_subtotal();
-                }
             }
             $is_under_min = ( $material_subtotal < 2000.00 );
-            $remaining = 2000.00 - $material_subtotal;
+            $remaining    = max( 0, 2000.00 - $material_subtotal );
             ?>
             <div class="csl-draw-info-box" style="background: <?php echo $is_under_min ? '#fffbeb' : '#f0fdf4'; ?>; border: 1.5px solid <?php echo $is_under_min ? '#fde68a' : '#86efac'; ?>; border-radius: 6px; padding: 18px; margin-top: 8px;">
                 <?php if ( $is_under_min ) : ?>
@@ -2030,8 +2634,12 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
                             <span>⚠️ $2,000 Minimum for CSL Draw Advance</span>
                         </div>
                         <div style="font-size: 12px; color: #b91c1c; line-height: 1.45; font-weight: 500;">
-                            Material Draw Advances require a minimum order of $2,000.00. Current material subtotal: <strong>$<?php echo number_format($material_subtotal, 2); ?></strong> (<strong>$<?php echo number_format(max(0, $remaining), 2); ?></strong> remaining).<br>
-                            To complete this order now, choose <strong>Credit Card / Debit Card</strong> above, or add more cartons to your order.
+                            Material Draw Advances require a minimum order of $2,000.00 in eligible flooring materials. Sample swatches ($0.00), sample shipping ($15.00), pallet freight, and sales tax are excluded from this threshold.<br>
+                            Current eligible material subtotal: <strong>$<?php echo number_format($material_subtotal, 2); ?></strong> (<strong>$<?php echo number_format($remaining, 2); ?></strong> remaining to qualify).<br><br>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <a href="javascript:void(0);" onclick="var r = document.getElementById('payment_method_stripe'); if(r){r.checked=true; jQuery(document.body).trigger('payment_method_selected');}" style="background: #0f172a; color: #ffffff; padding: 7px 14px; border-radius: 3px; font-weight: 800; font-size: 11.5px; text-decoration: none; text-transform: uppercase;">Pay with Card &amp; Checkout &rarr;</a>
+                                <a href="/commercial-flooring/" style="background: #007bff; color: #ffffff; padding: 7px 14px; border-radius: 3px; font-weight: 800; font-size: 11.5px; text-decoration: none; text-transform: uppercase;">+ Add Materials for CSL Financing</a>
+                            </div>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -2052,6 +2660,23 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function process_payment( $order_id ) {
+            $material_subtotal = 0.00;
+            if ( class_exists('WooCommerce') && WC()->cart ) {
+                foreach ( WC()->cart->get_cart() as $item ) {
+                    if ( empty( $item['is_sample'] ) ) {
+                        $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
+                    }
+                }
+            }
+
+            if ( $material_subtotal < 2000.00 ) {
+                wc_add_notice( __( 'Center Street Lending draw financing requires a minimum order of $2,000.00 in eligible flooring materials. Please choose Credit Card / Instant Pay or add more cartons to qualify.', 'fixflip' ), 'error' );
+                return array(
+                    'result'   => 'failure',
+                    'redirect' => ''
+                );
+            }
+
             $order = wc_get_order( $order_id );
             $order->update_status( 'processing', __( 'CSL Draw Advancement requested by borrower.', 'fixflip' ) );
             wc_reduce_stock_levels( $order_id );

@@ -14,6 +14,26 @@ do_action( 'woocommerce_before_cart' ); ?>
         <form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
             <?php do_action( 'woocommerce_before_cart_table' ); ?>
 
+            <?php
+            $cart_has_samples = false;
+            $cart_has_freight = false;
+            foreach ( WC()->cart->get_cart() as $ci ) {
+                if ( ! empty( $ci['is_sample'] ) ) {
+                    $cart_has_samples = true;
+                } else {
+                    $cart_has_freight = true;
+                }
+            }
+            if ( $cart_has_samples && $cart_has_freight ) : ?>
+                <div style="background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 4px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                    <div style="font-size: 24px; flex-shrink: 0;">📦</div>
+                    <div style="font-size: 13px; color: #1e40af; line-height: 1.45; font-weight: 600;">
+                        <strong style="color: #1e3a8a; font-weight: 800; display: block; margin-bottom: 2px;">Mixed Cart Shipment Routing:</strong>
+                        Samples ship separately by parcel service ($15.00 per 3 samples via USPS Ground Advantage). Flooring cartons and accessories are delivered by commercial pallet freight ($450 base + $0.40/sqft).
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="fd-cart-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); overflow: hidden; margin-bottom: 24px;">
                 
                 <div style="background: #0f172a; color: #ffffff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
@@ -111,8 +131,8 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                         <?php echo esc_html( $coverage ); ?> sq ft / box &bull; <strong style="color: #007bff;"><?php echo number_format( $total_sqft, 1 ); ?> sq ft total</strong>
                                                     </div>
                                                 <?php else : ?>
-                                                    <div style="font-size: 12.5px; color: #0284c7; font-weight: 700; margin-top: 2px;">
-                                                        Sample Swatch &bull; Free Direct Freight
+                                                    <div style="font-size: 12.5px; color: #166534; font-weight: 700; margin-top: 2px;">
+                                                        Sample Swatch &bull; Free Swatch ($0.00)
                                                     </div>
                                                 <?php endif; ?>
 
@@ -133,7 +153,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                             <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">
                                                 <?php 
                                                 if ( $is_sample ) {
-                                                    echo wc_price( 5.00 );
+                                                    echo wc_price( 0.00 ) . ' <span style="font-size: 11px; color: #16a34a; font-weight: 800;">(FREE)</span>';
                                                 } else {
                                                     echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
                                                 }

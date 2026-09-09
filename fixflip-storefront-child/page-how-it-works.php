@@ -466,7 +466,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         Shop the products you need for your renovation.
                     </p>
                     <p class="fd-step-sub-text">
-                        Browse our curated catalog of Heavy Commercial SPC Vinyl Plank ($3.56/sqft), Good Tier Red Oak ($5.12/sqft), and Better Tier White Oak ($5.97/sqft). Order $5.00 sample swatches with free priority courier delivery to verify finishes on-site.
+                        Browse our curated catalog of Heavy Commercial SPC Vinyl Plank ($3.56/sqft), Good Tier Red Oak ($5.12/sqft), and Better Tier White Oak ($5.97/sqft). Order free sample swatches ($0.00 each, $15.00 fixed shipping per 3 samples via USPS Ground Advantage) to verify finishes on-site.
                     </p>
                 </div>
             </div>
@@ -549,7 +549,7 @@ $theme_uri = get_stylesheet_directory_uri();
             </p>
             <div class="fd-hiw-cta-btns">
                 <a href="/commercial-flooring/" class="fd-btn-primary">Browse Wholesale Catalog &rarr;</a>
-                <a href="/category/spc/" class="fd-btn-secondary">Order Samples ($5.00)</a>
+                <a href="/category/spc/" class="fd-btn-secondary">Order Free Samples</a>
             </div>
         </div>
 
@@ -558,40 +558,40 @@ $theme_uri = get_stylesheet_directory_uri();
             <h3>FixFlip vs. Traditional Supply Purchasing</h3>
             <p class="sub">Why top real estate investors choose FixFlip + Center Street Lending</p>
             
-            <div style="overflow-x: auto;">
+            <div class="fd-compare-table-wrap">
                 <table class="fd-compare-table">
                     <thead>
                         <tr>
-                            <th style="width: 32%;">Feature / Workflow</th>
-                            <th style="width: 34%;">Traditional Retail / Big-Box</th>
-                            <th class="ff-col" style="width: 34%;">FixFlip + Center Street Lending</th>
+                            <th>Feature</th>
+                            <th class="fd-th-highlight">FixFlip + Center Street Lending</th>
+                            <th>Traditional Flooring Distributors</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Material Financing</strong></td>
-                            <td>100% upfront out-of-pocket cash / high credit card rates</td>
-                            <td class="ff-col"><strong>100% CSL Loan Integrated</strong> ($0 cash today)</td>
+                            <td><strong>Financing Integration</strong></td>
+                            <td class="fd-td-highlight">100% CSL Rehab Draw Advance ($0 upfront cash today)</td>
+                            <td>Credit card, cash on delivery, or high-interest trade credit</td>
                         </tr>
                         <tr>
-                            <td><strong>Material Pricing</strong></td>
-                            <td>Standard retail markups</td>
-                            <td class="ff-col"><strong>Commercial Wholesale Rates</strong> pre-negotiated</td>
+                            <td><strong>Material Quality</strong></td>
+                            <td class="fd-td-highlight">Heavy Commercial 20mil SPC &amp; Engineered Hardwoods</td>
+                            <td>Varies; retail grades often thin 6–12mil wear layers</td>
                         </tr>
                         <tr>
-                            <td><strong>Draw Reimbursement Hassle</strong></td>
-                            <td>Collect paper receipts, submit manual inspection requests, wait 2–3 weeks</td>
-                            <td class="ff-col"><strong>Automated Draw Invoicing</strong> directly between FixFlip &amp; CSL</td>
+                            <td><strong>Pricing Transparency</strong></td>
+                            <td class="fd-td-highlight">True wholesale contractor rates with bulk volume tiers</td>
+                            <td>Retail markup with opaque contractor discounts</td>
                         </tr>
                         <tr>
                             <td><strong>Jobsite Delivery</strong></td>
-                            <td>Customer responsible for truck rental or high fees</td>
-                            <td class="ff-col"><strong>Direct Liftgate Freight</strong> straight to project curb within 1 week</td>
+                            <td class="fd-td-highlight">Curbside liftgate &amp; pallet jack drop directly to flip property</td>
+                            <td>Warehouse pickup required or third-party freight coordination</td>
                         </tr>
                         <tr>
-                            <td><strong>Inventory Assurance</strong></td>
-                            <td>Frequent backorders and mixed dye-lots</td>
-                            <td class="ff-col"><strong>Bulk Pallet Inventory</strong> reserved for active projects</td>
+                            <td><strong>Ordering Speed</strong></td>
+                            <td class="fd-td-highlight">100% online in minutes with automatic draw billing</td>
+                            <td>Multiple sales reps, invoice quotes, and credit applications</td>
                         </tr>
                     </tbody>
                 </table>
@@ -599,13 +599,13 @@ $theme_uri = get_stylesheet_directory_uri();
         </div>
 
         <!-- FREQUENTLY ASKED QUESTIONS -->
-        <div class="fd-faq-section">
+        <div class="fd-hiw-faq-section">
             <h3>Frequently Asked Questions</h3>
             <div class="fd-faq-grid">
-                
+
                 <div class="fd-faq-card">
-                    <h4>Who is eligible for FixFlip Draw Financing?</h4>
-                    <p>Any real estate investor or general contractor with an active rehab or construction loan through Center Street Lending. Simply enter your loan number or property address at checkout.</p>
+                    <h4>How does Center Street Lending draw financing work?</h4>
+                    <p>When you select "Center Street Lending Draw Advance" at checkout, you enter your active CSL loan number or property address. Our team verifies your available draw budget, and FixFlip invoices CSL directly. Materials are released immediately with zero out-of-pocket cash from you.</p>
                 </div>
 
                 <div class="fd-faq-card">
@@ -615,7 +615,7 @@ $theme_uri = get_stylesheet_directory_uri();
 
                 <div class="fd-faq-card">
                     <h4>When does the $2,000 order minimum apply?</h4>
-                    <p>The $2,000.00 minimum order amount is <strong>only applicable if you are integrating the material spending into your Center Street Lending rehab loan advance</strong>. Direct cash/card purchases and sample swatches ($5.00) have no loan minimum.</p>
+                    <p>The $2,000.00 minimum order amount is <strong>only applicable if you are integrating the material spending into your Center Street Lending rehab loan advance</strong>. Direct cash/card purchases and free sample swatches ($0.00) have no loan minimum.</p>
                 </div>
 
                 <div class="fd-faq-card">

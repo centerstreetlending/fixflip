@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
                 }
 
                 if ( $is_sample ) {
-                    $coverage_text = '1 Sample Swatch &bull; Fast Courier Dispatch';
+                    $coverage_text = '1 Sample Swatch (FREE - $0.00) &bull; USPS Ground Advantage (3–7 Days)';
                 } elseif ( $is_trim ) {
                     $length = $_product->get_meta('custom_length') ?: 'Piece';
                     $matching = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
@@ -99,7 +99,14 @@ defined( 'ABSPATH' ) || exit;
             </td>
         </tr>
 
-        <!-- Fees (Freight / Sample Shipping) -->
+        <!-- Shipping Packages (Native Pallet Freight & Sample Parcel) -->
+        <?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
+            <?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
+            <?php wc_cart_totals_shipping_html(); ?>
+            <?php do_action( 'woocommerce_review_order_after_shipping' ); ?>
+        <?php endif; ?>
+
+        <!-- Fees (Extra services if applicable) -->
         <?php foreach ( WC()->cart->get_fees() as $fee ) : ?>
             <tr class="fee" style="border-top: 1px dashed #e2e8f0;">
                 <th style="padding: 8px 0; font-size: 13px; font-weight: 700; color: #64748b;">
