@@ -131,7 +131,13 @@ do_action( 'woocommerce_before_cart' ); ?>
                                         <!-- PRICE -->
                                         <td class="product-price" data-title="<?php esc_attr_e( 'Price', 'woocommerce' ); ?>" style="padding: 16px; vertical-align: middle; text-align: right; white-space: nowrap;">
                                             <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">
-                                                <?php echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key ); // PHPCS: XSS ok. ?>
+                                                <?php 
+                                                if ( $is_sample ) {
+                                                    echo wc_price( 5.00 );
+                                                } else {
+                                                    echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
+                                                }
+                                                ?>
                                             </div>
                                             <?php if ( $is_trim ) : ?>
                                                 <div style="font-size: 11px; color: #64748b; font-weight: 600;">/ piece</div>
@@ -175,7 +181,13 @@ do_action( 'woocommerce_before_cart' ); ?>
                                         <!-- SUBTOTAL -->
                                         <td class="product-subtotal" data-title="<?php esc_attr_e( 'Subtotal', 'woocommerce' ); ?>" style="padding: 16px; vertical-align: middle; text-align: right; white-space: nowrap;">
                                             <div style="font-size: 16px; font-weight: 900; color: #0f172a;">
-                                                <?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); // PHPCS: XSS ok. ?>
+                                                <?php 
+                                                if ( $is_sample ) {
+                                                    echo wc_price( 5.00 * (int) $cart_item['quantity'] );
+                                                } else {
+                                                    echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key );
+                                                }
+                                                ?>
                                             </div>
                                         </td>
 

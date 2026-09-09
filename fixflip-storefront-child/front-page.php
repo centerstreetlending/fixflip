@@ -848,6 +848,16 @@ $is_logged_in = is_user_logged_in();
     font-weight: 700;
 }
 
+/* Anchor smooth scrolling offset for sticky header */
+#how-it-works,
+#featured-products,
+#financing,
+#delivery-returns,
+#trust,
+#faq {
+    scroll-margin-top: 72px;
+}
+
 /* RESPONSIVE BREAKPOINTS */
 @media (max-width: 1024px) {
     .fd-hero-grid {
@@ -872,37 +882,93 @@ $is_logged_in = is_user_logged_in();
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .fd-hero-section {
-        padding: 32px 20px;
+        margin: 12px 0 20px 0 !important;
+        padding: 28px 18px !important;
+        border-radius: 4px !important;
     }
     .fd-hero-headline {
-        font-size: 30px;
+        font-size: 27px !important;
+        line-height: 1.22 !important;
+        letter-spacing: -0.02em !important;
+        word-break: keep-all !important;
+        hyphens: none !important;
+        margin-bottom: 14px !important;
     }
     .fd-hero-copy {
-        font-size: 14.5px;
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 22px !important;
+    }
+    .fd-hero-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .fd-hero-actions a {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        padding: 14px 20px !important;
+        min-height: 48px !important;
+    }
+    .fd-hero-card {
+        padding: 18px !important;
+    }
+    .fd-sec-title {
+        font-size: 24px !important;
+    }
+    .fd-sec-header {
+        margin-bottom: 24px !important;
+    }
+    .fd-btn-primary,
+    .fd-btn-secondary,
+    .fd-btn-outline-white {
+        min-height: 44px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .fd-hero-section {
+        padding: 24px 16px !important;
+    }
+    .fd-hero-headline {
+        font-size: 25px !important;
+    }
+    .fd-hero-copy {
+        font-size: 14px !important;
     }
     .fd-benefits-strip {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
     .fd-steps-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
     .fd-products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
     .fd-logistics-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
     .fd-trust-pillars {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
     .fd-trust-section,
     .fd-financing-section,
     .fd-hiw-section,
     .fd-faq-section,
     .fd-cta-banner {
-        padding: 28px 18px;
+        padding: 28px 16px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .fd-hp-container {
+        padding: 0 12px !important;
+    }
+    .fd-hero-headline {
+        font-size: 23px !important;
     }
 }
 </style>

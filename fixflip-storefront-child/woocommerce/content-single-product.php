@@ -156,12 +156,36 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                 width: 100% !important;
             }
             .fd-gallery-grid-2x2 {
-                display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px !important;
+                display: flex !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
+                gap: 12px !important;
                 width: 100% !important;
+                padding-bottom: 8px !important;
+                scroll-padding: 0 12px !important;
             }
             .fd-gallery-box {
+                flex: 0 0 86% !important;
+                scroll-snap-align: center !important;
+                border-radius: 4px !important;
+            }
+            .fd-gallery-dots {
+                display: flex !important;
+                justify-content: center !important;
+                gap: 8px !important;
+                margin-top: 10px !important;
+            }
+            .fd-gallery-dot {
+                width: 8px !important;
+                height: 8px !important;
+                border-radius: 50% !important;
+                background: #cbd5e1 !important;
+                transition: all 0.2s ease !important;
+            }
+            .fd-gallery-dot.active {
+                background: #007bff !important;
+                width: 22px !important;
                 border-radius: 4px !important;
             }
             .fd-right-details {
@@ -227,6 +251,12 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     <div class="fd-gallery-box" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #e2e8f0; border-radius: 0px; background: #f8fafc; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $idx; ?>)">
                         <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $idx + 1; ?>" style="<?php echo $box_img_style; ?> transition: transform 0.2s ease; display: block;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
                     </div>
+                <?php endforeach; ?>
+            </div>
+            <!-- Mobile Gallery Dots -->
+            <div class="fd-gallery-dots" style="display: none;">
+                <?php foreach ( $main_4_thumbs as $d_idx => $d_url ) : ?>
+                    <span class="fd-gallery-dot <?php echo $d_idx === 0 ? 'active' : ''; ?>"></span>
                 <?php endforeach; ?>
             </div>
 
@@ -368,11 +398,11 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                 <div id="fd-lw-calculator-box" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0px; padding: 16px; margin-bottom: 18px; gap: 12px;">
                     <div style="flex: 1;">
                         <label style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 4px; text-transform: uppercase;">LENGTH (FT)</label>
-                        <input type="number" id="fd-input-length" placeholder="0" min="0" step="any" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0px; font-size: 15px; box-sizing: border-box;">
+                        <input type="number" id="fd-input-length" placeholder="0" min="0" step="any" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0px; font-size: 16px; box-sizing: border-box;">
                     </div>
                     <div style="flex: 1;">
                         <label style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 4px; text-transform: uppercase;">WIDTH (FT)</label>
-                        <input type="number" id="fd-input-width" placeholder="0" min="0" step="any" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0px; font-size: 15px; box-sizing: border-box;">
+                        <input type="number" id="fd-input-width" placeholder="0" min="0" step="any" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 0px; font-size: 16px; box-sizing: border-box;">
                     </div>
                 </div>
 
@@ -587,8 +617,11 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     });
                 };
 
+                let isAddingSample = false;
                 window.fdSubmitAddSample = function(e) {
                     if (e) e.preventDefault();
+                    if (isAddingSample) return false;
+                    isAddingSample = true;
                     const sampleBtn = document.getElementById('fd-main-sample-btn');
                     const productId = '<?php echo esc_js($product->get_id()); ?>';
 
@@ -609,6 +642,7 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     })
                     .then(r => r.json())
                     .then(data => {
+                        isAddingSample = false;
                         if (sampleBtn) {
                             sampleBtn.style.opacity = '1';
                             sampleBtn.disabled = false;
@@ -630,6 +664,7 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                         }
                     })
                     .catch(err => {
+                        isAddingSample = false;
                         if (sampleBtn) {
                             sampleBtn.style.opacity = '1';
                             sampleBtn.disabled = false;
@@ -845,8 +880,8 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                 <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
                     <tbody>
                         <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding: 10px 0; color: #64748b; font-weight: 600; width: 45%;">Manufacturer / Collection:</td>
-                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? 'ShawContract® CA399 Provincial Plank' : esc_html($brand ?: 'Commercial Wholesale'); ?></td>
+                            <td style="padding: 10px 0; color: #64748b; font-weight: 600; width: 45%;">Product Collection:</td>
+                            <td style="padding: 10px 0; color: #0f172a; font-weight: 800;"><?php echo $is_best_tier_product ? 'CA399 Provincial Plank Collection' : esc_html($brand ?: 'Commercial Wholesale Collection'); ?></td>
                         </tr>
                         <tr style="border-bottom: 1px solid #f1f5f9;">
                             <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Species / Material:</td>
@@ -1247,6 +1282,8 @@ document.addEventListener('DOMContentLoaded', function() {
             liveShipping.textContent = '$' + estShipping.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
+        updateMobileStickyBar(wholeBoxes, formattedTotal, sqftPerBox);
+
         // Auto-highlight Bulk Tier Cards based on wholeBoxes
         const t1 = document.getElementById('fd-tier-1');
         const t2 = document.getElementById('fd-tier-2');
@@ -1315,9 +1352,75 @@ document.addEventListener('DOMContentLoaded', function() {
     if (lenInput) lenInput.addEventListener('input', calculateFromLW);
     if (widInput) widInput.addEventListener('input', calculateFromLW);
 
+    // Sticky mobile bar updates & visibility
+    function updateMobileStickyBar(wholeBoxes, formattedTotal, sqftPerBox) {
+        const stickyBar   = document.getElementById('fd-mobile-sticky-bar');
+        const stickyBoxes = document.getElementById('fd-sticky-bar-boxes');
+        const stickySqft  = document.getElementById('fd-sticky-bar-sqft');
+        const stickyTotal = document.getElementById('fd-sticky-bar-total');
+        const addBtn      = document.getElementById('fd-main-add-btn');
+
+        if (!stickyBar) return;
+        const boxWord = wholeBoxes === 1 ? 'box' : 'boxes';
+        if (stickyBoxes) stickyBoxes.textContent = wholeBoxes + ' ' + boxWord;
+        if (stickySqft)  stickySqft.textContent  = (wholeBoxes * sqftPerBox).toFixed(1) + ' sqft';
+        if (stickyTotal) stickyTotal.textContent = formattedTotal;
+
+        if (wholeBoxes >= 1 && window.innerWidth <= 768) {
+            if (addBtn) {
+                const rect = addBtn.getBoundingClientRect();
+                stickyBar.style.display = (rect.bottom < 0) ? 'flex' : 'none';
+            } else {
+                stickyBar.style.display = 'flex';
+            }
+        } else {
+            stickyBar.style.display = 'none';
+        }
+    }
+
+    window.addEventListener('scroll', function() {
+        const wholeBoxes = hiddenWcQty ? parseInt(hiddenWcQty.value) : 0;
+        updateMobileStickyBar(wholeBoxes, subtotalDisplay ? subtotalDisplay.textContent : '$0.00', sqftPerBox);
+    });
+
+    window.addEventListener('resize', function() {
+        const wholeBoxes = hiddenWcQty ? parseInt(hiddenWcQty.value) : 0;
+        updateMobileStickyBar(wholeBoxes, subtotalDisplay ? subtotalDisplay.textContent : '$0.00', sqftPerBox);
+    });
+
+    // Mobile Gallery Swipe Dots Synchronization
+    const galleryCarousel = document.querySelector('.fd-gallery-grid-2x2');
+    const galleryDots      = document.querySelectorAll('.fd-gallery-dot');
+    if (galleryCarousel && galleryDots.length > 0) {
+        galleryCarousel.addEventListener('scroll', function() {
+            const cardWidth = galleryCarousel.offsetWidth * 0.86;
+            const activeIdx = Math.min(galleryDots.length - 1, Math.max(0, Math.round(galleryCarousel.scrollLeft / cardWidth)));
+            galleryDots.forEach((dot, i) => {
+                if (i === activeIdx) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        });
+    }
+
     // Initial run to ensure zero-quantity state is active
     calculateValues(true);
 });
 </script>
+
+<!-- STICKY MOBILE PURCHASE BAR (Appears on mobile when quantity >= 1) -->
+<div id="fd-mobile-sticky-bar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 1.5px solid #0f172a; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); padding: 10px 16px; z-index: 9998; align-items: center; justify-content: space-between; box-sizing: border-box;">
+    <div>
+        <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">
+            <span id="fd-sticky-bar-boxes">1 box</span> &bull; <span id="fd-sticky-bar-sqft">20 sqft</span>
+        </div>
+        <div style="font-size: 19px; font-weight: 900; color: #0f172a; line-height: 1.1;" id="fd-sticky-bar-total">
+            $0.00
+        </div>
+    </div>
+    <button type="button" onclick="window.fdSubmitAddToCart(event)" style="background: #007bff; color: #ffffff; border: none; padding: 12px 20px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.6px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 44px;">
+        <span>ADD TO ORDER</span>
+        <span>&rarr;</span>
+    </button>
+</div>
 
 <?php do_action( 'woocommerce_after_single_product' ); ?>

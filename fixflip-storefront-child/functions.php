@@ -750,6 +750,20 @@ function fixflip_save_order_line_item_data( $item, $cart_item_key, $values, $ord
    B2B CHECKOUT MODIFICATIONS (LOAN REQUEST)
    ========================================================================== */
 
+// Clear default customer address pre-fills for guest checkouts (no pre-filled LA/90001)
+add_filter( 'default_checkout_billing_postcode', 'fixflip_clear_default_checkout_fields', 10, 2 );
+add_filter( 'default_checkout_billing_city', 'fixflip_clear_default_checkout_fields', 10, 2 );
+add_filter( 'default_checkout_billing_state', 'fixflip_clear_default_checkout_fields', 10, 2 );
+add_filter( 'default_checkout_shipping_postcode', 'fixflip_clear_default_checkout_fields', 10, 2 );
+add_filter( 'default_checkout_shipping_city', 'fixflip_clear_default_checkout_fields', 10, 2 );
+add_filter( 'default_checkout_shipping_state', 'fixflip_clear_default_checkout_fields', 10, 2 );
+function fixflip_clear_default_checkout_fields( $value, $input = null ) {
+    if ( ! is_user_logged_in() ) {
+        return '';
+    }
+    return $value;
+}
+
 // 1. Customize Checkout Fields
 add_filter( 'woocommerce_checkout_fields' , 'fixflip_custom_checkout_fields' );
 function fixflip_custom_checkout_fields( $fields ) {
@@ -1119,21 +1133,20 @@ function fixflip_output_cart_drawer_items_html() {
         if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 ) {
             $product_name  = $_product->get_name();
             $thumbnail     = $_product->get_image('thumbnail', array('style' => 'width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;'));
-            $subtotal      = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
-            $remove_url    = wc_get_cart_remove_url( $cart_item_key );
-            $is_sample     = ! empty( $cart_item['is_sample'] );
-            $is_trim       = ( ! empty( $cart_item['is_trim'] ) || $_product->get_meta('is_trim') === 'yes' );
-
             if ( $is_sample ) {
-                $item_badge = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">SAMPLE</span>';
-                $line_desc  = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample ($5.00 ea)';
+                $sample_line_total = 5.00 * (int) $cart_item['quantity'];
+                $subtotal          = wc_price( $sample_line_total );
+                $item_badge        = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">SAMPLE</span>';
+                $line_desc         = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample ($5.00 ea)';
             } elseif ( $is_trim ) {
+                $subtotal   = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
                 $item_badge = ' <span style="background: #f1f5f9; color: #0f172a; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px; border: 1px solid #cbd5e1;">MOLDING / TRIM</span>';
                 $pieces = (int) $cart_item['quantity'];
                 $piece_unit = $pieces === 1 ? 'piece' : 'pieces';
                 $matching_note = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
                 $line_desc  = $pieces . ' ' . $piece_unit . ' ($' . number_format((float)$_product->get_price(), 2) . ' / pc)' . $matching_note;
             } else {
+                $subtotal   = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
                 $item_badge = '';
                 $boxes = (int) $cart_item['quantity'];
                 $coverage = fixflip_get_product_coverage( $_product );
@@ -1156,30 +1169,38 @@ function fixflip_output_cart_drawer_items_html() {
     }
     echo '</div>';
 
-    // Subtotal & Action Buttons
-    $subtotal_val = (float) WC()->cart->get_subtotal();
-    $min_target   = 2000.00;
-    $percent      = min(100, round(($subtotal_val / $min_target) * 100));
-    $needed       = number_format(max(0, $min_target - $subtotal_val), 2);
-    $distinct_count = count( WC()->cart->get_cart() );
-    $boxes_total   = WC()->cart->get_cart_contents_count();
-    $item_label    = $distinct_count === 1 ? '1 item' : $distinct_count . ' items';
+    // Calculate materials subtotal (excluding samples) for CSL financing threshold
+    $materials_subtotal = 0.00;
+    $samples_subtotal   = 0.00;
+    $total_sqft         = 0;
+    $has_bulk           = false;
 
-    // Calculate freight for drawer
-    $total_sqft = 0;
-    $has_bulk   = false;
     foreach ( WC()->cart->get_cart() as $c_item ) {
-        if ( empty( $c_item['is_sample'] ) ) {
-            $has_bulk   = true;
-            $p_id       = isset( $c_item['product_id'] ) ? $c_item['product_id'] : 0;
-            $is_tr      = ( ! empty( $c_item['is_trim'] ) || get_post_meta( $p_id, 'is_trim', true ) === 'yes' );
+        if ( ! empty( $c_item['is_sample'] ) ) {
+            $samples_subtotal += (5.00 * (int) $c_item['quantity']);
+        } else {
+            $has_bulk = true;
+            $p_id     = isset( $c_item['product_id'] ) ? $c_item['product_id'] : 0;
+            $is_tr    = ( ! empty( $c_item['is_trim'] ) || get_post_meta( $p_id, 'is_trim', true ) === 'yes' );
             if ( ! $is_tr ) {
                 $q_boxes    = isset( $c_item['quantity'] ) ? (int) $c_item['quantity'] : 1;
                 $cov        = fixflip_get_product_coverage( $p_id );
                 $total_sqft += ($q_boxes * $cov);
             }
+            if ( isset( $c_item['line_total'] ) ) {
+                $materials_subtotal += (float) $c_item['line_total'];
+            }
         }
     }
+
+    $subtotal_val   = (float) WC()->cart->get_subtotal();
+    $min_target     = 2000.00;
+    $percent        = min(100, round(($materials_subtotal / $min_target) * 100));
+    $needed         = number_format(max(0, $min_target - $materials_subtotal), 2);
+    $distinct_count = count( WC()->cart->get_cart() );
+    $boxes_total    = WC()->cart->get_cart_contents_count();
+    $item_label     = $distinct_count === 1 ? '1 item' : $distinct_count . ' items';
+
     $freight_cost = $has_bulk ? (450.00 + ($total_sqft * 0.40)) : 0.00;
     $tax_cost     = (float) WC()->cart->get_total_tax();
     $est_total    = $subtotal_val + $freight_cost + $tax_cost;
@@ -1189,7 +1210,7 @@ function fixflip_output_cart_drawer_items_html() {
     // B2B Minimum Order Progress Bar
     if ( $has_bulk ) {
         echo '<div style="margin-bottom: 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 12px 14px; border-radius: 4px;">';
-        if ($subtotal_val >= $min_target) {
+        if ($materials_subtotal >= $min_target) {
             echo '<div style="font-size: 11px; font-weight: 900; color: #16a34a; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">';
             echo '<span>MINIMUM ORDER REACHED ($2,000+)</span>';
             echo '</div>';
@@ -1205,7 +1226,7 @@ function fixflip_output_cart_drawer_items_html() {
             echo '<div style="height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
             echo '<div style="width: ' . $percent . '%; height: 100%; background: #007bff;"></div>';
             echo '</div>';
-            echo '<div style="font-size: 11.5px; color: #0f172a; font-weight: 600;">Add $' . $needed . ' more to integrate into your rehab loan advance ($2,000.00 min).</div>';
+            echo '<div style="font-size: 11.5px; color: #0f172a; font-weight: 600;">Add $' . $needed . ' more in materials to finance via CSL Loan Draw ($2,000.00 min).</div>';
         }
         echo '</div>';
     } else {
@@ -1242,13 +1263,20 @@ function fixflip_output_cart_drawer_items_html() {
     echo '<span style="color: #007bff;">$' . number_format($est_total, 2) . '</span>';
     echo '</div>';
     
-    if ( ! $has_bulk || $subtotal_val >= $min_target ) {
-        echo '<a href="' . esc_url( wc_get_checkout_url() ) . '" style="display: block; width: 100%; padding: 16px; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none; border-radius: 0px; box-sizing: border-box; margin-bottom: 10px;">PROCEED TO CHECKOUT &rarr;</a>';
+    // Dynamic Dual Actions: Never trap customer with a disabled button
+    if ( ! $has_bulk || $materials_subtotal >= $min_target ) {
+        $btn_label = $has_bulk ? 'PROCEED TO CHECKOUT &rarr;' : 'CHECKOUT SAMPLES ($5.00 EA) &rarr;';
+        echo '<a href="' . esc_url( wc_get_checkout_url() ) . '" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 14px 16px; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">' . $btn_label . '</a>';
     } else {
-        echo '<button type="button" disabled style="display: block; width: 100%; padding: 14px; background: #cbd5e1; color: #64748b; font-size: 13px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; border: none; border-radius: 0px; box-sizing: border-box; margin-bottom: 10px; cursor: not-allowed;">ADD $' . $needed . ' MORE TO CHECKOUT</button>';
+        // Dual actions for orders under $2,000:
+        // 1. Pay with Card Checkout
+        echo '<a href="' . esc_url( wc_get_checkout_url() ) . '" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 14px 16px; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">PAY WITH CARD &amp; CHECKOUT &rarr;</a>';
+        
+        // 2. Add Materials to Qualify for CSL Financing
+        echo '<a href="/commercial-flooring/" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 12px 14px; background: #f0fdf4; color: #166534; border: 1.5px solid #86efac; font-size: 12px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">+ ADD MATERIALS FOR CSL FINANCING (Need $' . $needed . ' more)</a>';
     }
     
-    echo '<button type="button" onclick="window.fdCloseCartDrawer()" style="width: 100%; padding: 12px; background: #ffffff; color: #475569; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 700; text-transform: uppercase; border-radius: 0px; cursor: pointer;">Continue Shopping</button>';
+    echo '<button type="button" onclick="window.fdCloseCartDrawer()" style="width: 100%; min-height: 44px; padding: 12px; background: #ffffff; color: #475569; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 700; text-transform: uppercase; border-radius: 4px; cursor: pointer;">Continue Shopping</button>';
     echo '</div>';
 }
 
@@ -1263,15 +1291,15 @@ function fixflip_render_ajax_cart_drawer() {
     <div id="fd-cart-drawer-backdrop" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15,23,42,0.6); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999998;"></div>
 
     <!-- Slide-Out Drawer Panel from Right -->
-    <aside id="fd-cart-drawer-panel" style="position: fixed; top: 0; right: -420px; width: 400px; max-width: 90vw; height: 100vh; background: #ffffff; z-index: 999999; box-shadow: -10px 0 30px rgba(0,0,0,0.15); transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <aside id="fd-cart-drawer-panel" style="position: fixed; top: 0; right: 0; width: 400px; max-width: 100vw; height: 100vh; background: #ffffff; z-index: 999999; box-shadow: -10px 0 30px rgba(0,0,0,0.15); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         
         <!-- Drawer Header -->
-        <div style="padding: 20px 24px; border-bottom: 1.5px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+        <div style="padding: 16px 20px; border-bottom: 1.5px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#007bff;stroke-width:2;fill:none;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">YOUR ORDER CART</h3>
             </div>
-            <button type="button" id="fd-close-cart-drawer" aria-label="Close Shopping Cart Drawer" style="background: none; border: none; color: #64748b; font-size: 24px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+            <button type="button" id="fd-close-cart-drawer" aria-label="Close Shopping Cart Drawer" style="background: none; border: none; color: #64748b; font-size: 24px; cursor: pointer; padding: 0; line-height: 1; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">&times;</button>
         </div>
 
         <!-- Drawer Body Content (Dynamic Cart Items Container) -->
@@ -1292,18 +1320,20 @@ function fixflip_render_ajax_cart_drawer() {
         window.fdOpenCartDrawer = function() {
             if (drawer && backdrop) {
                 drawer.classList.add('is-open');
-                drawer.style.right = '0';
+                drawer.style.transform = 'translateX(0)';
                 backdrop.style.opacity = '1';
                 backdrop.style.pointerEvents = 'auto';
+                document.body.style.overflow = 'hidden';
             }
         };
 
         window.fdCloseCartDrawer = function() {
             if (drawer && backdrop) {
                 drawer.classList.remove('is-open');
-                drawer.style.right = '-450px';
+                drawer.style.transform = 'translateX(100%)';
                 backdrop.style.opacity = '0';
                 backdrop.style.pointerEvents = 'none';
+                document.body.style.overflow = '';
             }
         };
 
@@ -3072,7 +3102,7 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
             </h1>
 
             <div style="display: inline-block; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 13px; font-weight: 800; padding: 4px 12px; border-radius: 20px; margin-bottom: 18px;">
-                ShawContract® CA399 Provincial Plank 7.5" &bull; $9.00 / sq ft
+                CA399 Provincial Plank European White Oak 7.5" &bull; $9.00 / sq ft
             </div>
 
             <?php if ( ! empty( $item_title ) ) : ?>
@@ -3170,27 +3200,27 @@ function fixflip_ensure_best_tier_products() {
         '11100' => array(
             'title'       => 'Parchment White Oak - CA399 Provincial Plank 7.5"',
             'slug'        => 'parchment-white-oak-ca399-provincial-plank',
-            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Parchment (SKU: 11100). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+            'description' => 'CA399 Provincial Plank European White Oak in Parchment (SKU: 11100). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
         ),
         '11101' => array(
             'title'       => 'French Buff White Oak - CA399 Provincial Plank 7.5"',
             'slug'        => 'french-buff-white-oak-ca399-provincial-plank',
-            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in French Buff (SKU: 11101). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+            'description' => 'CA399 Provincial Plank European White Oak in French Buff (SKU: 11101). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
         ),
         '11102' => array(
             'title'       => 'Au Naturale White Oak - CA399 Provincial Plank 7.5"',
             'slug'        => 'au-naturale-white-oak-ca399-provincial-plank',
-            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Au Naturale (SKU: 11102). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+            'description' => 'CA399 Provincial Plank European White Oak in Au Naturale (SKU: 11102). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
         ),
         '15041' => array(
             'title'       => 'Ashen White Oak - CA399 Provincial Plank 7.5"',
             'slug'        => 'ashen-white-oak-ca399-provincial-plank',
-            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Ashen (SKU: 15041). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+            'description' => 'CA399 Provincial Plank European White Oak in Ashen (SKU: 15041). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
         ),
         '17065' => array(
             'title'       => 'Fawn White Oak - CA399 Provincial Plank 7.5"',
             'slug'        => 'fawn-white-oak-ca399-provincial-plank',
-            'description' => 'ShawContract® CA399 Provincial Plank European White Oak in Fawn (SKU: 17065). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
+            'description' => 'CA399 Provincial Plank European White Oak in Fawn (SKU: 17065). Engineered ply-core hardwood with a 4.0mm heavy face veneer, UV Aluminum Oxide wirebrushed finish, and 7.5" x 74.8" x 5/8" plank dimensions. 23.31 sq ft per carton. $9.00/sq ft wholesale pro rate (25% off $12.15 retail).',
         ),
     );
 
@@ -3209,7 +3239,7 @@ function fixflip_ensure_best_tier_products() {
                 'post_title'   => $data['title'],
                 'post_name'    => $data['slug'],
                 'post_content' => $data['description'],
-                'post_excerpt' => 'ShawContract® CA399 Provincial Plank 7.5" European White Oak with 4mm heavy face veneer. 23.31 sqft/carton. Best Tier pro rate at $9.00/sq ft.',
+                'post_excerpt' => 'CA399 Provincial Plank 7.5" European White Oak with 4mm heavy face veneer. 23.31 sqft/carton. Best Tier pro rate at $9.00/sq ft.',
                 'post_status'  => 'publish',
                 'post_type'    => 'product',
             ) );
@@ -3441,7 +3471,7 @@ function fixflip_get_all_trims_data() {
             'group'       => 'hardwood_ca',
         ),
 
-        // Group 4: Camaret (Shaw Hardwood Collection 203UV)
+        // Group 4: Camaret (Hardwood Collection 203UV)
         '03W07' => array(
             'sku'         => '03W07',
             'title'       => 'Camaret Quarter Round',
@@ -3483,7 +3513,7 @@ function fixflip_get_all_trims_data() {
             'group'       => 'camaret',
         ),
 
-        // Group 5: European Ash (Shaw Hardwood Collection 176)
+        // Group 5: European Ash (Hardwood Collection 176)
         '176QR' => array(
             'sku'         => '176QR',
             'title'       => 'European Ash Quarter Round',

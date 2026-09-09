@@ -108,12 +108,48 @@ if ( $cart_empty ) {
                     </span>
                 </div>
 
+                <!-- Collapsible Toggle for Mobile Viewports -->
+                <button type="button" id="fd-mobile-order-toggle" aria-expanded="false" style="display: none; width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 13px; font-weight: 800; color: #0f172a; align-items: center; justify-content: space-between; cursor: pointer; box-sizing: border-box; min-height: 44px;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <span>📦</span>
+                        <span id="fd-order-toggle-text">Show Item Details (<?php echo count( WC()->cart->get_cart() ); ?> items)</span>
+                    </span>
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <span id="fd-order-toggle-arrow" style="font-size: 10px; transition: transform 0.2s ease;">▼</span>
+                    </span>
+                </button>
+
                 <div class="fd-checkout-summary-body" id="order_review">
                     <?php
                     // Render order review table with HD thumbnails and carton math
                     woocommerce_order_review();
                     ?>
                 </div>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var toggleBtn = document.getElementById('fd-mobile-order-toggle');
+                    var reviewBody = document.querySelector('.fd-checkout-summary-body');
+                    var arrow = document.getElementById('fd-order-toggle-arrow');
+                    var toggleText = document.getElementById('fd-order-toggle-text');
+                    if (toggleBtn && reviewBody) {
+                        toggleBtn.addEventListener('click', function() {
+                            var isOpen = reviewBody.classList.contains('is-expanded');
+                            if (isOpen) {
+                                reviewBody.classList.remove('is-expanded');
+                                toggleBtn.setAttribute('aria-expanded', 'false');
+                                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                                if (toggleText) toggleText.textContent = 'Show Item Details';
+                            } else {
+                                reviewBody.classList.add('is-expanded');
+                                toggleBtn.setAttribute('aria-expanded', 'true');
+                                if (arrow) arrow.style.transform = 'rotate(180deg)';
+                                if (toggleText) toggleText.textContent = 'Hide Item Details';
+                            }
+                        });
+                    }
+                });
+                </script>
 
                 <!-- DYNAMIC PAYMENT METHOD CALLOUT -->
                 <div id="fd-checkout-payment-callout" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 4px; padding: 14px 16px; margin: 18px 18px 0 18px; transition: all 0.2s ease;">

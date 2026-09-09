@@ -258,7 +258,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                     <a href="/category/hardwood-best/" style="background: #eff6ff; color: #1e40af; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #bfdbfe; transition: all 0.2s ease;">
                         <span style="color: #007bff; font-size: 10px; font-weight: 900; text-transform: uppercase;">MEMBER EXCLUSIVE</span>
                         <span style="margin: 8px 0 4px 0; font-size: 15px;">Shop Best Tier White Oak</span>
-                        <span style="font-size: 12px; color: #3b82f6; font-weight: 500;">ShawContract® CA399 &bull; $9.00/sqft Unlocked &rarr;</span>
+                        <span style="font-size: 12px; color: #3b82f6; font-weight: 500;">CA399 Provincial Plank &bull; $9.00/sqft Unlocked &rarr;</span>
                     </a>
 
                     <a href="/commercial-flooring/" style="background: #ffffff; color: #0f172a; padding: 18px 16px; border-radius: 3px; text-decoration: none; font-weight: 800; font-size: 13.5px; display: flex; flex-direction: column; justify-content: space-between; border: 1.5px solid #cbd5e1; transition: all 0.2s ease;">
@@ -386,7 +386,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                         </div>
                         <div class="fd-perk-item">
                             <span class="fd-perk-check">✓</span>
-                            <span><strong>Best Tier European White Oak ($9.00/sqft):</strong> Unlocked member access to ShawContract® CA399 7.5" pro rate.</span>
+                            <span><strong>Best Tier European White Oak ($9.00/sqft):</strong> Unlocked member access to CA399 Provincial Plank 7.5" pro rate.</span>
                         </div>
                     </div>
 

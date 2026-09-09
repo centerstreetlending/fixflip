@@ -51,14 +51,18 @@
     #fd-cart-drawer-panel {
         position: fixed !important;
         top: 0 !important;
-        right: -450px;
+        right: 0 !important;
         left: auto !important;
         bottom: auto !important;
         width: 420px !important;
         max-width: 90vw !important;
         height: 100vh !important;
         z-index: 999999 !important;
-        transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        transform: translateX(100%) !important;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    #fd-cart-drawer-panel.is-open {
+        transform: translateX(0) !important;
     }
 
     /* CRITICAL MOBILE RESPONSIVE ENGINE */
@@ -114,17 +118,65 @@
         display: none !important;
     }
 
-    /* MOBILE HEADER & 3-SEGMENTED NAV TABS */
+    /* ACCESSIBLE FOCUS STYLES */
+    :focus-visible {
+        outline: 2px solid #007bff !important;
+        outline-offset: 2px !important;
+    }
+
+    /* DESKTOP / MOBILE VISIBILITY SWITCHES */
+    .mobile-only-header-row {
+        display: none !important;
+    }
+
     @media (max-width: 768px) {
-        .desktop-nav-txt {
+        /* Hide desktop header tiers on mobile */
+        .header-tier-1,
+        .header-tier-2,
+        .mega-menu-wrapper {
             display: none !important;
         }
-        .mobile-nav-txt {
-            display: inline !important;
+
+        /* Show compact 58px mobile header row */
+        .mobile-only-header-row {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            height: 58px;
+            padding: 0 16px;
+            background: #f2f2f2;
+            box-sizing: border-box;
+            width: 100%;
         }
+
+        .mobile-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        #fd-mobile-menu-btn,
+        #fd-mobile-search-toggle,
+        .mobile-header-icon-btn {
+            min-width: 44px;
+            min-height: 44px;
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Top Announcement Bar Mobile Polish */
         .top-header-wrapper > div:first-child {
-            padding: 8px 12px !important;
-            font-size: 11px !important;
+            padding: 8px 14px !important;
+            font-size: 11.5px !important;
             flex-wrap: wrap !important;
             gap: 6px !important;
             line-height: 1.3 !important;
@@ -135,33 +187,12 @@
             font-size: 8.5px !important;
             padding: 2px 6px !important;
         }
-        .header-tier-1 {
-            flex-wrap: wrap !important;
-            padding: 10px 12px !important;
-            gap: 10px !important;
-        }
-        .header-tier-1 .logo img {
-            height: 22px !important;
-        }
-        .header-tier-1 .search-group {
-            order: 3 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 4px 0 0 0 !important;
-        }
-        .header-tier-1 .partner-badge {
-            display: flex !important;
-        }
-        .header-tier-1 .partner-badge img {
-            height: 12px !important;
-        }
-        .header-tier-1 .partner-badge span {
-            font-size: 7.5px !important;
-        }
+
+        /* Center Street Partner Bar - visible at top, scrolls away */
         .header-partner-bar {
             flex-wrap: wrap !important;
             justify-content: center !important;
-            padding: 6px 10px !important;
+            padding: 8px 12px !important;
             gap: 6px 10px !important;
             font-size: 11px !important;
             text-align: center !important;
@@ -169,47 +200,14 @@
         .header-partner-bar img {
             height: 14px !important;
         }
-        .mega-menu-wrapper {
-            padding: 6px 10px !important;
-            background: #ffffff !important;
-            border-bottom: 1px solid #eaebed !important;
+
+        /* Cart Drawer Full-Width Sheet on Mobile */
+        #fd-cart-drawer-panel {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            right: 0 !important;
         }
-        .mega-menu-container {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            gap: 6px !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 4px 6px !important;
-            scrollbar-width: none;
-        }
-        .mega-menu-container::-webkit-scrollbar {
-            display: none;
-        }
-        .mega-menu-container .nav-item {
-            flex: 0 0 auto !important;
-            width: auto !important;
-        }
-        .mega-menu-link {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 7px 12px !important;
-            font-size: 11.5px !important;
-            font-weight: 800 !important;
-            letter-spacing: 0.3px !important;
-            border-radius: 4px !important;
-            background: #f8fafc !important;
-            border: 1px solid #e2e8f0 !important;
-            text-align: center !important;
-            white-space: nowrap !important;
-            box-sizing: border-box !important;
-        }
-        .mega-menu-link svg {
-            display: none !important;
-        }
+    }
         .fd-footer-grid {
             grid-template-columns: 1fr !important;
             gap: 28px !important;
@@ -540,22 +538,24 @@
         margin-right: auto !important;
     }
 
-    .header-tier-1,
-    .mega-menu-container,
-    .fd-single-product,
-    #content {
-        padding-left: 24px !important;
-        padding-right: 24px !important;
-    }
+    @media (min-width: 769px) {
+        .header-tier-1,
+        .mega-menu-container,
+        .fd-single-product,
+        #content {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+        }
 
-    .header-tier-1 {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 20px !important;
-        padding: 14px 24px !important;
-        max-width: 1320px !important;
-        margin: 0 auto !important;
+        .header-tier-1 {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 20px !important;
+            padding: 14px 24px !important;
+            max-width: 1320px !important;
+            margin: 0 auto !important;
+        }
     }
   </style>
 </head>
@@ -571,7 +571,20 @@
         <a href="<?php echo is_front_page() ? '#how-it-works' : home_url('/#how-it-works'); ?>" style="color: #60a5fa; text-decoration: underline; margin-left: 6px; font-weight: 800;">Learn How &rarr;</a>
       </div>
       
-      <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT BAR SCROLLS AWAY) -->
+      <!-- Lender Partner Bar (Visible near top of page, scrolls off on both desktop & mobile) -->
+      <div class="header-partner-bar" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 7px 16px; font-family: Inter, system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 11.5px; color: #475569; z-index: 9998; position: relative;">
+        <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b;">Official Materials Financing Partner:</span>
+        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
+          <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 16px; width: auto; object-fit: contain; display: block;">
+        </a>
+        <span style="color: #cbd5e1; font-weight: 900;">•</span>
+        <span style="color: #16a34a; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 0.5px;">
+          <span style="display: inline-block; width: 6px; height: 6px; background: #16a34a; border-radius: 50%;"></span>
+          Advance materials through your existing loan
+        </span>
+      </div>
+
+      <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT & PARTNER BARS SCROLL AWAY) -->
       <div class="fd-sticky-header-inner" id="fd-sticky-header-inner" style="background-color: #f2f2f2 !important; border-bottom: 1px solid #e5e5e5; width: 100%; transition: box-shadow 0.2s ease;">
       
       <!-- Tier 0 Navigation Removed -->
@@ -703,8 +716,243 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('resize', handleStickyScroll);
         handleStickyScroll();
     }
+
+    // ACCESSIBLE MOBILE NAVIGATION ENGINE
+    var mobMenuBtn       = document.getElementById('fd-mobile-menu-btn');
+    var mobNavPanel      = document.getElementById('fd-mobile-nav-panel');
+    var mobNavOverlay    = document.getElementById('fd-mobile-nav-overlay');
+    var mobNavClose      = document.getElementById('fd-mobile-nav-close');
+    var mobSearchToggle  = document.getElementById('fd-mobile-search-toggle');
+    var mobSearchDropdown = document.getElementById('fd-mobile-search-dropdown');
+    var mobShopExpand    = document.getElementById('fd-mob-shop-expand');
+    var mobShopSublinks  = document.getElementById('fd-mob-shop-sublinks');
+    var mobCartToggle    = document.getElementById('fd-mobile-cart-toggle');
+
+    function openMobNav() {
+        if (!mobNavPanel || !mobNavOverlay) return;
+        mobNavPanel.style.left = '0';
+        mobNavOverlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        if (mobMenuBtn) mobMenuBtn.setAttribute('aria-expanded', 'true');
+        if (mobNavClose) mobNavClose.focus();
+    }
+
+    function closeMobNav() {
+        if (!mobNavPanel || !mobNavOverlay) return;
+        mobNavPanel.style.left = '-320px';
+        mobNavOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+        if (mobMenuBtn) {
+            mobMenuBtn.setAttribute('aria-expanded', 'false');
+            mobMenuBtn.focus();
+        }
+    }
+
+    if (mobMenuBtn) mobMenuBtn.addEventListener('click', openMobNav);
+    if (mobNavClose) mobNavClose.addEventListener('click', closeMobNav);
+    if (mobNavOverlay) mobNavOverlay.addEventListener('click', closeMobNav);
+
+    // Escape key handler for drawers
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+            if (mobNavPanel && mobNavPanel.style.left === '0px') {
+                closeMobNav();
+            }
+            if (drawer && drawer.style.right === '0px') {
+                closeDrawer();
+            }
+        }
+    });
+
+    // Keyboard focus trapping in mobile navigation drawer
+    if (mobNavPanel) {
+        mobNavPanel.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' || e.keyCode === 9) {
+                var focusables = mobNavPanel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])');
+                if (focusables.length === 0) return;
+                var first = focusables[0];
+                var last = focusables[focusables.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) {
+                        last.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === last) {
+                        first.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+    }
+
+    // Expandable Mobile Search Toggle
+    if (mobSearchToggle && mobSearchDropdown) {
+        mobSearchToggle.addEventListener('click', function() {
+            var isExpanded = (mobSearchDropdown.style.display === 'block');
+            mobSearchDropdown.style.display = isExpanded ? 'none' : 'block';
+            mobSearchToggle.setAttribute('aria-expanded', !isExpanded);
+            if (!isExpanded) {
+                var inp = mobSearchDropdown.querySelector('input[type="search"], input.search-field, input.custom-search-input');
+                if (inp) inp.focus();
+            }
+        });
+    }
+
+    // Mobile Shop Subcategories Accordion Toggle
+    if (mobShopExpand && mobShopSublinks) {
+        mobShopExpand.addEventListener('click', function() {
+            var isOpen = (mobShopSublinks.style.display === 'block');
+            mobShopSublinks.style.display = isOpen ? 'none' : 'block';
+            mobShopExpand.setAttribute('aria-expanded', !isOpen);
+            var arr = mobShopExpand.querySelector('svg');
+            if (arr) arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+    }
+
+    // Mobile Cart Drawer Trigger
+    if (mobCartToggle) {
+        mobCartToggle.addEventListener('click', function(e) {
+            if (typeof window.fdOpenCartDrawer === 'function') {
+                e.preventDefault();
+                window.fdOpenCartDrawer();
+            }
+        });
+    }
 });
 </script>
+
+      <?php 
+        $header_cart_count = ( class_exists('WooCommerce') && WC()->cart ) ? count( WC()->cart->get_cart() ) : 0; 
+        $header_cart_badge = ($header_cart_count > 99) ? '99+' : $header_cart_count;
+      ?>
+
+      <!-- SLIDE-OUT MOBILE NAVIGATION DRAWER -->
+      <div id="fd-mobile-nav-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); z-index: 999998;"></div>
+      <nav id="fd-mobile-nav-panel" role="dialog" aria-modal="true" aria-label="Main Navigation Menu" style="position: fixed; top: 0; left: -320px; width: 300px; max-width: 85vw; height: 100vh; background: #ffffff; z-index: 999999; transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 6px 0 24px rgba(0,0,0,0.18); display: flex; flex-direction: column; overflow-y: auto;">
+        
+        <!-- Header with Close Button -->
+        <div style="padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #f1f5f9; background: #f8fafc;">
+          <a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="display: flex; align-items: center;" aria-label="FixFlip.com Home">
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 20px; width: auto; mix-blend-mode: multiply;">
+          </a>
+          <button type="button" id="fd-mobile-nav-close" aria-label="Close Navigation Menu" style="background: none; border: none; cursor: pointer; color: #0f172a; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0;">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- All 9 Navigation Links -->
+        <div class="fd-mobile-nav-links" style="padding: 12px 0; flex: 1;">
+          <!-- 1. Shop (with expandable sub-links) -->
+          <div class="fd-mobile-nav-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+              <a href="/commercial-flooring/" class="fd-mob-link" style="flex: 1; padding: 12px 0; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <span>Shop</span>
+              </a>
+              <button type="button" id="fd-mob-shop-expand" aria-label="Toggle Shop Subcategories" aria-expanded="false" style="width: 44px; height: 44px; background: none; border: none; display: flex; align-items: center; justify-content: center; color: #007bff; cursor: pointer;">
+                <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; transition: transform 0.2s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+            <div id="fd-mob-shop-sublinks" style="display: none; background: #f8fafc; padding: 6px 20px 10px; border-left: 3px solid #007bff; margin: 0 20px 8px;">
+              <a href="/commercial-flooring/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">View All Flooring &rarr;</a>
+              <a href="/category/vinyl-flooring/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Waterproof SPC Vinyl ($3.56/sqft)</a>
+              <a href="/category/hardwood-good/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Good Tier Red Oak ($5.12/sqft)</a>
+              <a href="/category/hardwood-better/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Better Tier White Oak ($5.97/sqft)</a>
+              <?php if ( is_user_logged_in() ) : ?>
+                <a href="/category/hardwood-best/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 700; color: #007bff; text-decoration: none;">Best Tier White Oak ($9.00/sqft) 🔒</a>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <!-- 2. How It Works -->
+          <a href="<?php echo is_front_page() ? '#how-it-works' : home_url('/#how-it-works'); ?>" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            How It Works
+          </a>
+
+          <!-- 3. Financing -->
+          <a href="<?php echo is_front_page() ? '#financing' : home_url('/#financing'); ?>" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            Financing
+          </a>
+
+          <!-- 4. Contractor Desk -->
+          <a href="/member-login/" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            Contractor Desk
+          </a>
+
+          <!-- 5. FAQ -->
+          <a href="<?php echo is_front_page() ? '#faq' : home_url('/#faq'); ?>" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            FAQ
+          </a>
+
+          <!-- 6. Account -->
+          <a href="/member-login/" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 15px; font-weight: 800; color: <?php echo is_user_logged_in() ? '#16a34a' : '#007bff'; ?>; text-decoration: none; border-top: 1px solid #f1f5f9; margin-top: 6px;">
+            <span>Account <?php echo is_user_logged_in() ? '(Active 🔒)' : '(Sign In)'; ?></span>
+            <span style="font-size: 12px; font-weight: 600;">&rarr;</span>
+          </a>
+
+          <!-- 7. Shipping -->
+          <a href="/shipping-delivery/" class="fd-mob-link" style="display: flex; align-items: center; padding: 12px 20px; font-size: 14px; font-weight: 600; color: #475569; text-decoration: none;">
+            Shipping
+          </a>
+
+          <!-- 8. Returns -->
+          <a href="/returns-unopened-box-credit/" class="fd-mob-link" style="display: flex; align-items: center; padding: 12px 20px; font-size: 14px; font-weight: 600; color: #475569; text-decoration: none;">
+            Returns
+          </a>
+
+          <!-- 9. Contact or Order Support -->
+          <a href="tel:9497054300" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; font-size: 14px; font-weight: 700; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9;">
+            <span>Contact or Order Support</span>
+            <span style="font-size: 12px; font-weight: 600;">(949) 705-4300</span>
+          </a>
+        </div>
+
+        <!-- Drawer Footer: CSL Partner Badge -->
+        <div style="padding: 16px 20px; background: #f8fafc; border-top: 1.5px solid #e2e8f0; font-size: 11.5px; color: #64748b;">
+          <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: #64748b; margin-bottom: 6px;">Official Financing Partner</div>
+          <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 15px; width: auto; margin-bottom: 6px; display: block;">
+          <div style="color: #16a34a; font-weight: 700; font-size: 11px;">100% Construction Draw Advances</div>
+        </div>
+      </nav>
+
+      <!-- MOBILE-ONLY COMPACT HEADER ROW (58PX ON MOBILE <= 768PX) -->
+      <div class="mobile-only-header-row">
+        <!-- Left: Hamburger Button -->
+        <button type="button" id="fd-mobile-menu-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="fd-mobile-nav-panel">
+          <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#0f172a;stroke-width:2.2;fill:none;stroke-linecap:round;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+
+        <!-- Center: FixFlip Logo -->
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="mobile-header-logo" aria-label="FixFlip.com Home">
+          <img src="<?php echo get_stylesheet_directory_uri(); ?>/FixFlip-dotCOM_Black.png?v=<?php echo time(); ?>" alt="FixFlip.com" style="height: 22px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
+        </a>
+
+        <!-- Right: Search, Account, Cart Actions -->
+        <div class="mobile-header-actions">
+          <button type="button" id="fd-mobile-search-toggle" aria-label="Search Catalog" aria-expanded="false">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#0f172a;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+          
+          <a href="/member-login/" class="account-link mobile-header-icon-btn" aria-label="<?php echo is_user_logged_in() ? 'Member Account' : 'Member Login'; ?>">
+            <svg viewBox="0 0 24 24" style="width:21px;height:21px;stroke:<?php echo is_user_logged_in() ? '#16a34a' : '#007bff'; ?>;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </a>
+
+          <a href="<?php echo wc_get_cart_url(); ?>" id="fd-mobile-cart-toggle" class="mobile-header-icon-btn" aria-label="View Shopping Cart">
+            <svg viewBox="0 0 24 24" style="width:21px;height:21px;stroke:#007bff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <div class="cart-badge" style="position: absolute; top: 4px; right: 2px; background: #007bff; color: #ffffff; font-size: 10px; font-weight: 900; min-width: 18px; height: 18px; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; line-height: 1; border: 1.5px solid #ffffff;">
+              <?php echo $header_cart_badge; ?>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Expandable Mobile Search Dropdown -->
+      <div id="fd-mobile-search-dropdown" style="display: none; padding: 10px 16px 12px; background: #ffffff; border-bottom: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;">
+        <?php get_product_search_form(); ?>
+      </div>
+
+      <!-- DESKTOP HEADER (TIER 1) -->
       <header class="header-tier-1">
         <!-- Logo & Partner Group (Beside Logo with Text Stacked Above Partner Logo) -->
         <div class="logo-partner-group" style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; position: relative; z-index: 10;">
@@ -881,17 +1129,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
         </div>
       </nav>
-
-      <!-- 4. LENDER PARTNER BAR AT BOTTOM OF HEADER -->
-      <div class="header-partner-bar" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 7px 16px; font-family: Inter, system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 11.5px; color: #475569; z-index: 9998; position: relative;">
-        <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b;">Official Materials Financing Partner:</span>
-        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
-          <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 16px; width: auto; object-fit: contain; display: block;">
-        </a>
-        <span style="color: #cbd5e1; font-weight: 900;">•</span>
-        <span style="color: #16a34a; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 0.5px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background: #16a34a; border-radius: 50%;"></span>
-          Advance materials through your existing loan
-        </span>
-      </div>
       </div><!-- End fd-sticky-header-inner -->

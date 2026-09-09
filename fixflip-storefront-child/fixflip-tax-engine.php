@@ -424,14 +424,23 @@ function fixflip_lookup_zip_tax_rate( $postcode, $state = '', $city = '' ) {
         );
     }
 
-    // Default Fallback: FixFlip Default CA Sales Tax
-    return array(
-        'rate'  => 7.75,
-        'city'  => 'Irvine',
-        'state' => 'CA',
-        'zip'   => '92618',
-        'label' => 'Sales Tax (Irvine, CA 92618 - 7.75%)',
-    );
+    // If no ZIP and no state is provided, do not calculate tax until destination address is entered
+    if ( empty( $clean_zip ) && empty( $state_upper ) ) {
+        return false;
+    }
+
+    // Fallback: If state is CA or unknown US location with ZIP
+    if ( $state_upper === 'CA' ) {
+        return array(
+            'rate'  => 7.25,
+            'city'  => 'California Base',
+            'state' => 'CA',
+            'zip'   => $clean_zip,
+            'label' => 'Sales Tax (California - 7.25%)',
+        );
+    }
+
+    return false;
 }
 
 /**
@@ -444,9 +453,9 @@ function fixflip_sync_checkout_tax_address( $post_data ) {
     if ( empty( $data ) || ! is_array( $data ) ) return;
 
     $ship_diff = ! empty( $data['ship_to_different_address'] );
-    $postcode = '';
-    $state    = '';
-    $city     = '';
+    $postcode  = '';
+    $state     = '';
+    $city      = '';
 
     if ( $ship_diff && ! empty( $data['shipping_postcode'] ) ) {
         $postcode = sanitize_text_field( $data['shipping_postcode'] );
@@ -530,6 +539,11 @@ function fixflip_dynamic_destination_tax_rates( $matched_tax_rates, $args ) {
         $state    = WC()->customer->get_shipping_state() ?: WC()->customer->get_billing_state();
         $city     = WC()->customer->get_shipping_city() ?: WC()->customer->get_billing_city();
         $country  = WC()->customer->get_shipping_country() ?: ( WC()->customer->get_billing_country() ?: 'US' );
+    }
+
+    // If no postcode and no state is provided yet, do not calculate tax
+    if ( empty( $postcode ) && empty( $state ) ) {
+        return array();
     }
 
     if ( ! empty( $country ) && $country !== 'US' ) {

@@ -5,6 +5,25 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
+<?php
+$eligible_materials_total = 0.00;
+$sample_total             = 0.00;
+$has_bulk                 = false;
+
+if ( WC()->cart ) {
+    foreach ( WC()->cart->get_cart() as $ci ) {
+        if ( ! empty( $ci['is_sample'] ) ) {
+            $sample_total += (5.00 * (int) $ci['quantity']);
+        } else {
+            $has_bulk = true;
+            if ( isset( $ci['line_total'] ) ) {
+                $eligible_materials_total += (float) $ci['line_total'];
+            }
+        }
+    }
+}
+$is_csl_eligible = ( $has_bulk && $eligible_materials_total >= 2000.00 );
+?>
 <div class="cart_totals <?php echo ( WC()->customer->has_calculated_shipping() ) ? 'calculated_shipping' : ''; ?>" style="background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
 
     <?php do_action( 'woocommerce_before_cart_totals' ); ?>
@@ -13,9 +32,19 @@ defined( 'ABSPATH' ) || exit;
         <h2 style="font-size: 17px; font-weight: 900; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.8px;">
             Jobsite Order Summary
         </h2>
-        <span style="background: #eff6ff; color: #007bff; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 2px;">
-            CSL ELIGIBLE
-        </span>
+        <?php if ( $is_csl_eligible ) : ?>
+            <span style="background: #eff6ff; color: #007bff; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 2px;">
+                CSL ELIGIBLE
+            </span>
+        <?php elseif ( $has_bulk ) : ?>
+            <span style="background: #f1f5f9; color: #64748b; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 2px;">
+                CARD CHECKOUT
+            </span>
+        <?php else : ?>
+            <span style="background: #f0fdf4; color: #166534; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 2px;">
+                SAMPLE SWATCHES
+            </span>
+        <?php endif; ?>
     </div>
 
     <table cellspacing="0" class="shop_table shop_table_responsive" style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
@@ -90,14 +119,27 @@ defined( 'ABSPATH' ) || exit;
 
     </table>
 
-    <!-- CSL FINANCING CALLOUT -->
-    <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 4px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
-        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: #16a34a; stroke-width: 2.2; fill: none; flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
-        <div style="font-size: 12px; line-height: 1.45; color: #166534;">
-            <strong style="font-weight: 800; display: block; margin-bottom: 2px;">100% CSL Material Draw Eligible</strong>
-            Borrowers can submit this entire order directly for construction draw financing with <strong>$0 cash out-of-pocket</strong> at checkout.
+    <?php if ( $is_csl_eligible ) : ?>
+        <!-- CSL FINANCING CALLOUT -->
+        <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 4px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: #16a34a; stroke-width: 2.2; fill: none; flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+            <div style="font-size: 12px; line-height: 1.45; color: #166534;">
+                <strong style="font-weight: 800; display: block; margin-bottom: 2px;">100% CSL Material Draw Eligible</strong>
+                Borrowers can submit this entire order directly for construction draw financing with <strong>$0 cash out-of-pocket</strong> at checkout.
+            </div>
         </div>
-    </div>
+    <?php elseif ( $has_bulk ) : 
+        $needed = number_format( max( 0, 2000.00 - $eligible_materials_total ), 2 );
+    ?>
+        <!-- Sub-$2,000 Guidance Callout -->
+        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: #007bff; stroke-width: 2.2; fill: none; flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div style="font-size: 12px; line-height: 1.45; color: #334155;">
+                <strong style="font-weight: 800; color: #0f172a; display: block; margin-bottom: 2px;">Credit Card Checkout Available</strong>
+                Pay directly with card, or add <strong>$<?php echo $needed; ?></strong> more in materials to finance via your Center Street Lending loan.
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="wc-proceed-to-checkout" style="margin-bottom: 18px;">
         <?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
