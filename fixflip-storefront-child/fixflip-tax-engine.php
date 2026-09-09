@@ -495,6 +495,11 @@ function fixflip_sync_checkout_tax_address( $post_data ) {
  */
 add_filter( 'woocommerce_find_rates', 'fixflip_dynamic_destination_tax_rates', 99, 2 );
 function fixflip_dynamic_destination_tax_rates( $matched_tax_rates, $args ) {
+    // If Stripe Tax for WooCommerce plugin is active and enabled, let Stripe Tax calculate authoritative rates
+    if ( class_exists( '\Stripe\StripeTaxForWooCommerce\WordPress\Options' ) && \Stripe\StripeTaxForWooCommerce\WordPress\Options::is_live_mode_enabled() ) {
+        return $matched_tax_rates;
+    }
+
     $country  = strtoupper( trim( isset( $args['country'] ) ? $args['country'] : 'US' ) );
     $state    = strtoupper( trim( isset( $args['state'] ) ? $args['state'] : '' ) );
     $postcode = trim( isset( $args['postcode'] ) ? $args['postcode'] : '' );
@@ -560,6 +565,11 @@ function fixflip_dynamic_destination_tax_rates( $matched_tax_rates, $args ) {
 add_filter( 'woocommerce_rate_label', 'fixflip_dynamic_tax_rate_label_output', 99, 2 );
 add_filter( 'woocommerce_rate_code', 'fixflip_dynamic_tax_rate_label_output', 99, 2 );
 function fixflip_dynamic_tax_rate_label_output( $label, $rate_id ) {
+    // If Stripe Tax for WooCommerce plugin is active, preserve its exact jurisdictional labels
+    if ( class_exists( '\Stripe\StripeTaxForWooCommerce\WordPress\Options' ) && \Stripe\StripeTaxForWooCommerce\WordPress\Options::is_live_mode_enabled() ) {
+        return $label;
+    }
+
     if ( ! empty( $GLOBALS['fixflip_active_tax_label'] ) ) {
         return $GLOBALS['fixflip_active_tax_label'];
     }
