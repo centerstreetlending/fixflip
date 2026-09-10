@@ -12,16 +12,79 @@ $is_logged_in = is_user_logged_in();
 <style>
 /* -------------------------------------------------------------
    FIXFLIP INSTITUTIONAL BORROWER FINANCING HOMEPAGE STYLING
-   Atoms & Manors Minimalist Aesthetic (Inter Typography)
+   Alternating Full-Width Section System & Minimalist Aesthetic
 ------------------------------------------------------------- */
 .fd-hp-wrapper {
-    background-color: #f8fafc;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #0f172a;
-    padding-bottom: 80px;
     overflow-x: hidden;
 }
 
+/* FULL-WIDTH SECTION WRAPPERS */
+.fd-hp-section {
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.fd-sec-navy {
+    background-color: #0f172a;
+    color: #ffffff;
+}
+.fd-sec-white {
+    background-color: #ffffff;
+    color: #0f172a;
+}
+.fd-sec-gray {
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+/* SECTION PADDING & RHYTHM (Desktop 64-84px, Mobile 40-48px) */
+.fd-sec-hero {
+    padding: 68px 0 76px 0;
+    border-bottom: 1px solid #1e293b;
+}
+.fd-sec-benefits {
+    padding: 64px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-hiw {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-products {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-financing {
+    padding: 76px 0 84px 0;
+    border-bottom: 1px solid #1e293b;
+}
+.fd-sec-logistics {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-faq {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-cta {
+    padding: 76px 0 84px 0;
+    border-bottom: none;
+}
+
+/* SEAMLESS FOOTER TRANSITION ON HOMEPAGE */
+body.home #colophon {
+    margin-top: 0 !important;
+    border-top: 1px solid #1e293b !important;
+}
+
+/* INNER CONSTRAINED CONTAINER */
 .fd-hp-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -42,13 +105,19 @@ $is_logged_in = is_user_logged_in();
     color: #007bff;
     margin-bottom: 8px;
 }
+.fd-sec-kicker-sky {
+    color: #38bdf8 !important;
+}
 .fd-sec-title {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 900;
     line-height: 1.2;
     letter-spacing: -0.025em;
     color: #0f172a;
     margin: 0 0 10px 0;
+}
+.fd-sec-title-white {
+    color: #ffffff !important;
 }
 .fd-sec-subtitle {
     font-size: 15px;
@@ -56,6 +125,9 @@ $is_logged_in = is_user_logged_in();
     color: #475569;
     margin: 0;
     max-width: 680px;
+}
+.fd-sec-subtitle-slate {
+    color: #94a3b8 !important;
 }
 
 /* BUTTONS */
@@ -78,7 +150,7 @@ $is_logged_in = is_user_logged_in();
 .fd-btn-primary:hover {
     background: #0069d9;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 14px rgba(0, 123, 255, 0.25);
     color: #ffffff !important;
 }
 
@@ -127,16 +199,6 @@ $is_logged_in = is_user_logged_in();
 }
 
 /* 1. HERO SECTION */
-.fd-hero-section {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    color: #ffffff;
-    padding: 56px 48px;
-    margin: 24px 0 28px 0;
-    border-radius: 6px;
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
-}
-
 .fd-hero-grid {
     display: grid;
     grid-template-columns: 1.35fr 1fr;
@@ -163,10 +225,14 @@ $is_logged_in = is_user_logged_in();
 .fd-hero-headline {
     font-size: 44px;
     font-weight: 900;
-    line-height: 1.12;
+    line-height: 1.15;
     letter-spacing: -0.03em;
     color: #ffffff;
     margin: 0 0 18px 0;
+    max-width: 640px;
+}
+.fd-desktop-br {
+    display: inline;
 }
 
 .fd-hero-copy {
@@ -189,7 +255,7 @@ $is_logged_in = is_user_logged_in();
     background: #1e293b;
     border: 1.5px solid #334155;
     border-radius: 6px;
-    padding: 24px;
+    padding: 26px;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
 }
 
@@ -200,6 +266,7 @@ $is_logged_in = is_user_logged_in();
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 .fd-hero-card-kicker {
     font-size: 10px;
@@ -217,6 +284,8 @@ $is_logged_in = is_user_logged_in();
     padding: 3px 8px;
     border-radius: 3px;
     text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
 }
 
 .fd-hero-card-rows {
@@ -243,7 +312,8 @@ $is_logged_in = is_user_logged_in();
 }
 
 .fd-hero-card-footer {
-    background: rgba(15, 23, 42, 0.5);
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(51, 65, 85, 0.6);
     border-radius: 4px;
     padding: 10px 12px;
     font-size: 11.5px;
@@ -255,58 +325,50 @@ $is_logged_in = is_user_logged_in();
 }
 
 /* 2. FOUR KEY BENEFITS STRIP */
-.fd-benefits-strip {
+.fd-benefits-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-bottom: 64px;
+    gap: 20px;
 }
 
 .fd-benefit-card {
     background: #ffffff;
     border: 1.5px solid #e2e8f0;
     border-radius: 6px;
-    padding: 22px 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 24px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .fd-benefit-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
 }
 .fd-benefit-icon {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     background: #eff6ff;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #007bff;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 .fd-benefit-title {
-    font-size: 15px;
+    font-size: 15.5px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 6px 0;
     letter-spacing: -0.015em;
 }
 .fd-benefit-desc {
-    font-size: 12.5px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1.55;
     color: #64748b;
     margin: 0;
 }
 
 /* 3. HOW IT WORKS (5 SIMPLE STEPS) */
-.fd-hiw-section {
-    background: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 48px 40px;
-    margin-bottom: 64px;
-}
-
 .fd-steps-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -315,17 +377,23 @@ $is_logged_in = is_user_logged_in();
 }
 
 .fd-step-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
     border-radius: 6px;
-    padding: 22px 16px;
+    padding: 24px 18px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fd-step-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
 }
 .fd-step-number {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 900;
     color: #007bff;
     background: #eff6ff;
@@ -333,38 +401,35 @@ $is_logged_in = is_user_logged_in();
     border-radius: 3px;
     display: inline-block;
     width: fit-content;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
 }
 .fd-step-icon {
     width: 32px;
     height: 32px;
     color: #0f172a;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 .fd-step-title {
-    font-size: 14px;
+    font-size: 14.5px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 8px 0;
     letter-spacing: -0.015em;
 }
 .fd-step-text {
-    font-size: 12px;
-    line-height: 1.5;
+    font-size: 12.5px;
+    line-height: 1.55;
     color: #64748b;
     margin: 0;
 }
 
 /* 4. FEATURED PRODUCTS SECTION */
-.fd-featured-section {
-    margin-bottom: 64px;
-}
-
 .fd-products-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-    margin-bottom: 32px;
+    gap: 24px;
+    margin-bottom: 36px;
 }
 
 .fd-prod-card {
@@ -374,11 +439,11 @@ $is_logged_in = is_user_logged_in();
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .fd-prod-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
     border-color: #cbd5e1;
 }
 
@@ -386,7 +451,7 @@ $is_logged_in = is_user_logged_in();
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 10;
-    background: #f1f5f9;
+    background: #f5f0ea;
     overflow: hidden;
 }
 .fd-prod-thumb img {
@@ -413,6 +478,7 @@ $is_logged_in = is_user_logged_in();
     text-transform: uppercase;
     padding: 3px 8px;
     border-radius: 3px;
+    z-index: 2;
 }
 
 .fd-prod-body {
@@ -462,7 +528,7 @@ $is_logged_in = is_user_logged_in();
 }
 
 .fd-prod-box-note {
-    font-size: 11px;
+    font-size: 11.5px;
     color: #64748b;
     padding-bottom: 16px;
     margin-bottom: 16px;
@@ -482,11 +548,15 @@ $is_logged_in = is_user_logged_in();
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    padding: 9px 8px;
+    padding: 10px 8px;
     border-radius: 3px;
     text-align: center;
     text-decoration: none;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
 }
 .fd-btn-sample:hover {
     border-color: #0f172a;
@@ -500,40 +570,64 @@ $is_logged_in = is_user_logged_in();
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    padding: 9px 8px;
+    padding: 10px 8px;
     border-radius: 3px;
     text-align: center;
     text-decoration: none;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
 }
 .fd-btn-shop:hover {
     background: #007bff;
     border-color: #007bff;
 }
 
-/* 5. FINANCING EXAMPLE SECTION ("PRESERVE YOUR CASH") */
-.fd-financing-section {
-    background: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 48px;
-    margin-bottom: 64px;
-}
-
+/* 5. FINANCING SECTION ("PRESERVE YOUR CASH") */
 .fd-financing-grid {
     display: grid;
     grid-template-columns: 1fr 1.15fr;
-    gap: 40px;
+    gap: 48px;
     align-items: center;
 }
 
-.fd-fin-example-card {
-    background: #0f172a;
-    border: 1.5px solid #1e293b;
-    border-radius: 6px;
-    padding: 28px;
+.fd-fin-comparison-points {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 28px;
+}
+.fd-fin-point {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.fd-fin-point-icon {
+    width: 20px;
+    height: 20px;
+    color: #38bdf8;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.fd-fin-point-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin: 0;
+}
+.fd-fin-point-text strong {
     color: #ffffff;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+}
+
+.fd-fin-example-card {
+    background: #1e293b;
+    border: 1.5px solid #334155;
+    border-radius: 6px;
+    padding: 30px;
+    color: #ffffff;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
 }
 .fd-fin-card-header {
     border-bottom: 1px solid #334155;
@@ -542,6 +636,7 @@ $is_logged_in = is_user_logged_in();
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 .fd-fin-card-title {
     font-size: 12px;
@@ -590,37 +685,19 @@ $is_logged_in = is_user_logged_in();
     letter-spacing: 0.5px;
 }
 .fd-fin-hl-val {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 900;
     color: #ffffff;
 }
 
-.fd-fin-comparison-points {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 24px;
-}
-.fd-fin-point {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-}
-.fd-fin-point-icon {
-    width: 20px;
-    height: 20px;
-    color: #16a34a;
-    flex-shrink: 0;
-    margin-top: 2px;
-}
-.fd-fin-point-text {
-    font-size: 13.5px;
-    line-height: 1.55;
-    color: #334155;
-    margin: 0;
-}
-.fd-fin-point-text strong {
-    color: #0f172a;
+.fd-fin-disclaimer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(148, 163, 184, 0.25);
+    font-size: 11px;
+    line-height: 1.5;
+    color: #94a3b8;
+    font-style: italic;
 }
 
 /* 6. DELIVERY + RETURNS SECTION */
@@ -628,7 +705,6 @@ $is_logged_in = is_user_logged_in();
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
-    margin-bottom: 64px;
 }
 
 .fd-logistic-card {
@@ -636,12 +712,22 @@ $is_logged_in = is_user_logged_in();
     border: 1.5px solid #e2e8f0;
     border-radius: 6px;
     padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fd-logistic-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
 }
 .fd-logistic-icon {
     width: 44px;
     height: 44px;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
+    background: #eff6ff;
+    border: 1.5px solid #dbeafe;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -660,7 +746,7 @@ $is_logged_in = is_user_logged_in();
     font-size: 14px;
     line-height: 1.6;
     color: #475569;
-    margin: 0 0 18px 0;
+    margin: 0 0 20px 0;
 }
 .fd-logistic-list {
     list-style: none;
@@ -668,117 +754,46 @@ $is_logged_in = is_user_logged_in();
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    margin-top: auto;
 }
 .fd-logistic-list li {
     font-size: 13px;
     color: #334155;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 10px;
     font-weight: 600;
+    line-height: 1.45;
 }
 .fd-logistic-list li svg {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     color: #16a34a;
     flex-shrink: 0;
+    margin-top: 2px;
 }
 
-/* 7. WHY FIXFLIP / CENTER STREET LENDING TRUST SECTION */
-.fd-trust-section {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 6px;
-    padding: 48px;
-    color: #ffffff;
-    margin-bottom: 64px;
-}
-
-.fd-trust-header {
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto 40px auto;
-}
-.fd-trust-kicker {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #38bdf8;
-    margin-bottom: 8px;
-    display: inline-block;
-}
-.fd-trust-title {
-    font-size: 28px;
-    font-weight: 900;
-    color: #ffffff;
-    margin: 0 0 12px 0;
-    letter-spacing: -0.025em;
-}
-.fd-trust-subtitle {
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: #94a3b8;
-    margin: 0;
-}
-
-.fd-trust-pillars {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-.fd-trust-pillar {
-    background: #1e293b;
-    border: 1.5px solid #334155;
-    border-radius: 6px;
-    padding: 24px 20px;
-}
-.fd-trust-num {
-    font-size: 12px;
-    font-weight: 900;
-    color: #38bdf8;
-    margin-bottom: 10px;
-}
-.fd-trust-pillar-title {
-    font-size: 16px;
-    font-weight: 800;
-    color: #ffffff;
-    margin: 0 0 8px 0;
-    letter-spacing: -0.015em;
-}
-.fd-trust-pillar-desc {
-    font-size: 12.5px;
-    line-height: 1.55;
-    color: #94a3b8;
-    margin: 0;
-}
-
-/* 8. BORROWER FAQ ACCORDION */
-.fd-faq-section {
-    background: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 44px;
-    margin-bottom: 64px;
-}
-
+/* 7. BORROWER FAQ ACCORDION */
 .fd-faq-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 .fd-faq-item {
     border: 1px solid #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
     transition: border-color 0.15s ease;
+    background: #ffffff;
 }
 .fd-faq-item:hover {
     border-color: #cbd5e1;
 }
 .fd-faq-q {
-    padding: 16px 20px;
+    padding: 18px 20px;
     background: #f8fafc;
     display: flex;
     justify-content: space-between;
@@ -788,19 +803,21 @@ $is_logged_in = is_user_logged_in();
     font-size: 14.5px;
     font-weight: 800;
     color: #0f172a;
+    gap: 16px;
 }
 .fd-faq-icon {
     font-size: 18px;
     font-weight: 900;
     color: #007bff;
     transition: transform 0.2s ease;
+    flex-shrink: 0;
 }
 .fd-faq-a {
     display: none;
-    padding: 16px 20px;
+    padding: 18px 20px;
     background: #ffffff;
     font-size: 13.5px;
-    line-height: 1.6;
+    line-height: 1.65;
     color: #475569;
     border-top: 1px solid #f1f5f9;
 }
@@ -808,27 +825,25 @@ $is_logged_in = is_user_logged_in();
     display: block;
 }
 
-/* 9. BOTTOM CONVERSION BANNER */
-.fd-cta-banner {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 6px;
-    padding: 48px;
+/* 8. BOTTOM CONVERSION BANNER */
+.fd-cta-wrapper {
     text-align: center;
-    color: #ffffff;
+    max-width: 800px;
+    margin: 0 auto;
 }
 .fd-cta-title {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 900;
     color: #ffffff;
-    margin: 0 0 12px 0;
+    margin: 0 0 14px 0;
     letter-spacing: -0.025em;
+    line-height: 1.2;
 }
 .fd-cta-desc {
-    font-size: 15px;
+    font-size: 16px;
     color: #94a3b8;
-    max-width: 600px;
-    margin: 0 auto 28px auto;
+    max-width: 620px;
+    margin: 0 auto 30px auto;
     line-height: 1.6;
 }
 .fd-cta-actions {
@@ -836,10 +851,10 @@ $is_logged_in = is_user_logged_in();
     justify-content: center;
     gap: 14px;
     flex-wrap: wrap;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
 }
 .fd-cta-support {
-    font-size: 12px;
+    font-size: 13px;
     color: #64748b;
 }
 .fd-cta-support a {
@@ -847,24 +862,26 @@ $is_logged_in = is_user_logged_in();
     text-decoration: none;
     font-weight: 700;
 }
+.fd-cta-support a:hover {
+    text-decoration: underline;
+}
 
 /* Anchor smooth scrolling offset for sticky header */
 #how-it-works,
 #featured-products,
 #financing,
 #delivery-returns,
-#trust,
 #faq {
-    scroll-margin-top: 72px;
+    scroll-margin-top: 80px;
 }
 
 /* RESPONSIVE BREAKPOINTS */
 @media (max-width: 1024px) {
     .fd-hero-grid {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 36px;
     }
-    .fd-benefits-strip {
+    .fd-benefits-grid {
         grid-template-columns: repeat(2, 1fr);
     }
     .fd-steps-grid {
@@ -875,26 +892,36 @@ $is_logged_in = is_user_logged_in();
     }
     .fd-financing-grid {
         grid-template-columns: 1fr;
-        gap: 32px;
-    }
-    .fd-trust-pillars {
-        grid-template-columns: repeat(2, 1fr);
+        gap: 36px;
     }
 }
 
 @media (max-width: 768px) {
-    .fd-hero-section {
-        margin: 12px 0 20px 0 !important;
-        padding: 28px 18px !important;
-        border-radius: 4px !important;
+    .fd-hp-container {
+        padding: 0 20px !important;
+    }
+    .fd-sec-hero {
+        padding: 40px 0 44px 0 !important;
+    }
+    .fd-sec-benefits,
+    .fd-sec-hiw,
+    .fd-sec-products,
+    .fd-sec-financing,
+    .fd-sec-logistics,
+    .fd-sec-faq,
+    .fd-sec-cta {
+        padding: 44px 0 !important;
     }
     .fd-hero-headline {
-        font-size: 27px !important;
+        font-size: 28px !important;
         line-height: 1.22 !important;
         letter-spacing: -0.02em !important;
         word-break: keep-all !important;
         hyphens: none !important;
         margin-bottom: 14px !important;
+    }
+    .fd-desktop-br {
+        display: none !important;
     }
     .fd-hero-copy {
         font-size: 14px !important;
@@ -914,7 +941,7 @@ $is_logged_in = is_user_logged_in();
         min-height: 48px !important;
     }
     .fd-hero-card {
-        padding: 18px !important;
+        padding: 20px !important;
     }
     .fd-sec-title {
         font-size: 24px !important;
@@ -927,19 +954,28 @@ $is_logged_in = is_user_logged_in();
     .fd-btn-outline-white {
         min-height: 44px !important;
     }
+    .fd-cta-title {
+        font-size: 26px !important;
+    }
+    .fd-cta-desc {
+        font-size: 14px !important;
+    }
+    .fd-cta-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .fd-cta-actions a {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        padding: 14px 20px !important;
+        min-height: 48px !important;
+    }
 }
 
 @media (max-width: 640px) {
-    .fd-hero-section {
-        padding: 24px 16px !important;
-    }
-    .fd-hero-headline {
-        font-size: 25px !important;
-    }
-    .fd-hero-copy {
-        font-size: 14px !important;
-    }
-    .fd-benefits-strip {
+    .fd-benefits-grid {
         grid-template-columns: 1fr !important;
     }
     .fd-steps-grid {
@@ -948,6 +984,7 @@ $is_logged_in = is_user_logged_in();
     .fd-products-grid {
         grid-template-columns: 1fr !important;
     }
+    /* Mobile: show 3 top products only, rest accessible via full catalog CTA */
     .fd-products-grid .fd-prod-card:nth-child(n+4) {
         display: none !important;
     }
@@ -960,35 +997,28 @@ $is_logged_in = is_user_logged_in();
     .fd-logistics-grid {
         grid-template-columns: 1fr !important;
     }
-    .fd-trust-pillars {
-        grid-template-columns: 1fr !important;
+    .fd-logistic-card {
+        padding: 24px 20px !important;
     }
-    .fd-trust-section,
-    .fd-financing-section,
-    .fd-hiw-section,
-    .fd-faq-section,
-    .fd-cta-banner {
-        padding: 28px 16px !important;
+    .fd-fin-example-card {
+        padding: 20px !important;
     }
 }
 
 @media (max-width: 480px) {
-    .fd-hp-container {
-        padding: 0 12px !important;
-    }
     .fd-hero-headline {
-        font-size: 23px !important;
+        font-size: 24px !important;
     }
 }
 </style>
 
 <div class="fd-hp-wrapper">
-    <div class="fd-hp-container">
 
-        <!-- =============================================================
-             1. HERO SECTION
-        ============================================================== -->
-        <section class="fd-hero-section">
+    <!-- =============================================================
+         1. HERO SECTION (FULL-WIDTH NAVY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-navy fd-sec-hero">
+        <div class="fd-hp-container">
             <div class="fd-hero-grid">
                 <div>
                     <div class="fd-hero-partner-pill">
@@ -997,7 +1027,7 @@ $is_logged_in = is_user_logged_in();
                     </div>
 
                     <h1 class="fd-hero-headline">
-                        Buy Your Materials Without Using Your Cash
+                        Buy Your Materials<br class="fd-desktop-br"> Without Using Your Cash
                     </h1>
 
                     <p class="fd-hero-copy">
@@ -1019,7 +1049,7 @@ $is_logged_in = is_user_logged_in();
                 <div class="fd-hero-card">
                     <div class="fd-hero-card-header">
                         <span class="fd-hero-card-kicker">CSL Material Advance</span>
-                        <span class="fd-hero-card-badge">Zero Cash Required</span>
+                        <span class="fd-hero-card-badge">Approved CSL Advances</span>
                     </div>
 
                     <div class="fd-hero-card-rows">
@@ -1032,7 +1062,7 @@ $is_logged_in = is_user_logged_in();
                             <span class="fd-hero-card-val">Matched to Existing Loan Rate</span>
                         </div>
                         <div class="fd-hero-card-row">
-                            <span class="fd-hero-card-label">Material Cash Needed Today</span>
+                            <span class="fd-hero-card-label">Material Cash at Checkout</span>
                             <span class="fd-hero-card-val" style="color: #4ade80; font-size: 15px;">$0.00</span>
                         </div>
                         <div class="fd-hero-card-row" style="border-bottom: none;">
@@ -1043,57 +1073,63 @@ $is_logged_in = is_user_logged_in();
 
                     <div class="fd-hero-card-footer">
                         <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#38bdf8;stroke-width:2.2;fill:none;flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        <span>Advance remains tied to your existing loan until payoff.</span>
+                        <span>Advance tied to your active CSL renovation loan until final project payoff.</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             2. FOUR KEY BENEFITS (DIRECTLY UNDER HERO)
-        ============================================================== -->
-        <section class="fd-benefits-strip">
-            <!-- Benefit 1 -->
-            <div class="fd-benefit-card">
-                <div class="fd-benefit-icon">
-                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+    <!-- =============================================================
+         2. FOUR KEY BENEFITS (FULL-WIDTH WHITE)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-white fd-sec-benefits">
+        <div class="fd-hp-container">
+            <div class="fd-benefits-grid">
+                <!-- Benefit 1 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">Same Loan Rate</h3>
+                    <p class="fd-benefit-desc">Pay the same interest rate already on your CSL loan. No separate markups or surprise loan fees.</p>
                 </div>
-                <h3 class="fd-benefit-title">Same Loan Rate</h3>
-                <p class="fd-benefit-desc">Pay the same interest rate already on your CSL loan. No separate markups or surprise loan fees.</p>
-            </div>
 
-            <!-- Benefit 2 -->
-            <div class="fd-benefit-card">
-                <div class="fd-benefit-icon">
-                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                <!-- Benefit 2 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="10" y1="10" x2="23" y2="10"></line></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">No Material Cash Upfront</h3>
+                    <p class="fd-benefit-desc">$0 out-of-pocket required to order your renovation finishes. Keep cash available for labor.</p>
                 </div>
-                <h3 class="fd-benefit-title">No Material Cash Upfront</h3>
-                <p class="fd-benefit-desc">$0 out-of-pocket required to order your renovation finishes. Keep cash available for labor.</p>
-            </div>
 
-            <!-- Benefit 3 -->
-            <div class="fd-benefit-card">
-                <div class="fd-benefit-icon">
-                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <!-- Benefit 3 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">Direct Jobsite Delivery</h3>
+                    <p class="fd-benefit-desc">Scheduled commercial freight with liftgate and pallet jack unloading directly to your project.</p>
                 </div>
-                <h3 class="fd-benefit-title">Direct Jobsite Delivery</h3>
-                <p class="fd-benefit-desc">Scheduled commercial freight with liftgate and pallet jack unloading directly to your project.</p>
-            </div>
 
-            <!-- Benefit 4 -->
-            <div class="fd-benefit-card">
-                <div class="fd-benefit-icon">
-                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                <!-- Benefit 4 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">Unopened Box Credits</h3>
+                    <p class="fd-benefit-desc">Return extra unopened cartons per published policy so you aren’t stuck paying for unused materials.</p>
                 </div>
-                <h3 class="fd-benefit-title">Unopened Box Credits</h3>
-                <p class="fd-benefit-desc">Return eligible unopened boxes for credit so you aren’t stuck paying for material your project didn’t use.</p>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             3. HOW IT WORKS (5 SIMPLE STEPS)
-        ============================================================== -->
-        <section class="fd-hiw-section" id="how-it-works">
+    <!-- =============================================================
+         3. HOW IT WORKS (FULL-WIDTH LIGHT GRAY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-gray fd-sec-hiw" id="how-it-works">
+        <div class="fd-hp-container">
             <div class="fd-sec-header" style="text-align: center; max-width: 680px; margin: 0 auto 40px auto;">
                 <span class="fd-sec-kicker">BORROWER WORKFLOW</span>
                 <h2 class="fd-sec-title">How It Works</h2>
@@ -1112,7 +1148,7 @@ $is_logged_in = is_user_logged_in();
                 <!-- Step 2 -->
                 <div class="fd-step-card">
                     <span class="fd-step-number">STEP 02</span>
-                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="10" y1="10" x2="23" y2="10"></line></svg>
                     <h4 class="fd-step-title">2. FixFlip Advances the Cost</h4>
                     <p class="fd-step-text">Eligible purchases are advanced through your existing loan at the same interest rate.</p>
                 </div>
@@ -1141,12 +1177,14 @@ $is_logged_in = is_user_logged_in();
                     <p class="fd-step-text">The advance remains tied to your existing loan until payoff at final project sale.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             4. FEATURED PRODUCTS (TOP 4–6 HIGH-DEMAND PLANKS)
-        ============================================================== -->
-        <section class="fd-featured-section" id="featured-products">
+    <!-- =============================================================
+         4. FEATURED PRODUCTS (FULL-WIDTH WHITE)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-white fd-sec-products" id="featured-products">
+        <div class="fd-hp-container">
             <div class="fd-sec-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
                 <div>
                     <span class="fd-sec-kicker">CURATED FINISHES</span>
@@ -1331,22 +1369,24 @@ $is_logged_in = is_user_logged_in();
             </div>
 
             <!-- Central Full Catalog Link -->
-            <div style="text-align: center; margin-top: 24px;">
+            <div style="text-align: center;">
                 <a href="/commercial-flooring/" class="fd-btn-primary fd-catalog-cta-btn" style="padding: 14px 32px; min-height: 44px;">
                     <span>View Full Catalog (16 Planks) &rarr;</span>
                 </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             5. FINANCING EXAMPLE SECTION ("PRESERVE YOUR CASH")
-        ============================================================== -->
-        <section class="fd-financing-section" id="financing">
+    <!-- =============================================================
+         5. FINANCING SECTION ("PRESERVE YOUR CASH" - FULL-WIDTH NAVY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-navy fd-sec-financing" id="financing">
+        <div class="fd-hp-container">
             <div class="fd-financing-grid">
                 <div>
-                    <span class="fd-sec-kicker">CAPITAL PRESERVATION</span>
-                    <h2 class="fd-sec-title">Preserve Your Cash</h2>
-                    <p class="fd-sec-subtitle">
+                    <span class="fd-sec-kicker fd-sec-kicker-sky">CAPITAL PRESERVATION</span>
+                    <h2 class="fd-sec-title fd-sec-title-white">Preserve Your Cash</h2>
+                    <p class="fd-sec-subtitle fd-sec-subtitle-slate">
                         Instead of paying for materials out of pocket, use the financing already available through your project.
                     </p>
 
@@ -1401,112 +1441,89 @@ $is_logged_in = is_user_logged_in();
                         </div>
                         <div class="fd-fin-hl-val">$0</div>
                     </div>
+
+                    <div class="fd-fin-disclaimer">
+                        Illustrative example only. Eligibility, available loan funds, rates, and approval are subject to the borrower’s existing loan terms.
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             6. DELIVERY + RETURNS SECTION
-        ============================================================== -->
-        <section class="fd-logistics-grid" id="delivery-returns">
-            <!-- Delivery -->
-            <div class="fd-logistic-card">
-                <div class="fd-logistic-icon">
-                    <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                </div>
-                <h3 class="fd-logistic-title">Direct Jobsite Delivery</h3>
-                <p class="fd-logistic-copy">
-                    FixFlip coordinates delivery directly to your project, including pallet-jack unloading where available. Delivery pricing should be shown clearly before checkout and should not appear as a surprise charge.
-                </p>
-                <ul class="fd-logistic-list">
-                    <li>
-                        <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Scheduled curbside freight directly to your active jobsite</span>
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Hydraulic liftgate and electric pallet jack equipment included</span>
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>100% transparent freight quotes presented prior to order submit</span>
-                    </li>
-                </ul>
+    <!-- =============================================================
+         6. DELIVERY + RETURNS SECTION (FULL-WIDTH LIGHT GRAY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-gray fd-sec-logistics" id="delivery-returns">
+        <div class="fd-hp-container">
+            <div class="fd-sec-header" style="text-align: center; max-width: 680px; margin: 0 auto 40px auto;">
+                <span class="fd-sec-kicker">LOGISTICS & PEACE OF MIND</span>
+                <h2 class="fd-sec-title">Delivery & Returns</h2>
+                <p class="fd-sec-subtitle" style="margin: 0 auto;">Reliable jobsite freight and straightforward return policies designed for renovation schedules.</p>
             </div>
 
-            <!-- Returns -->
-            <div class="fd-logistic-card">
-                <div class="fd-logistic-icon">
-                    <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-                </div>
-                <h3 class="fd-logistic-title">Ordered Extra? No Problem.</h3>
-                <p class="fd-logistic-copy">
-                    Eligible unopened boxes can be returned for credit, so you aren’t stuck paying for material your project didn’t use.
-                </p>
-                <ul class="fd-logistic-list">
-                    <li>
-                        <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Order adequate 10% waste contingency with zero anxiety</span>
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Full, factory-sealed unopened cartons are eligible for credit</span>
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Credit credited back against your material advance balance</span>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- =============================================================
-             7. WHY FIXFLIP / CENTER STREET LENDING TRUST SECTION
-        ============================================================== -->
-        <section class="fd-trust-section" id="trust">
-            <div class="fd-trust-header">
-                <span class="fd-trust-kicker">LENDING INTEGRATION</span>
-                <h2 class="fd-trust-title">Designed Around Center Street Lending Borrowers</h2>
-                <p class="fd-trust-subtitle">
-                    FixFlip was built to eliminate the liquidity strain, retail markups, and draw lag common in residential renovation financing. We communicate four core ideas:
-                </p>
-            </div>
-
-            <div class="fd-trust-pillars">
-                <!-- Pillar 1 -->
-                <div class="fd-trust-pillar">
-                    <div class="fd-trust-num">01</div>
-                    <h4 class="fd-trust-pillar-title">Buy below retail.</h4>
-                    <p class="fd-trust-pillar-desc">Contractor-direct pricing on commercial SPC vinyl and engineered hardwood without retail middlemen markups.</p>
+            <div class="fd-logistics-grid">
+                <!-- Delivery -->
+                <div class="fd-logistic-card">
+                    <div class="fd-logistic-icon">
+                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                    <h3 class="fd-logistic-title">Direct Jobsite Delivery</h3>
+                    <p class="fd-logistic-copy">
+                        FixFlip coordinates delivery directly to your project. Delivery pricing is calculated transparently before checkout so there are no surprise freight fees.
+                    </p>
+                    <ul class="fd-logistic-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Scheduled curbside delivery directly to your active jobsite</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Delivery equipment includes liftgate and pallet jack where site conditions permit (paved, level surface required)</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>100% transparent freight quotes presented prior to order submission</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Pillar 2 -->
-                <div class="fd-trust-pillar">
-                    <div class="fd-trust-num">02</div>
-                    <h4 class="fd-trust-pillar-title">Use your existing loan.</h4>
-                    <p class="fd-trust-pillar-desc">Advance materials through your active Center Street Lending loan at the same interest rate you're already paying.</p>
-                </div>
-
-                <!-- Pillar 3 -->
-                <div class="fd-trust-pillar">
-                    <div class="fd-trust-num">03</div>
-                    <h4 class="fd-trust-pillar-title">Keep your cash.</h4>
-                    <p class="fd-trust-pillar-desc">Preserve liquid bank funds for contractor payroll, unexpected structural items, and daily project operations.</p>
-                </div>
-
-                <!-- Pillar 4 -->
-                <div class="fd-trust-pillar">
-                    <div class="fd-trust-num">04</div>
-                    <h4 class="fd-trust-pillar-title">We deliver it to the job.</h4>
-                    <p class="fd-trust-pillar-desc">Scheduled curbside freight delivery directly to your jobsite with liftgate and pallet-jack unloading included.</p>
+                <!-- Returns -->
+                <div class="fd-logistic-card">
+                    <div class="fd-logistic-icon">
+                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                    </div>
+                    <h3 class="fd-logistic-title">Ordered Extra? Return Unopened Cartons</h3>
+                    <p class="fd-logistic-copy">
+                        Undamaged, unopened cartons in their original factory packaging may be returned for project credit in accordance with our published return policy.
+                    </p>
+                    <ul class="fd-logistic-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Order adequate 10% contingency with confidence</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Full, factory-sealed unopened cartons are eligible for credit</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Returns subject to published policy terms, return freight, and restocking guidelines</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Approved credit is applied back against your material advance balance</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             8. BORROWER FAQ SECTION
-        ============================================================== -->
-        <section class="fd-faq-section" id="faq">
+    <!-- =============================================================
+         7. BORROWER FAQ SECTION (FULL-WIDTH WHITE)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-white fd-sec-faq" id="faq">
+        <div class="fd-hp-container">
             <div class="fd-sec-header" style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
                 <span class="fd-sec-kicker">BORROWER QUESTIONS</span>
                 <h2 class="fd-sec-title">Frequently Asked Questions</h2>
@@ -1554,7 +1571,7 @@ $is_logged_in = is_user_logged_in();
                         <span class="fd-faq-icon">+</span>
                     </div>
                     <div class="fd-faq-a">
-                        Orders are shipped via commercial freight carrier directly to your project within 1 week of advance authorization. Delivery trucks arrive equipped with hydraulic liftgates and pallet jacks to unload pallets directly to the curbside or driveway. Delivery fees are shown clearly before checkout with no surprise charges.
+                        Orders are shipped via commercial freight carrier directly to your project within 1 week of advance authorization. Delivery trucks arrive equipped with hydraulic liftgates and pallet jacks to unload pallets directly to the curbside or driveway where paved, level surface conditions permit. Delivery fees are shown clearly before checkout with no surprise charges.
                     </div>
                 </div>
 
@@ -1565,7 +1582,7 @@ $is_logged_in = is_user_logged_in();
                         <span class="fd-faq-icon">+</span>
                     </div>
                     <div class="fd-faq-a">
-                        We encourage ordering a 10% waste contingency. If you finish your project with extra, undamaged, unopened cartons in their original packaging, you can return them for project credit applied directly against your advance balance.
+                        We encourage ordering an adequate 10% waste contingency. If you finish your project with extra, undamaged, unopened cartons in their original packaging, you can return them in accordance with our published return policy terms, with approved credit applied directly against your advance balance.
                     </div>
                 </div>
 
@@ -1580,31 +1597,36 @@ $is_logged_in = is_user_logged_in();
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- =============================================================
-             9. BOTTOM INSTITUTIONAL CONVERSION BANNER
-        ============================================================== -->
-        <section class="fd-cta-banner">
-            <h2 class="fd-cta-title">Buy Your Materials Without Using Your Cash</h2>
-            <p class="fd-cta-desc">
-                Advance eligible renovation materials through your existing Center Street Lending loan today.
-            </p>
-            <div class="fd-cta-actions">
-                <a href="/commercial-flooring/" class="fd-btn-primary">
-                    <span>Shop Materials</span>
-                    <span>&rarr;</span>
-                </a>
-                <a href="#how-it-works" class="fd-btn-outline-white">
-                    <span>How It Works</span>
-                </a>
+    <!-- =============================================================
+         8. BOTTOM CONVERSION BANNER (FULL-WIDTH NAVY, FLOWS INTO FOOTER)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-navy fd-sec-cta">
+        <div class="fd-hp-container">
+            <div class="fd-cta-wrapper">
+                <span class="fd-sec-kicker fd-sec-kicker-sky" style="margin-bottom: 12px;">GET STARTED TODAY</span>
+                <h2 class="fd-cta-title">Buy Your Materials Without Using Your Cash</h2>
+                <p class="fd-cta-desc">
+                    Advance eligible renovation materials through your existing Center Street Lending loan today.
+                </p>
+                <div class="fd-cta-actions">
+                    <a href="/commercial-flooring/" class="fd-btn-primary">
+                        <span>Shop Materials</span>
+                        <span>&rarr;</span>
+                    </a>
+                    <a href="#how-it-works" class="fd-btn-outline-white">
+                        <span>How It Works</span>
+                    </a>
+                </div>
+                <div class="fd-cta-support">
+                    Contractor Support &bull; <a href="tel:9497054300">(949) 705-4300</a> &bull; <a href="mailto:support@fixflip.com">support@fixflip.com</a>
+                </div>
             </div>
-            <div class="fd-cta-support">
-                Contractor Support &bull; <a href="tel:9497054300">(949) 705-4300</a> &bull; <a href="mailto:support@fixflip.com">support@fixflip.com</a>
-            </div>
-        </section>
+        </div>
+    </section>
 
-    </div>
 </div>
 
 <!-- =============================================================

@@ -173,32 +173,18 @@
             box-sizing: border-box;
         }
 
-        /* Top Announcement Bar Mobile Polish */
-        .top-header-wrapper > div:first-child {
-            padding: 8px 14px !important;
-            font-size: 11.5px !important;
-            flex-wrap: wrap !important;
-            gap: 6px !important;
-            line-height: 1.3 !important;
-            text-align: center !important;
-            justify-content: center !important;
-        }
-        .top-header-wrapper > div:first-child span:first-child {
-            font-size: 8.5px !important;
-            padding: 2px 6px !important;
-        }
-
-        /* Center Street Partner Bar - visible at top, scrolls away */
-        .header-partner-bar {
-            flex-wrap: wrap !important;
-            justify-content: center !important;
+        /* Consolidated Announcement Bar Mobile Polish */
+        .fd-combined-announcement-bar {
             padding: 8px 12px !important;
-            gap: 6px 10px !important;
             font-size: 11px !important;
+            line-height: 1.35 !important;
             text-align: center !important;
+            justify-content: center !important;
+            gap: 4px 8px !important;
         }
-        .header-partner-bar img {
-            height: 14px !important;
+        .fd-combined-announcement-bar span span:first-child {
+            font-size: 8px !important;
+            padding: 2px 5px !important;
         }
 
         /* Cart Drawer Full-Width Sheet on Mobile */
@@ -564,27 +550,19 @@
     
     <!-- Top Navigation -->
     <div class="top-header-wrapper">
-      <!-- Announcement Bar (CSL Borrowers) -->
-      <div style="background: #0f172a; color: #ffffff; padding: 10px 32px; font-size: 13px; font-weight: 800; letter-spacing: 0.8px; box-sizing: border-box; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <span style="background: #007bff; color: #ffffff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 0px; letter-spacing: 0.5px; text-transform: uppercase;">CENTER STREET LENDING BORROWERS</span>
-        <span>Advance materials through your existing Center Street Lending loan.</span>
-        <a href="<?php echo is_front_page() ? '#how-it-works' : home_url('/#how-it-works'); ?>" style="color: #60a5fa; text-decoration: underline; margin-left: 6px; font-weight: 800;">Learn How &rarr;</a>
-      </div>
-      
-      <!-- Lender Partner Bar (Visible near top of page, scrolls off on both desktop & mobile) -->
-      <div class="header-partner-bar" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 7px 16px; font-family: Inter, system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 11.5px; color: #475569; z-index: 9998; position: relative;">
-        <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #64748b;">Official Materials Financing Partner:</span>
-        <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
-          <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/center_street_lending_logo.svg?v=<?php echo time(); ?>" alt="Center Street Lending" style="height: 16px; width: auto; object-fit: contain; display: block;">
-        </a>
-        <span style="color: #cbd5e1; font-weight: 900;">•</span>
-        <span style="color: #16a34a; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 0.5px;">
-          <span style="display: inline-block; width: 6px; height: 6px; background: #16a34a; border-radius: 50%;"></span>
-          Advance materials through your existing loan
+      <!-- Consolidated Single Announcement Bar (CSL Borrowers) -->
+      <div class="fd-combined-announcement-bar" style="background: #0f172a; color: #ffffff; padding: 10px 24px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.2px; box-sizing: border-box; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; line-height: 1.4; border-bottom: 1px solid #1e293b;">
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: #ffffff;">
+          <span style="background: #007bff; color: #ffffff; font-size: 9px; font-weight: 900; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.6px; text-transform: uppercase;">PARTNER ADVANCE</span>
+          <span>Center Street Lending Borrowers &mdash; Advance eligible materials through your existing renovation loan.</span>
         </span>
+        <a href="<?php echo is_front_page() ? '#how-it-works' : home_url('/#how-it-works'); ?>" style="color: #38bdf8; text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s ease;" onmouseover="this.style.color='#7dd3fc'" onmouseout="this.style.color='#38bdf8'">
+          <span>Learn How</span>
+          <span style="font-size: 14px;">&rarr;</span>
+        </a>
       </div>
 
-      <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT & PARTNER BARS SCROLL AWAY) -->
+      <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT BAR SCROLLS AWAY) -->
       <div class="fd-sticky-header-inner" id="fd-sticky-header-inner" style="background-color: #f2f2f2 !important; border-bottom: 1px solid #e5e5e5; width: 100%; transition: box-shadow 0.2s ease;">
       
       <!-- Tier 0 Navigation Removed -->
@@ -901,10 +879,15 @@ document.addEventListener('DOMContentLoaded', function() {
             Returns
           </a>
 
-          <!-- 9. Contact or Order Support -->
-          <a href="tel:9497054300" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; font-size: 14px; font-weight: 700; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9; gap: 8px; flex-wrap: nowrap;">
-            <span style="white-space: nowrap;">Order Support</span>
-            <span style="font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0;">(949) 705-4300</span>
+          <!-- 9. Order Support -->
+          <a href="tel:9497054300" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; text-decoration: none; border-bottom: 1px solid #f1f5f9; min-height: 52px; box-sizing: border-box;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">Order Support</span>
+              <span style="font-size: 14px; font-weight: 800; color: #007bff; letter-spacing: -0.01em;">(949) 705-4300</span>
+            </div>
+            <div style="width: 34px; height: 34px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #007bff; flex-shrink: 0;">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:2.2;fill:none;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
           </a>
         </div>
 

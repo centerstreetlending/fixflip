@@ -1295,4 +1295,42 @@ div:has(> label > span > input[data-filter-type="feature"]),
     }
 }
 
+/* ==========================================================================
+   HOMEPAGE FULL-WIDTH SECTION SYSTEM & SEAMLESS TRANSITIONS
+   ========================================================================== */
+.fd-hp-section {
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.fd-sec-navy {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+
+.fd-sec-white {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+.fd-sec-gray {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+/* Ensure smooth scrolling & header clearance on target sections */
+html {
+    scroll-behavior: smooth;
+}
+
+#how-it-works,
+#featured-products,
+#financing,
+#delivery-returns,
+#faq {
+    scroll-margin-top: 80px !important;
+}
+
+
 
