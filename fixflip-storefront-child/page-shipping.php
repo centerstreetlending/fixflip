@@ -49,8 +49,8 @@ get_header();
                         </div>
                         <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 4px; padding: 18px;">
                             <div style="font-size: 12px; font-weight: 800; color: #64748b; text-transform: uppercase;">Sample Swatch Parcel (USPS)</div>
-                            <div style="font-size: 20px; font-weight: 900; color: #16a34a; margin: 4px 0;">Free ($15.00 / 3 Samples)</div>
-                            <div style="font-size: 13px; color: #64748b;">Free sample swatches ($0.00). Fixed $15.00 shipping per package of 3 samples via USPS Ground Advantage.</div>
+                            <div style="font-size: 20px; font-weight: 900; color: #16a34a; margin: 4px 0;">Free ($15 Shipping / Up to 3)</div>
+                            <div style="font-size: 13px; color: #64748b;">Free sample swatches • $15 shipping per package of up to 3 via USPS Ground Advantage.</div>
                         </div>
                     </div>
                 </section>

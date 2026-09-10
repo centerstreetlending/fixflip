@@ -631,7 +631,10 @@ function fixflip_get_product_carton_price( $product ) {
 add_action( 'woocommerce_before_calculate_totals', 'fixflip_calculate_box_cart_price', 99, 1 );
 function fixflip_calculate_box_cart_price( $cart ) {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
-    if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 ) return;
+    
+    static $calculating = false;
+    if ( $calculating ) return;
+    $calculating = true;
 
     foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
         $product = $cart_item['data'];
@@ -652,6 +655,8 @@ function fixflip_calculate_box_cart_price( $cart ) {
             $product->set_price( $price_per_box );
         }
     }
+
+    $calculating = false;
 }
 
 // 1. Add Custom Fields to Product Data
@@ -698,7 +703,7 @@ add_filter( 'woocommerce_add_cart_item_data', 'fixflip_add_cart_item_data', 10, 
 function fixflip_add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
     if ( ( isset( $_POST['is_sample'] ) && $_POST['is_sample'] === '1' ) || ( isset( $_REQUEST['is_sample'] ) && $_REQUEST['is_sample'] == '1' ) ) {
         $cart_item_data['is_sample'] = true;
-        $cart_item_data['unique_key'] = md5( $product_id . '_sample_' . microtime() );
+        $cart_item_data['unique_key'] = md5( $product_id . '_sample' );
     } elseif ( isset( $_POST['calculated_sqft'] ) && !empty( $_POST['calculated_sqft'] ) ) {
         $cart_item_data['calculated_sqft'] = sanitize_text_field( $_POST['calculated_sqft'] );
     }
@@ -713,6 +718,98 @@ function fixflip_get_sample_shipping_class_id() {
         $sample_class_id = ( $term && ! is_wp_error( $term ) ) ? (int) $term->term_id : 0;
     }
     return $sample_class_id;
+}
+
+/**
+ * Authoritative Helper: Calculate CSL Eligible Renovation Materials Subtotal
+ *
+ * Strictly includes:
+ *   - Flooring cartons (bulk materials)
+ *   - Moldings, trims, and approved renovation materials
+ * Strictly excludes:
+ *   - Sample swatches ($0.00)
+ *   - Sample shipping ($15.00)
+ *   - Pallet freight ($450 base + $0.40/sqft)
+ *   - Sales taxes
+ */
+function fixflip_get_csl_eligible_materials_subtotal( $cart_or_order = null ) {
+    $materials_subtotal = 0.00;
+
+    if ( is_a( $cart_or_order, 'WC_Order' ) ) {
+        foreach ( $cart_or_order->get_items() as $item ) {
+            $is_sample = $item->get_meta( 'Order Type' ) && strpos( $item->get_meta( 'Order Type' ), 'Sample' ) !== false;
+            if ( ! $is_sample ) {
+                $materials_subtotal += (float) $item->get_total();
+            }
+        }
+        return round( $materials_subtotal, 2 );
+    }
+
+    $cart = is_a( $cart_or_order, 'WC_Cart' ) ? $cart_or_order : ( ( function_exists('WC') && WC()->cart ) ? WC()->cart : null );
+    if ( ! $cart ) {
+        return 0.00;
+    }
+
+    foreach ( $cart->get_cart() as $cart_item ) {
+        if ( ! empty( $cart_item['is_sample'] ) ) {
+            continue;
+        }
+        if ( isset( $cart_item['data'] ) && is_object( $cart_item['data'] ) ) {
+            if ( $cart_item['data']->get_shipping_class() === 'sample-parcel' ) {
+                continue;
+            }
+        }
+        if ( isset( $cart_item['line_total'] ) ) {
+            $materials_subtotal += (float) $cart_item['line_total'];
+        } elseif ( isset( $cart_item['data'] ) && is_object( $cart_item['data'] ) ) {
+            $qty = isset( $cart_item['quantity'] ) ? (int) $cart_item['quantity'] : 1;
+            $materials_subtotal += (float) $cart_item['data']->get_price() * $qty;
+        }
+    }
+
+    return round( $materials_subtotal, 2 );
+}
+
+/**
+ * Sanitize Cart Session Samples: purge legacy $5 sample rates, enforce $0.00 & deduplicate
+ */
+add_action( 'woocommerce_cart_loaded_from_session', 'fixflip_sanitize_cart_session_samples', 10, 1 );
+function fixflip_sanitize_cart_session_samples( $cart ) {
+    if ( ! is_object( $cart ) || empty( $cart->cart_contents ) ) {
+        return;
+    }
+
+    $seen_sample_products = array();
+    $sample_class_id      = fixflip_get_sample_shipping_class_id();
+
+    foreach ( $cart->cart_contents as $key => &$item ) {
+        if ( ! empty( $item['is_sample'] ) ) {
+            $product_id = isset( $item['product_id'] ) ? $item['product_id'] : 0;
+            // Prevent duplicate sample lines for the exact same SKU
+            if ( isset( $seen_sample_products[ $product_id ] ) ) {
+                unset( $cart->cart_contents[ $key ] );
+                continue;
+            }
+            $seen_sample_products[ $product_id ] = true;
+
+            $item['quantity']          = 1;
+            $item['line_total']         = 0.00;
+            $item['line_subtotal']      = 0.00;
+            $item['line_tax']           = 0.00;
+            $item['line_subtotal_tax']  = 0.00;
+            $item['line_tax_data']      = array( 'subtotal' => array(), 'total' => array() );
+
+            unset( $item['sample_price'] );
+
+            if ( isset( $item['data'] ) && is_object( $item['data'] ) ) {
+                $item['data']->set_price( 0.00 );
+                if ( $sample_class_id ) {
+                    $item['data']->set_shipping_class_id( $sample_class_id );
+                }
+            }
+        }
+    }
+    unset( $item );
 }
 
 add_action( 'woocommerce_before_calculate_totals', 'fixflip_calculate_sample_and_custom_prices', 99, 1 );
@@ -1101,7 +1198,7 @@ function fixflip_checkout_product_image( $name, $cart_item, $cart_item_key ) {
 add_filter( 'woocommerce_checkout_cart_item_quantity', 'fixflip_checkout_custom_qty', 10, 3 );
 function fixflip_checkout_custom_qty( $qty_html, $cart_item, $cart_item_key ) {
     if ( ! empty( $cart_item['is_sample'] ) ) {
-        return ' <span class="product-quantity" style="font-weight: 700; color: #0284c7; font-size: 13px;">&times; 1 item (' . $cart_item['quantity'] . ' Sample Swatch &bull; $5.00 ea)</span>';
+        return ' <span class="product-quantity" style="font-weight: 700; color: #0284c7; font-size: 13px;">&times; 1 item (' . $cart_item['quantity'] . ' Sample Swatch &bull; FREE)</span>';
     }
     $boxes = isset($cart_item['quantity']) ? (int) $cart_item['quantity'] : 1;
     $product_id = isset($cart_item['product_id']) ? $cart_item['product_id'] : 0;
@@ -1149,7 +1246,7 @@ function fixflip_output_cart_drawer_items_html() {
         echo '<div style="text-align: center; padding: 48px 16px; color: #64748b;">';
         echo '<svg viewBox="0 0 24 24" style="width:48px;height:48px;stroke:#94a3b8;stroke-width:1.5;fill:none;margin-bottom:12px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>';
         echo '<h4 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">Your cart is currently empty</h4>';
-        echo '<p style="font-size: 13px; color: #64748b; margin: 0;">Add flooring products or order sample swatches ($5.00 ea).</p>';
+        echo '<p style="font-size: 13px; color: #64748b; margin: 0;">Add flooring products or order free sample swatches ($15 shipping per package of up to 3).</p>';
         echo '</div>';
         return;
     }
@@ -1160,11 +1257,14 @@ function fixflip_output_cart_drawer_items_html() {
         if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 ) {
             $product_name  = $_product->get_name();
             $thumbnail     = $_product->get_image('thumbnail', array('style' => 'width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;'));
+            $is_sample     = ! empty( $cart_item['is_sample'] );
+            $is_trim       = ( ! empty( $cart_item['is_trim'] ) || get_post_meta( $_product->get_id(), 'is_trim', true ) === 'yes' );
+            $remove_url    = wc_get_cart_remove_url( $cart_item_key );
+
             if ( $is_sample ) {
-                $sample_line_total = 5.00 * (int) $cart_item['quantity'];
-                $subtotal          = wc_price( $sample_line_total );
-                $item_badge        = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">SAMPLE</span>';
-                $line_desc         = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample ($5.00 ea)';
+                $subtotal          = '<span style="color: #16a34a; font-weight: 800;">$0.00 (FREE)</span>';
+                $item_badge        = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">FREE SAMPLE</span>';
+                $line_desc         = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample (FREE)';
             } elseif ( $is_trim ) {
                 $subtotal   = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
                 $item_badge = ' <span style="background: #f1f5f9; color: #0f172a; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px; border: 1px solid #cbd5e1;">MOLDING / TRIM</span>';
@@ -1196,26 +1296,22 @@ function fixflip_output_cart_drawer_items_html() {
     }
     echo '</div>';
 
-    // Calculate materials subtotal (excluding samples) for CSL financing threshold
-    $materials_subtotal = 0.00;
+    // Calculate materials subtotal (strictly excluding samples, shipping, and taxes) for CSL financing threshold
+    $materials_subtotal = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
     $sample_count       = 0;
     $total_sqft         = 0;
-    $has_bulk           = false;
+    $has_bulk           = ( $materials_subtotal > 0 );
 
     foreach ( WC()->cart->get_cart() as $c_item ) {
         if ( ! empty( $c_item['is_sample'] ) ) {
             $sample_count += (int) $c_item['quantity'];
         } else {
-            $has_bulk = true;
             $p_id     = isset( $c_item['product_id'] ) ? $c_item['product_id'] : 0;
             $is_tr    = ( ! empty( $c_item['is_trim'] ) || get_post_meta( $p_id, 'is_trim', true ) === 'yes' );
             if ( ! $is_tr ) {
                 $q_boxes    = isset( $c_item['quantity'] ) ? (int) $c_item['quantity'] : 1;
                 $cov        = fixflip_get_product_coverage( $p_id );
                 $total_sqft += ($q_boxes * $cov);
-            }
-            if ( isset( $c_item['line_total'] ) ) {
-                $materials_subtotal += (float) $c_item['line_total'];
             }
         }
     }
@@ -1240,7 +1336,7 @@ function fixflip_output_cart_drawer_items_html() {
     // Mixed Cart Notice
     if ( $has_bulk && $sample_count > 0 ) {
         echo '<div style="margin-bottom: 14px; background: #eff6ff; border: 1.5px solid #93c5fd; padding: 10px 12px; border-radius: 4px; font-size: 11.5px; color: #1e40af; line-height: 1.45; font-weight: 600;">';
-        echo '📦 <strong>Mixed Shipment:</strong> Samples ship separately via USPS Parcel ($15.00 per 3 samples). Flooring materials are delivered by commercial pallet freight.';
+        echo '📦 <strong>Mixed Shipment:</strong> Free sample swatches ship separately via USPS Ground Advantage ($15 shipping per package of up to 3). Flooring materials are delivered by commercial pallet freight.';
         echo '</div>';
     }
 
@@ -1268,7 +1364,7 @@ function fixflip_output_cart_drawer_items_html() {
         echo '</div>';
     } else {
         echo '<div style="margin-bottom: 16px; background: #f0fdf4; border: 1.5px solid #86efac; padding: 10px 12px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">';
-        echo '<div style="font-size: 11.5px; font-weight: 700; color: #166534;">Free Sample Swatches ($0.00) &bull; Fixed $15.00 Shipping / 3 Samples (USPS)</div>';
+        echo '<div style="font-size: 11.5px; font-weight: 700; color: #166534;">Free sample swatches &bull; $15 shipping per package of up to 3 via USPS Ground Advantage</div>';
         echo '</div>';
     }
 
@@ -1489,7 +1585,7 @@ function fixflip_render_ajax_cart_drawer() {
 }
 
 /**
- * AJAX Add to Cart Callback Handler (Supports Materials & $5 Samples)
+ * AJAX Add to Cart Callback Handler (Supports Materials & Free Samples)
  */
 add_action( 'wp_ajax_fixflip_ajax_add_to_cart', 'fixflip_ajax_add_to_cart_handler' );
 add_action( 'wp_ajax_nopriv_fixflip_ajax_add_to_cart', 'fixflip_ajax_add_to_cart_handler' );
@@ -1523,8 +1619,25 @@ function fixflip_ajax_add_to_cart_handler() {
     if ( $product_id ) {
         $cart_item_data = array();
         if ( $is_sample ) {
-            $cart_item_data['is_sample'] = true;
-            $cart_item_data['unique_key'] = md5( $product_id . '_sample_' . microtime() );
+            $cart_item_data['is_sample']  = true;
+            $cart_item_data['unique_key'] = md5( $product_id . '_sample' );
+            $quantity                     = 1;
+
+            // If this sample swatch SKU is already in the cart, do not duplicate or increase qty
+            foreach ( WC()->cart->get_cart() as $existing_key => $existing_item ) {
+                if ( ! empty( $existing_item['is_sample'] ) && (int)$existing_item['product_id'] === (int)$product_id ) {
+                    ob_start();
+                    fixflip_output_cart_drawer_items_html();
+                    $drawer_html = ob_get_clean();
+
+                    wp_send_json_success( array(
+                        'drawer_html' => $drawer_html,
+                        'cart_count'  => count( WC()->cart->get_cart() ),
+                        'box_count'   => WC()->cart->get_cart_contents_count()
+                    ) );
+                    return;
+                }
+            }
         } elseif ( isset( $_POST['calculated_sqft'] ) && ! empty( $_POST['calculated_sqft'] ) ) {
             $cart_item_data['calculated_sqft'] = sanitize_text_field( $_POST['calculated_sqft'] );
         }
@@ -1538,7 +1651,11 @@ function fixflip_ajax_add_to_cart_handler() {
             $product_obj   = wc_get_product( $product_id );
             if ( $product_obj ) {
                 if ( $is_sample ) {
-                    $product_obj->set_price( 5.00 );
+                    $product_obj->set_price( 0.00 );
+                    $sample_class_id = fixflip_get_sample_shipping_class_id();
+                    if ( $sample_class_id ) {
+                        $product_obj->set_shipping_class_id( $sample_class_id );
+                    }
                 }
                 WC()->cart->cart_contents[ $cart_item_key ] = array_merge( $cart_item_data, array(
                     'key'          => $cart_item_key,
@@ -1774,7 +1891,7 @@ function fixflip_split_shipping_packages( $packages ) {
             'applied_coupons' => array(),
             'user'            => $first_package['user'],
             'destination'     => $first_package['destination'],
-            'package_name'    => __( 'Shipment 1: Sample Swatches (USPS Parcel)', 'fixflip' ),
+            'package_name'    => __( '1. Sample Swatches — USPS Parcel', 'fixflip' ),
             'package_type'    => 'sample_parcel',
         );
 
@@ -1785,14 +1902,14 @@ function fixflip_split_shipping_packages( $packages ) {
             'applied_coupons' => $first_package['applied_coupons'],
             'user'            => $first_package['user'],
             'destination'     => $first_package['destination'],
-            'package_name'    => __( 'Shipment 2: Jobsite Flooring (Pallet Freight)', 'fixflip' ),
+            'package_name'    => __( '2. Jobsite Flooring — Pallet Freight', 'fixflip' ),
             'package_type'    => 'pallet_freight',
         );
     } elseif ( ! empty( $sample_items ) ) {
-        $packages[0]['package_name'] = __( 'Sample Swatches (USPS Parcel)', 'fixflip' );
+        $packages[0]['package_name'] = __( '1. Sample Swatches — USPS Parcel', 'fixflip' );
         $packages[0]['package_type'] = 'sample_parcel';
     } elseif ( ! empty( $pallet_items ) ) {
-        $packages[0]['package_name'] = __( 'Jobsite Flooring (Pallet Freight)', 'fixflip' );
+        $packages[0]['package_name'] = __( '2. Jobsite Flooring — Pallet Freight', 'fixflip' );
         $packages[0]['package_type'] = 'pallet_freight';
     }
 
@@ -2616,16 +2733,9 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function payment_fields() {
-            $material_subtotal = 0.00;
-            if ( class_exists('WooCommerce') && WC()->cart ) {
-                foreach ( WC()->cart->get_cart() as $item ) {
-                    if ( empty( $item['is_sample'] ) ) {
-                        $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
-                    }
-                }
-            }
-            $is_under_min = ( $material_subtotal < 2000.00 );
-            $remaining    = max( 0, 2000.00 - $material_subtotal );
+            $material_subtotal = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+            $is_under_min      = ( $material_subtotal < 2000.00 );
+            $remaining         = max( 0, 2000.00 - $material_subtotal );
             ?>
             <div class="csl-draw-info-box" style="background: <?php echo $is_under_min ? '#fffbeb' : '#f0fdf4'; ?>; border: 1.5px solid <?php echo $is_under_min ? '#fde68a' : '#86efac'; ?>; border-radius: 6px; padding: 18px; margin-top: 8px;">
                 <?php if ( $is_under_min ) : ?>
@@ -2634,11 +2744,11 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
                             <span>⚠️ $2,000 Minimum for CSL Draw Advance</span>
                         </div>
                         <div style="font-size: 12px; color: #b91c1c; line-height: 1.45; font-weight: 500;">
-                            Material Draw Advances require a minimum order of $2,000.00 in eligible flooring materials. Sample swatches ($0.00), sample shipping ($15.00), pallet freight, and sales tax are excluded from this threshold.<br>
-                            Current eligible material subtotal: <strong>$<?php echo number_format($material_subtotal, 2); ?></strong> (<strong>$<?php echo number_format($remaining, 2); ?></strong> remaining to qualify).<br><br>
+                            CSL Material Advance requires a minimum of $2,000.00 in eligible renovation materials. Free samples ($0.00), sample shipping ($15.00), pallet freight, and sales tax are excluded from this threshold.<br>
+                            Current eligible material subtotal: <strong>$<?php echo number_format($material_subtotal, 2); ?></strong> (Add <strong>$<?php echo number_format($remaining, 2); ?></strong> more in materials to qualify for CSL Draw Financing).<br><br>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                <a href="javascript:void(0);" onclick="var r = document.getElementById('payment_method_stripe'); if(r){r.checked=true; jQuery(document.body).trigger('payment_method_selected');}" style="background: #0f172a; color: #ffffff; padding: 7px 14px; border-radius: 3px; font-weight: 800; font-size: 11.5px; text-decoration: none; text-transform: uppercase;">Pay with Card &amp; Checkout &rarr;</a>
-                                <a href="/commercial-flooring/" style="background: #007bff; color: #ffffff; padding: 7px 14px; border-radius: 3px; font-weight: 800; font-size: 11.5px; text-decoration: none; text-transform: uppercase;">+ Add Materials for CSL Financing</a>
+                                <a href="javascript:void(0);" onclick="var r = document.getElementById('payment_method_stripe') || document.getElementById('payment_method_stripe_cc'); if(r){r.checked=true; jQuery(document.body).trigger('payment_method_selected');}" style="background: #0f172a; color: #ffffff; padding: 8px 14px; border-radius: 3px; font-weight: 800; font-size: 11.5px; text-decoration: none; text-transform: uppercase;">Pay with Card &amp; Place Order &rarr;</a>
+                                <a href="/commercial-flooring/" style="background: #007bff; color: #ffffff; padding: 8px 14px; border-radius: 3px; font-weight: 800; font-size: 11.5px; text-decoration: none; text-transform: uppercase;">+ Add Materials for CSL Financing</a>
                             </div>
                         </div>
                     </div>
@@ -2660,24 +2770,17 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
         }
 
         public function process_payment( $order_id ) {
-            $material_subtotal = 0.00;
-            if ( class_exists('WooCommerce') && WC()->cart ) {
-                foreach ( WC()->cart->get_cart() as $item ) {
-                    if ( empty( $item['is_sample'] ) ) {
-                        $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
-                    }
-                }
-            }
+            $order = wc_get_order( $order_id );
+            $material_subtotal = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal( $order ) : 0.00;
 
             if ( $material_subtotal < 2000.00 ) {
-                wc_add_notice( __( 'Center Street Lending draw financing requires a minimum order of $2,000.00 in eligible flooring materials. Please choose Credit Card / Instant Pay or add more cartons to qualify.', 'fixflip' ), 'error' );
+                wc_add_notice( sprintf( __( 'Center Street Lending draw financing requires a minimum order of $2,000.00 in eligible flooring materials. Current eligible subtotal: $%s. Please choose Credit Card / Instant Pay or add more cartons to qualify.', 'fixflip' ), number_format( $material_subtotal, 2 ) ), 'error' );
                 return array(
                     'result'   => 'failure',
                     'redirect' => ''
                 );
             }
 
-            $order = wc_get_order( $order_id );
             $order->update_status( 'processing', __( 'CSL Draw Advancement requested by borrower.', 'fixflip' ) );
             wc_reduce_stock_levels( $order_id );
             WC()->cart->empty_cart();
@@ -2754,25 +2857,13 @@ function fixflip_validate_checkout_csl_rules() {
     }
 
     if ( 'csl_draw_advance' === $chosen_gateway ) {
-        // Calculate material subtotal (excluding samples)
-        $material_subtotal = 0;
-        if ( class_exists('WooCommerce') && WC()->cart ) {
-            foreach ( WC()->cart->get_cart() as $item ) {
-                if ( empty( $item['is_sample'] ) ) {
-                    $material_subtotal += (float) ( isset( $item['line_total'] ) ? $item['line_total'] : 0 );
-                }
-            }
-            if ( $material_subtotal <= 0 ) {
-                $material_subtotal = (float) WC()->cart->get_subtotal();
-            }
-        }
-
+        $material_subtotal = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
         $min_csl = 2000.00;
         if ( $material_subtotal < $min_csl ) {
             $remaining = $min_csl - $material_subtotal;
             wc_add_notice(
                 sprintf(
-                    __( '<strong>Center Street Lending Minimum:</strong> Material Draw Advances require a minimum order of $2,000.00. Your current material subtotal is <strong>$%s</strong> (<strong>$%s</strong> remaining to qualify for loan draw financing). Please select <strong>Credit Card / Debit Card</strong> to complete your order, or add additional cartons.', 'fixflip' ),
+                    __( '<strong>Center Street Lending Minimum:</strong> Material Draw Advances require a minimum order of $2,000.00 in eligible materials. Your current eligible material subtotal is <strong>$%s</strong> (<strong>$%s</strong> remaining to qualify for loan draw financing). Please select <strong>Credit Card / Debit Card</strong> to complete your order, or add additional cartons.', 'fixflip' ),
                     number_format( $material_subtotal, 2 ),
                     number_format( max(0, $remaining), 2 )
                 ),
@@ -2946,12 +3037,29 @@ function fixflip_custom_all_gateway_titles( $title, $gateway_id ) {
 }
 
 /**
+ * Automatically select Stripe Card as default payment method when order materials are below $2,000
+ */
+add_action( 'template_redirect', 'fixflip_set_default_gateway_based_on_materials' );
+function fixflip_set_default_gateway_based_on_materials() {
+    if ( is_checkout() && class_exists('WooCommerce') && WC()->cart && WC()->session ) {
+        $materials = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+        if ( $materials < 2000.00 ) {
+            $chosen = WC()->session->get( 'chosen_payment_method' );
+            if ( empty( $chosen ) || $chosen === 'csl_draw_advance' ) {
+                WC()->session->set( 'chosen_payment_method', 'stripe' );
+            }
+        }
+    }
+}
+
+/**
  * Dynamic Order Button Text on Server Render
  */
 add_filter( 'woocommerce_order_button_text', 'fixflip_dynamic_order_button_text' );
 function fixflip_dynamic_order_button_text( $button_text ) {
-    $chosen_gateway = ( class_exists('WooCommerce') && WC()->session ) ? WC()->session->get('chosen_payment_method') : 'csl_draw_advance';
-    if ( $chosen_gateway === 'csl_draw_advance' ) {
+    $materials = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+    $chosen_gateway = ( class_exists('WooCommerce') && WC()->session ) ? WC()->session->get('chosen_payment_method') : 'stripe';
+    if ( $materials >= 2000.00 && $chosen_gateway === 'csl_draw_advance' ) {
         return 'SUBMIT REQUEST FOR DRAW ADVANCEMENT &rarr;';
     } else {
         return 'PAY WITH CARD & PLACE ORDER &rarr;';
@@ -2964,20 +3072,48 @@ function fixflip_dynamic_order_button_text( $button_text ) {
 add_action( 'wp_footer', 'fixflip_checkout_payment_button_morpher', 999 );
 function fixflip_checkout_payment_button_morpher() {
     if ( is_checkout() ) {
+        $eligible_materials = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+        $is_sub_2k          = ( $eligible_materials < 2000.00 );
+        $needed_amount      = number_format( max( 0, 2000.00 - $eligible_materials ), 2 );
         ?>
         <script>
         (function() {
+            const isSub2k = <?php echo $is_sub_2k ? 'true' : 'false'; ?>;
+            const neededAmt = '<?php echo esc_js( $needed_amount ); ?>';
+
             function updateCheckoutUI() {
                 const btn = document.getElementById('place_order');
                 const selected = document.querySelector('input[name="payment_method"]:checked');
-                const method = selected ? selected.value : 'csl_draw_advance';
-                
+                let method = selected ? selected.value : (isSub2k ? 'stripe' : 'csl_draw_advance');
+
+                const cslRadio = document.getElementById('payment_method_csl_draw_advance');
+                const stripeRadio = document.getElementById('payment_method_stripe') || document.getElementById('payment_method_stripe_cc');
+
+                // Enforce sub-$2,000 restrictions: disable CSL and default to card
+                if (isSub2k) {
+                    if (cslRadio) {
+                        cslRadio.disabled = true;
+                        const cslLi = cslRadio.closest('.wc_payment_method');
+                        if (cslLi) {
+                            cslLi.style.opacity = '0.75';
+                            cslLi.style.cursor = 'not-allowed';
+                        }
+                    }
+                    if (method === 'csl_draw_advance' && stripeRadio) {
+                        stripeRadio.checked = true;
+                        method = stripeRadio.value;
+                        if (typeof jQuery !== 'undefined') {
+                            jQuery(stripeRadio).trigger('change');
+                        }
+                    }
+                }
+
                 const badge = document.getElementById('fd-checkout-method-badge');
                 const callout = document.getElementById('fd-checkout-payment-callout');
                 const calloutTitle = document.getElementById('fd-callout-title');
                 const calloutBody = document.getElementById('fd-callout-body');
 
-                if (method === 'csl_draw_advance') {
+                if (!isSub2k && method === 'csl_draw_advance') {
                     if (btn) {
                         btn.value = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
                         btn.textContent = 'SUBMIT REQUEST FOR DRAW ADVANCEMENT \u2192';
@@ -2985,7 +3121,7 @@ function fixflip_checkout_payment_button_morpher() {
                         btn.style.setProperty('box-shadow', 'none', 'important');
                     }
                     if (badge) {
-                        badge.textContent = 'CSL DRAW FINANCING';
+                        badge.textContent = 'CSL DRAW FINANCING ELIGIBLE';
                         badge.style.background = '#eff6ff';
                         badge.style.color = '#1e40af';
                         badge.style.borderColor = '#bfdbfe';
@@ -3010,7 +3146,7 @@ function fixflip_checkout_payment_button_morpher() {
                         btn.style.setProperty('box-shadow', 'none', 'important');
                     }
                     if (badge) {
-                        badge.textContent = 'INSTANT CARD CHECKOUT';
+                        badge.textContent = isSub2k ? 'CARD CHECKOUT AVAILABLE' : 'INSTANT CARD CHECKOUT';
                         badge.style.background = '#f0fdf4';
                         badge.style.color = '#166534';
                         badge.style.borderColor = '#bbf7d0';
@@ -3041,7 +3177,7 @@ function fixflip_checkout_payment_button_morpher() {
                     const li = e.target.closest('.wc_payment_method');
                     if (li) {
                         const radio = li.querySelector('input[name="payment_method"]');
-                        if (radio && !radio.checked) {
+                        if (radio && !radio.disabled && !radio.checked) {
                             radio.checked = true;
                             if (typeof jQuery !== 'undefined') {
                                 jQuery(radio).trigger('change');
@@ -3065,40 +3201,27 @@ function fixflip_checkout_payment_button_morpher() {
     }
 }
 
-
-
 /**
- * Enforce $2,000.00 Minimum Order Amount for FixFlip B2B Material Orders
+ * Enforce $2,000.00 Minimum Order Notice for FixFlip B2B Material Orders
  */
 add_action('woocommerce_check_cart_items', 'fixflip_enforce_minimum_order_amount');
 add_action('woocommerce_before_checkout_process', 'fixflip_enforce_minimum_order_amount');
 
 function fixflip_enforce_minimum_order_amount() {
     if ( is_cart() || is_checkout() ) {
-        // Exclude orders that only contain sample swatches
-        $has_bulk = false;
-        if ( WC()->cart ) {
-            foreach ( WC()->cart->get_cart() as $cart_item ) {
-                if ( empty( $cart_item['is_sample'] ) ) {
-                    $has_bulk = true;
-                    break;
-                }
-            }
-        }
-        if ( ! $has_bulk ) {
-            return; // Swatch samples do not require $2,000 pallet minimum
+        $materials_subtotal = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+        if ( $materials_subtotal <= 0 ) {
+            return; // Swatch sample orders do not require $2,000 pallet minimum
         }
 
-        $minimum = 2000;
-        $cart_subtotal = (float) WC()->cart->get_subtotal();
-
-        if ( $cart_subtotal < $minimum ) {
-            $difference = number_format($minimum - $cart_subtotal, 2);
-            $current    = number_format($cart_subtotal, 2);
+        $minimum = 2000.00;
+        if ( $materials_subtotal < $minimum ) {
+            $difference = number_format( $minimum - $materials_subtotal, 2 );
+            $current    = number_format( $materials_subtotal, 2 );
             
             wc_add_notice( 
                 sprintf( 
-                    '<strong>Loan Advance Integration:</strong> The <strong>$2,000.00 minimum order amount</strong> is only applicable if you are integrating material spending into your Center Street Lending rehab loan.<br>Current order subtotal: <strong>$%s</strong> &bull; Please add <strong>$%s</strong> more to qualify for 100%% loan draw integration.',
+                    '<strong>CSL Financing Minimum:</strong> Center Street Lending material advance requires a minimum order of $2,000.00 in eligible materials.<br>Current eligible materials: <strong>$%s</strong> &bull; Add <strong>$%s</strong> more to qualify for 100%% CSL draw financing, or checkout with Credit Card.',
                     $current,
                     $difference
                 ), 
@@ -3121,6 +3244,21 @@ function fixflip_add_csl_draw_notification_recipient( $recipient, $order ) {
     }
     return $recipient;
 }
+
+/**
+ * Brand Leakage Filter: Guarantee zero customer-facing leakage of supplier brand names (e.g. Shaw)
+ */
+function fixflip_filter_brand_leakage( $text ) {
+    if ( empty( $text ) || ! is_string( $text ) ) {
+        return $text;
+    }
+    return preg_replace( '/\bshaw\b/i', 'FixFlip Commercial', $text );
+}
+add_filter( 'the_title', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'the_content', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'the_excerpt', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_product_get_name', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_product_title', 'fixflip_filter_brand_leakage', 99 );
 
 /**
  * Inject Loan Number into WooCommerce Order Emails for CSL Review

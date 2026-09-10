@@ -57,7 +57,7 @@ get_header();
                 <section>
                     <h2 style="font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 10px 0;">4. Sample Swatches &amp; Special Orders</h2>
                     <p style="margin: 0;">
-                        Orders for $5.00 swatch samples are processed and dispatched on the same business day and are non-refundable once handed over to the courier.
+                        Orders for sample swatches are processed and dispatched on the same business day and shipping fees are non-refundable once handed over to the carrier.
                     </p>
                 </section>
 

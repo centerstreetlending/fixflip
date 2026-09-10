@@ -43,7 +43,7 @@ get_header();
                         <li><strong>Timeframe:</strong> Return authorization requests must be submitted within <strong>30 calendar days</strong> of initial jobsite delivery.</li>
                         <li><strong>Packaging Integrity:</strong> Returned cartons must be factory-sealed, completely undamaged, clean, and free of moisture, adhesive, chalk, or jobsite markings.</li>
                         <li><strong>Minimum Quantity:</strong> A minimum return quantity of 4 unopened cartons is required for freight return logistics. Individual loose planks or opened boxes cannot be accepted.</li>
-                        <li><strong>Molding &amp; Swatches:</strong> Custom molding pieces and $5.00 sample swatches are non-returnable.</li>
+                        <li><strong>Molding &amp; Swatches:</strong> Custom molding pieces and free sample swatches ($15 shipping per package of up to 3) are non-returnable.</li>
                     </ul>
                 </section>
 

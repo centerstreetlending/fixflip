@@ -103,9 +103,24 @@ if ( $cart_empty ) {
                     <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: #0f172a; letter-spacing: -0.3px; text-transform: uppercase;">
                         Jobsite Order Review
                     </h3>
-                    <span id="fd-checkout-method-badge" style="font-size: 11px; font-weight: 800; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; padding: 4px 8px; border-radius: 4px; transition: all 0.2s ease;">
-                        CSL DRAW ELIGIBLE
-                    </span>
+                    <?php
+                    $csl_materials   = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+                    $is_csl_eligible = ( $csl_materials >= 2000.00 );
+                    $has_bulk        = ( $csl_materials > 0 );
+                    ?>
+                    <?php if ( $is_csl_eligible ) : ?>
+                        <span id="fd-checkout-method-badge" style="font-size: 11px; font-weight: 800; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; padding: 4px 8px; border-radius: 4px; transition: all 0.2s ease;">
+                            CSL DRAW FINANCING ELIGIBLE
+                        </span>
+                    <?php elseif ( $has_bulk ) : ?>
+                        <span id="fd-checkout-method-badge" style="font-size: 11px; font-weight: 800; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px; transition: all 0.2s ease;">
+                            CARD CHECKOUT AVAILABLE
+                        </span>
+                    <?php else : ?>
+                        <span id="fd-checkout-method-badge" style="font-size: 11px; font-weight: 800; background: #f0fdf4; color: #166534; border: 1px solid #86efac; padding: 4px 8px; border-radius: 4px; transition: all 0.2s ease;">
+                            SAMPLE ORDER
+                        </span>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Collapsible Toggle for Mobile Viewports -->
@@ -152,14 +167,25 @@ if ( $cart_empty ) {
                 </script>
 
                 <!-- DYNAMIC PAYMENT METHOD CALLOUT -->
-                <div id="fd-checkout-payment-callout" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 4px; padding: 14px 16px; margin: 18px 18px 0 18px; transition: all 0.2s ease;">
-                    <div id="fd-callout-title" style="font-size: 11.5px; font-weight: 900; color: #166534; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                        <span>🔒 100% CSL Material Draw</span>
+                <?php if ( $is_csl_eligible ) : ?>
+                    <div id="fd-checkout-payment-callout" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 4px; padding: 14px 16px; margin: 18px 18px 0 18px; transition: all 0.2s ease;">
+                        <div id="fd-callout-title" style="font-size: 11.5px; font-weight: 900; color: #166534; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span>🔒 100% CSL Material Draw</span>
+                        </div>
+                        <div id="fd-callout-body" style="font-size: 12px; color: #15803d; line-height: 1.45; font-weight: 500;">
+                            No upfront card charge today for approved Center Street Lending borrowers. Materials roll directly into your construction draw budget.
+                        </div>
                     </div>
-                    <div id="fd-callout-body" style="font-size: 12px; color: #15803d; line-height: 1.45; font-weight: 500;">
-                        No upfront card charge today for approved Center Street Lending borrowers. Materials roll directly into your construction draw budget.
+                <?php else : ?>
+                    <div id="fd-checkout-payment-callout" style="background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 4px; padding: 14px 16px; margin: 18px 18px 0 18px; transition: all 0.2s ease;">
+                        <div id="fd-callout-title" style="font-size: 11.5px; font-weight: 900; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span>💳 Secure Stripe Card Checkout</span>
+                        </div>
+                        <div id="fd-callout-body" style="font-size: 12px; color: #1e3a8a; line-height: 1.45; font-weight: 500;">
+                            Pay securely with credit card, debit card, or Apple Pay. Your material order will be processed and scheduled for direct jobsite dispatch immediately.
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
                 <!-- CONTRACTOR PRO DESK SUPPORT -->
                 <div style="padding: 16px 18px; margin-top: 14px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;">

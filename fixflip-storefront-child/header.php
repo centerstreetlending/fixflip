@@ -902,9 +902,9 @@ document.addEventListener('DOMContentLoaded', function() {
           </a>
 
           <!-- 9. Contact or Order Support -->
-          <a href="tel:9497054300" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; font-size: 14px; font-weight: 700; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9;">
-            <span>Contact or Order Support</span>
-            <span style="font-size: 12px; font-weight: 600;">(949) 705-4300</span>
+          <a href="tel:9497054300" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; font-size: 14px; font-weight: 700; color: #007bff; text-decoration: none; border-bottom: 1px solid #f1f5f9; gap: 8px; flex-wrap: nowrap;">
+            <span style="white-space: nowrap;">Order Support</span>
+            <span style="font-size: 13px; font-weight: 700; white-space: nowrap; flex-shrink: 0;">(949) 705-4300</span>
           </a>
         </div>
 

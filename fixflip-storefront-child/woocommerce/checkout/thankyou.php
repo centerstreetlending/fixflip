@@ -133,8 +133,8 @@ foreach ( $order->get_items() as $item_id => $item ) {
                         <div style="font-weight: 800; color: #0f172a;">Direct Jobsite Freight Delivery</div>
                         <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">Liftgate &amp; Power Pallet Jack Included &bull; 1-3 Hr Call Window</div>
                     <?php else : ?>
-                        <div style="font-weight: 800; color: #16a34a;">Standard Swatch Courier Mail Delivery</div>
-                        <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">USPS / FedEx Swatch Packet (Free Standard Shipping)</div>
+                        <div style="font-weight: 800; color: #16a34a;">USPS Ground Advantage Parcel Delivery</div>
+                        <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">USPS Ground Advantage Parcel (typically 3–7 business days)</div>
                     <?php endif; ?>
                 </div>
 

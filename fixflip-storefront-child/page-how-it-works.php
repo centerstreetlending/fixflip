@@ -466,7 +466,7 @@ $theme_uri = get_stylesheet_directory_uri();
                         Shop the products you need for your renovation.
                     </p>
                     <p class="fd-step-sub-text">
-                        Browse our curated catalog of Heavy Commercial SPC Vinyl Plank ($3.56/sqft), Good Tier Red Oak ($5.12/sqft), and Better Tier White Oak ($5.97/sqft). Order free sample swatches ($0.00 each, $15.00 fixed shipping per 3 samples via USPS Ground Advantage) to verify finishes on-site.
+                        Browse our curated catalog of Heavy Commercial SPC Vinyl Plank ($3.56/sqft), Good Tier Red Oak ($5.12/sqft), and Better Tier White Oak ($5.97/sqft). Free sample swatches &bull; $15 shipping per package of up to 3 via USPS Ground Advantage to verify finishes on-site.
                     </p>
                 </div>
             </div>

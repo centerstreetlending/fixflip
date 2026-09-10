@@ -553,7 +553,7 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                             <span style="color: #16a34a; font-weight: 900;">FREE ($0.00)</span>
                         </button>
                         <div id="fd-sample-shipping-hint" style="font-size: 11.5px; color: #64748b; margin-top: -4px; margin-bottom: 2px; font-weight: 600; text-align: center; line-height: 1.4;">
-                            Free swatches ($0.00). Fixed $15.00 shipping per package of 3 samples via USPS Ground Advantage.
+                            Free sample swatches &bull; $15 shipping per package of up to 3 via USPS Ground Advantage.
                         </div>
                     </div>
                 </form>
@@ -622,15 +622,22 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
 
                 let isAddingSample = false;
                 window.fdSubmitAddSample = function(e) {
-                    if (e) e.preventDefault();
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    }
                     if (isAddingSample) return false;
                     isAddingSample = true;
                     const sampleBtn = document.getElementById('fd-main-sample-btn');
                     const productId = '<?php echo esc_js($product->get_id()); ?>';
+                    const originalBtnContent = sampleBtn ? sampleBtn.innerHTML : '';
 
                     if (sampleBtn) {
-                        sampleBtn.style.opacity = '0.6';
+                        sampleBtn.style.opacity = '0.7';
+                        sampleBtn.style.pointerEvents = 'none';
                         sampleBtn.disabled = true;
+                        sampleBtn.innerHTML = '<svg style="width:18px;height:18px;animation:spin 1s linear infinite;stroke:#0f172a;fill:none;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="32" stroke-linecap="round"></circle></svg> <span>ADDING SAMPLE SWATCH...</span>';
                     }
 
                     const formData = new FormData();
@@ -645,11 +652,25 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     })
                     .then(r => r.json())
                     .then(data => {
-                        isAddingSample = false;
                         if (sampleBtn) {
-                            sampleBtn.style.opacity = '1';
-                            sampleBtn.disabled = false;
+                            sampleBtn.style.background = '#f0fdf4';
+                            sampleBtn.style.borderColor = '#16a34a';
+                            sampleBtn.style.color = '#166534';
+                            sampleBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#16a34a;stroke-width:2.5;fill:none;"><path d="M20 6L9 17l-5-5"></path></svg> <span>SAMPLE ADDED TO ORDER!</span>';
                         }
+                        setTimeout(() => {
+                            isAddingSample = false;
+                            if (sampleBtn) {
+                                sampleBtn.style.background = '#ffffff';
+                                sampleBtn.style.borderColor = '#0f172a';
+                                sampleBtn.style.color = '#0f172a';
+                                sampleBtn.style.opacity = '1';
+                                sampleBtn.style.pointerEvents = 'auto';
+                                sampleBtn.disabled = false;
+                                sampleBtn.innerHTML = originalBtnContent;
+                            }
+                        }, 2000);
+
                         if (data && data.success) {
                             const itemsContainer = document.getElementById('fd-cart-drawer-items');
                             if (itemsContainer && data.data && data.data.drawer_html) {
@@ -670,7 +691,9 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                         isAddingSample = false;
                         if (sampleBtn) {
                             sampleBtn.style.opacity = '1';
+                            sampleBtn.style.pointerEvents = 'auto';
                             sampleBtn.disabled = false;
+                            sampleBtn.innerHTML = originalBtnContent;
                         }
                         window.location.href = '/checkout/?add-to-cart=' + productId + '&is_sample=1&quantity=1';
                     });

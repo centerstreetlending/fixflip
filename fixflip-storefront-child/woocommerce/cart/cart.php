@@ -29,7 +29,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                     <div style="font-size: 24px; flex-shrink: 0;">📦</div>
                     <div style="font-size: 13px; color: #1e40af; line-height: 1.45; font-weight: 600;">
                         <strong style="color: #1e3a8a; font-weight: 800; display: block; margin-bottom: 2px;">Mixed Cart Shipment Routing:</strong>
-                        Samples ship separately by parcel service ($15.00 per 3 samples via USPS Ground Advantage). Flooring cartons and accessories are delivered by commercial pallet freight ($450 base + $0.40/sqft).
+                        Free sample swatches &bull; $15 shipping per package of up to 3 via USPS Ground Advantage. Flooring cartons and accessories are delivered by commercial pallet freight ($450 base + $0.40/sqft).
                     </div>
                 </div>
             <?php endif; ?>
@@ -203,7 +203,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                             <div style="font-size: 16px; font-weight: 900; color: #0f172a;">
                                                 <?php 
                                                 if ( $is_sample ) {
-                                                    echo wc_price( 5.00 * (int) $cart_item['quantity'] );
+                                                    echo '<span style="color: #16a34a; font-weight: 800;">' . wc_price( 0.00 ) . '</span> <span style="font-size: 11px; color: #16a34a; font-weight: 700;">(FREE)</span>';
                                                 } else {
                                                     echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key );
                                                 }

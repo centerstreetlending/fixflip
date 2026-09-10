@@ -6,23 +6,9 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <?php
-$eligible_materials_total = 0.00;
-$sample_total             = 0.00;
-$has_bulk                 = false;
-
-if ( WC()->cart ) {
-    foreach ( WC()->cart->get_cart() as $ci ) {
-        if ( ! empty( $ci['is_sample'] ) ) {
-            $sample_total += 0.00;
-        } else {
-            $has_bulk = true;
-            if ( isset( $ci['line_total'] ) ) {
-                $eligible_materials_total += (float) $ci['line_total'];
-            }
-        }
-    }
-}
-$is_csl_eligible = ( $has_bulk && $eligible_materials_total >= 2000.00 );
+$eligible_materials_total = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+$has_bulk = ( $eligible_materials_total > 0 );
+$is_csl_eligible = ( $eligible_materials_total >= 2000.00 );
 ?>
 <div class="cart_totals <?php echo ( WC()->customer->has_calculated_shipping() ) ? 'calculated_shipping' : ''; ?>" style="background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; padding: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); font-family: 'Inter', system-ui, -apple-system, sans-serif;">
 
@@ -121,7 +107,7 @@ $is_csl_eligible = ( $has_bulk && $eligible_materials_total >= 2000.00 );
 
     <?php if ( $has_bulk ) : ?>
         <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 4px; padding: 10px 12px; margin-bottom: 18px; font-size: 11px; color: #64748b; line-height: 1.45;">
-            ℹ️ <strong>Freight Delivery Notice:</strong> Jobsite freight is estimated using order square footage and standard delivery requirements ($450 base + $0.40/sqft). Additional limited-access, redelivery, address-change, residential, or unusual site-access charges may apply. FixFlip will communicate material adjustments before final settlement.
+            ℹ️ <strong>Freight Delivery Notice:</strong> Jobsite freight is estimated using order square footage and standard delivery requirements. Additional limited-access, redelivery, address-change, residential, or unusual site-access charges may apply. FixFlip will communicate material adjustments before final settlement.
         </div>
     <?php endif; ?>
 
@@ -138,12 +124,17 @@ $is_csl_eligible = ( $has_bulk && $eligible_materials_total >= 2000.00 );
         $needed = number_format( max( 0, 2000.00 - $eligible_materials_total ), 2 );
     ?>
         <!-- Sub-$2,000 Guidance Callout -->
-        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 12px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
-            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: #007bff; stroke-width: 2.2; fill: none; flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            <div style="font-size: 12px; line-height: 1.45; color: #334155;">
-                <strong style="font-weight: 800; color: #0f172a; display: block; margin-bottom: 2px;">Credit Card Checkout Available</strong>
-                Pay directly with card, or add <strong>$<?php echo $needed; ?></strong> more in materials to finance via your Center Street Lending loan.
+        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 14px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: #007bff; stroke-width: 2.2; fill: none; flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <div style="font-size: 12px; line-height: 1.45; color: #334155;">
+                    <strong style="font-weight: 800; color: #0f172a; display: block; margin-bottom: 2px;">Card Checkout Available</strong>
+                    Pay directly with card, or add <strong>$<?php echo $needed; ?></strong> more in materials to finance via Center Street Lending draw advance ($2,000 min).
+                </div>
             </div>
+            <a href="/commercial-flooring/" style="display: block; width: 100%; text-align: center; background: #eff6ff; color: #007bff; border: 1.5px solid #93c5fd; padding: 8px 12px; border-radius: 3px; font-size: 12px; font-weight: 700; text-decoration: none; box-sizing: border-box;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                + Add Materials for CSL Financing
+            </a>
         </div>
     <?php endif; ?>
 

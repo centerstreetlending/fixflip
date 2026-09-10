@@ -1229,8 +1229,70 @@ div:has(> label > span > input[data-filter-type="feature"]),
 .woocommerce-checkout #place_order::before,
 .woocommerce-checkout #place_order::after,
 .fd-table-cart .button::before,
-.fd-table-cart .button::after {
+.fd-table-cart .button::after,
+.woocommerce-checkout #payment ul.payment_methods li::before,
+.woocommerce-checkout #payment ul.payment_methods li::after,
+.woocommerce-checkout #payment .wc_payment_method label::before,
+.woocommerce-checkout #payment .wc_payment_method label::after {
     display: none !important;
     content: none !important;
+    font-family: inherit !important;
 }
+
+/* ==========================================================================
+   NEUTRAL FLOORING-TONED SKELETON PLACEHOLDER WITH SHIMMER ANIMATION
+   Eliminates white flash and visual layout shift during image loading.
+   ========================================================================== */
+@keyframes fixflip-gallery-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.fd-gallery-box,
+.fd-gallery-thumb-mini {
+    background: #f5f0ea linear-gradient(90deg, #f5f0ea 0%, #ede6dc 50%, #f5f0ea 100%) !important;
+    background-size: 200% 100% !important;
+    animation: fixflip-gallery-shimmer 2s infinite ease-in-out !important;
+}
+
+.fd-gallery-box img,
+.fd-gallery-thumb-mini img {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   MOBILE ACCESSIBILITY & 44PX TOUCH TARGETS
+   ========================================================================== */
+@media (max-width: 768px) {
+    button,
+    .button,
+    input[type="button"],
+    input[type="reset"],
+    input[type="submit"],
+    .woocommerce-checkout #place_order,
+    .fd-mob-link,
+    .fd-btn-sample,
+    .fd-btn-shop,
+    .fd-catalog-cta-btn,
+    .fd-btn-primary,
+    .fd-btn-secondary {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select {
+        min-height: 44px !important;
+        font-size: 16px !important;
+    }
+}
+
 

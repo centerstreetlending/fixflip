@@ -948,6 +948,15 @@ $is_logged_in = is_user_logged_in();
     .fd-products-grid {
         grid-template-columns: 1fr !important;
     }
+    .fd-products-grid .fd-prod-card:nth-child(n+4) {
+        display: none !important;
+    }
+    .fd-catalog-cta-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        min-height: 44px !important;
+    }
     .fd-logistics-grid {
         grid-template-columns: 1fr !important;
     }
@@ -1322,10 +1331,9 @@ $is_logged_in = is_user_logged_in();
             </div>
 
             <!-- Central Full Catalog Link -->
-            <div style="text-align: center;">
-                <a href="/commercial-flooring/" class="fd-btn-primary" style="padding: 14px 32px;">
-                    <span>View Full Commercial Flooring Catalog (<?php echo $is_logged_in ? '16 Planks' : '11 Planks'; ?>)</span>
-                    <span>&rarr;</span>
+            <div style="text-align: center; margin-top: 24px;">
+                <a href="/commercial-flooring/" class="fd-btn-primary fd-catalog-cta-btn" style="padding: 14px 32px; min-height: 44px;">
+                    <span>View Full Catalog (16 Planks) &rarr;</span>
                 </a>
             </div>
         </section>
@@ -1568,7 +1576,7 @@ $is_logged_in = is_user_logged_in();
                         <span class="fd-faq-icon">+</span>
                     </div>
                     <div class="fd-faq-a">
-                        Yes! You can order individual cut sample swatches for $5.00 each on any product page. Swatches are shipped directly to your door so you can verify color, grain, and thickness on-site before ordering.
+                        Yes! Free sample swatches &bull; $15 shipping per package of up to 3 via USPS Ground Advantage. Swatches are shipped directly to your jobsite or office so you can verify color, grain, and thickness on-site before ordering.
                     </div>
                 </div>
             </div>

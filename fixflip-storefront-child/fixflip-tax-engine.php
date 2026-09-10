@@ -83,6 +83,18 @@ function fixflip_lookup_zip_tax_rate( $postcode, $state = '', $city = '' ) {
         }
     }
 
+    // FixFlip collects sales tax exclusively for California destination delivery addresses.
+    // Non-CA / Out of state destinations have 0.00% tax.
+    if ( ! empty( $state_upper ) && $state_upper !== 'CA' ) {
+        return array(
+            'rate'  => 0.00,
+            'city'  => ! empty( $city_clean ) ? $city_clean : 'Out of State',
+            'state' => $state_upper,
+            'zip'   => $clean_zip,
+            'label' => sprintf( 'Sales Tax (%s, %s - 0.00%%)', ! empty( $city_clean ) ? $city_clean : 'Out of State', $state_upper ),
+        );
+    }
+
     // 1. SPECIFIC 5-DIGIT LOCAL & MUNICIPAL TAX RATES (High-Volume Renovation Markets)
     $specific_zips = array(
         // California - Los Angeles County Cities with District Add-ons
@@ -499,16 +511,24 @@ function fixflip_sync_checkout_tax_address( $post_data ) {
     }
 }
 
+// Ensure external tax services do not conflict with authoritative FixFlip destination tax engine
+add_filter( 'stripe_tax_skip_calculation', '__return_true', 999 );
+
+add_action( 'init', 'fixflip_suppress_conflicting_tax_hooks', 99 );
+function fixflip_suppress_conflicting_tax_hooks() {
+    if ( class_exists( 'Stripe\\StripeTaxForWooCommerce\\WooCommerce\\StripeTaxTaxRateHooks' ) ) {
+        remove_filter( 'woocommerce_find_rates', array( 'Stripe\\StripeTaxForWooCommerce\\WooCommerce\\StripeTaxTaxRateHooks', 'find_rates' ), 100 );
+    }
+    if ( class_exists( 'Stripe\\StripeTaxForWooCommerce\\WordPress\\Hooks' ) ) {
+        remove_filter( 'woocommerce_find_rates', array( 'Stripe\\StripeTaxForWooCommerce\\WordPress\\Hooks', 'filter_woocommerce_find_rates' ), 10 );
+    }
+}
+
 /**
  * Hook into WooCommerce find_rates to calculate destination tax dynamically
  */
-add_filter( 'woocommerce_find_rates', 'fixflip_dynamic_destination_tax_rates', 99, 2 );
+add_filter( 'woocommerce_find_rates', 'fixflip_dynamic_destination_tax_rates', 1001, 2 );
 function fixflip_dynamic_destination_tax_rates( $matched_tax_rates, $args ) {
-    // If Stripe Tax for WooCommerce plugin is active and enabled, let Stripe Tax calculate authoritative rates
-    if ( class_exists( '\Stripe\StripeTaxForWooCommerce\WordPress\Options' ) && \Stripe\StripeTaxForWooCommerce\WordPress\Options::is_live_mode_enabled() ) {
-        return $matched_tax_rates;
-    }
-
     $country  = strtoupper( trim( isset( $args['country'] ) ? $args['country'] : 'US' ) );
     $state    = strtoupper( trim( isset( $args['state'] ) ? $args['state'] : '' ) );
     $postcode = trim( isset( $args['postcode'] ) ? $args['postcode'] : '' );
@@ -564,7 +584,7 @@ function fixflip_dynamic_destination_tax_rates( $matched_tax_rates, $args ) {
             1 => array(
                 'rate'     => (float) $rate_info['rate'],
                 'label'    => $rate_info['label'],
-                'shipping' => 'no', // Sales tax applies to materials; freight has transparent dedicated line
+                'shipping' => 'yes', // Sales tax applies to eligible materials, sample shipping, and jobsite freight
                 'compound' => 'no',
             )
         );
@@ -579,11 +599,6 @@ function fixflip_dynamic_destination_tax_rates( $matched_tax_rates, $args ) {
 add_filter( 'woocommerce_rate_label', 'fixflip_dynamic_tax_rate_label_output', 99, 2 );
 add_filter( 'woocommerce_rate_code', 'fixflip_dynamic_tax_rate_label_output', 99, 2 );
 function fixflip_dynamic_tax_rate_label_output( $label, $rate_id ) {
-    // If Stripe Tax for WooCommerce plugin is active, preserve its exact jurisdictional labels
-    if ( class_exists( '\Stripe\StripeTaxForWooCommerce\WordPress\Options' ) && \Stripe\StripeTaxForWooCommerce\WordPress\Options::is_live_mode_enabled() ) {
-        return $label;
-    }
-
     if ( ! empty( $GLOBALS['fixflip_active_tax_label'] ) ) {
         return $GLOBALS['fixflip_active_tax_label'];
     }
@@ -642,5 +657,33 @@ function fixflip_auto_recalculate_tax_on_zip_change() {
         });
         </script>
         <?php
+    }
+}
+
+/**
+ * Record detailed FixFlip tax audit metadata on created orders
+ */
+add_action( 'woocommerce_checkout_create_order', 'fixflip_record_tax_order_meta', 20, 2 );
+function fixflip_record_tax_order_meta( $order, $data ) {
+    $postcode = $order->get_shipping_postcode() ?: $order->get_billing_postcode();
+    $state    = $order->get_shipping_state() ?: $order->get_billing_state();
+    $city     = $order->get_shipping_city() ?: $order->get_billing_city();
+    
+    $rate_info = fixflip_lookup_zip_tax_rate( $postcode, $state, $city );
+    if ( $rate_info && $rate_info['rate'] > 0 ) {
+        $taxable_merch    = (float) $order->get_subtotal();
+        $taxable_shipping = (float) $order->get_shipping_total();
+        
+        $order->update_meta_data( '_fixflip_tax_rate', $rate_info['rate'] );
+        $order->update_meta_data( '_fixflip_tax_jurisdiction', $rate_info['city'] . ', ' . $rate_info['state'] );
+        $order->update_meta_data( '_fixflip_tax_service_ref', 'CDTFA-' . $postcode );
+        $order->update_meta_data( '_fixflip_taxable_merchandise', $taxable_merch );
+        $order->update_meta_data( '_fixflip_taxable_shipping', $taxable_shipping );
+    } else {
+        $order->update_meta_data( '_fixflip_tax_rate', 0.00 );
+        $order->update_meta_data( '_fixflip_tax_jurisdiction', $state ? $state : 'None' );
+        $order->update_meta_data( '_fixflip_tax_service_ref', 'EXEMPT-NON-CA' );
+        $order->update_meta_data( '_fixflip_taxable_merchandise', (float) $order->get_subtotal() );
+        $order->update_meta_data( '_fixflip_taxable_shipping', (float) $order->get_shipping_total() );
     }
 }
