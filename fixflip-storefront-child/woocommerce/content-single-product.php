@@ -979,6 +979,8 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     const trimSku = this.getAttribute('data-sku');
                     const qty = parseInt(qtyInput.value) || 1;
                     const colorName = '<?php echo esc_js($title); ?>';
+                    const parentSku = '<?php echo esc_js($sku); ?>';
+                    const collectionName = '<?php echo esc_js($brand); ?>';
                     const origHtml = this.innerHTML;
 
                     this.disabled = true;
@@ -990,6 +992,8 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     formData.append('trim_sku', trimSku);
                     formData.append('quantity', qty);
                     formData.append('color_name', colorName);
+                    formData.append('parent_sku', parentSku);
+                    formData.append('collection_name', collectionName);
 
                     fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
                         method: 'POST',

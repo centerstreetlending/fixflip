@@ -23,10 +23,10 @@ defined( 'ABSPATH' ) || exit;
             $_product = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 
             if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
-                $sku = function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $_product ) : ( $_product->get_sku() ?: '56103' );
-                $theme_dir = get_stylesheet_directory_uri();
                 $is_sample = ! empty( $cart_item['is_sample'] );
-                $is_trim   = ( ! empty( $cart_item['is_trim'] ) || ( $_product && $_product->get_meta('is_trim') === 'yes' ) );
+                $is_trim   = ( ! empty( $cart_item['is_trim'] ) || ( $_product && $_product->get_meta('is_trim') === 'yes' ) || ( isset($cart_item['variation_id']) && get_post_meta( $cart_item['variation_id'], 'is_trim', true ) === 'yes' ) );
+                $sku       = $is_trim ? ( ! empty( $cart_item['trim_sku'] ) ? $cart_item['trim_sku'] : ( $_product ? $_product->get_sku() : '' ) ) : ( function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $_product ) : ( $_product ? $_product->get_sku() : '' ) );
+                $theme_dir = get_stylesheet_directory_uri();
 
                 if ( file_exists( get_stylesheet_directory() . '/images/hero_' . $sku . '.webp' ) ) {
                     $img_url = $theme_dir . '/images/hero_' . $sku . '.webp?v=' . time();
@@ -38,9 +38,18 @@ defined( 'ABSPATH' ) || exit;
                 if ( $is_sample ) {
                     $coverage_text = '1 Sample Swatch (FREE - $0.00) &bull; USPS Ground Advantage (3–7 Days)';
                 } elseif ( $is_trim ) {
-                    $length = $_product->get_meta('custom_length') ?: 'Piece';
-                    $matching = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
-                    $coverage_text = $length . ' Piece &bull; Sold by the Stick' . $matching;
+                    $length = ! empty( $cart_item['trim_length'] ) ? $cart_item['trim_length'] : ( $_product->get_meta('custom_length') ?: 'Piece' );
+                    $parts = array( $length . ' Piece', 'Sold by the Stick' );
+                    if ( ! empty( $cart_item['matching_color'] ) ) {
+                        $parts[] = 'Matches: ' . esc_html( $cart_item['matching_color'] );
+                    }
+                    if ( ! empty( $cart_item['collection_name'] ) ) {
+                        $parts[] = 'Collection: ' . esc_html( $cart_item['collection_name'] );
+                    }
+                    if ( ! empty( $cart_item['parent_sku'] ) ) {
+                        $parts[] = 'Color #: ' . esc_html( $cart_item['parent_sku'] );
+                    }
+                    $coverage_text = implode( ' &bull; ', $parts );
                 } else {
                     $coverage = function_exists('fixflip_get_product_coverage') ? fixflip_get_product_coverage( $_product ) : 20.00;
                     $total_sqft = round( $cart_item['quantity'] * $coverage, 1 );

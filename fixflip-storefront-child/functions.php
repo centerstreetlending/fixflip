@@ -888,17 +888,39 @@ function fixflip_display_cart_item_data( $item_data, $cart_item ) {
             'display' => ''
         );
     } elseif ( ! empty( $cart_item['is_trim'] ) ) {
+        $trim_sku = ! empty( $cart_item['trim_sku'] ) ? $cart_item['trim_sku'] : ( isset($cart_item['data']) && is_object($cart_item['data']) ? $cart_item['data']->get_sku() : '' );
+        if ( ! empty( $trim_sku ) ) {
+            $item_data[] = array(
+                'key'     => __( 'Accessory SKU', 'fixflip' ),
+                'value'   => esc_html( $trim_sku ),
+                'display' => ''
+            );
+        }
         if ( ! empty( $cart_item['matching_color'] ) ) {
             $item_data[] = array(
-                'key'     => __( 'Coordinating Floor', 'fixflip' ),
-                'value'   => sanitize_text_field( $cart_item['matching_color'] ),
+                'key'     => __( 'Matches', 'fixflip' ),
+                'value'   => esc_html( $cart_item['matching_color'] ),
+                'display' => ''
+            );
+        }
+        if ( ! empty( $cart_item['collection_name'] ) ) {
+            $item_data[] = array(
+                'key'     => __( 'Collection', 'fixflip' ),
+                'value'   => esc_html( $cart_item['collection_name'] ),
+                'display' => ''
+            );
+        }
+        if ( ! empty( $cart_item['parent_sku'] ) ) {
+            $item_data[] = array(
+                'key'     => __( 'Flooring Color #', 'fixflip' ),
+                'value'   => esc_html( $cart_item['parent_sku'] ),
                 'display' => ''
             );
         }
         if ( ! empty( $cart_item['trim_length'] ) ) {
             $item_data[] = array(
-                'key'     => __( 'Piece Length', 'fixflip' ),
-                'value'   => sanitize_text_field( $cart_item['trim_length'] ) . ' piece (sold by stick)',
+                'key'     => __( 'Length', 'fixflip' ),
+                'value'   => esc_html( $cart_item['trim_length'] ),
                 'display' => ''
             );
         }
@@ -918,19 +940,38 @@ function fixflip_save_order_line_item_data( $item, $cart_item_key, $values, $ord
     if ( ! empty( $values['is_sample'] ) ) {
         $item->add_meta_data( 'Order Type', 'Sample Swatch (FREE - $0.00)', true );
     } elseif ( ! empty( $values['is_trim'] ) ) {
-        $item->add_meta_data( 'Order Type', 'Jobsite Molding / Trim (Sold by Stick)', true );
+        $item->add_meta_data( 'Order Type', 'Coordinating Trim / Molding (Sold by Stick)', true );
+        $trim_sku = ! empty( $values['trim_sku'] ) ? $values['trim_sku'] : ( $item->get_product() ? $item->get_product()->get_sku() : '' );
+        if ( ! empty( $trim_sku ) ) {
+            $item->add_meta_data( 'Accessory SKU', sanitize_text_field( $trim_sku ), true );
+        }
         if ( ! empty( $values['matching_color'] ) ) {
-            $item->add_meta_data( 'Coordinating Floor', sanitize_text_field( $values['matching_color'] ), true );
+            $item->add_meta_data( 'Matches', sanitize_text_field( $values['matching_color'] ), true );
+        }
+        if ( ! empty( $values['collection_name'] ) ) {
+            $item->add_meta_data( 'Collection', sanitize_text_field( $values['collection_name'] ), true );
+        }
+        if ( ! empty( $values['parent_sku'] ) ) {
+            $item->add_meta_data( 'Flooring Color #', sanitize_text_field( $values['parent_sku'] ), true );
         }
         if ( ! empty( $values['trim_length'] ) ) {
-            $item->add_meta_data( 'Piece Length', sanitize_text_field( $values['trim_length'] ), true );
-        }
-        if ( ! empty( $values['trim_sku'] ) ) {
-            $item->add_meta_data( 'Trim SKU', sanitize_text_field( $values['trim_sku'] ), true );
+            $item->add_meta_data( 'Length', sanitize_text_field( $values['trim_length'] ), true );
         }
     } elseif ( isset( $values['calculated_sqft'] ) ) {
         $item->add_meta_data( 'Project Coverage', $values['calculated_sqft'] . ' sqft', true );
     }
+}
+
+// Ensure WooCommerce line item SKU returns the authentic accessory SKU in emails & admin
+add_filter( 'woocommerce_order_item_get_sku', 'fixflip_filter_order_item_sku', 10, 2 );
+function fixflip_filter_order_item_sku( $sku, $item ) {
+    if ( is_a( $item, 'WC_Order_Item_Product' ) ) {
+        $trim_sku = $item->get_meta( 'Accessory SKU' );
+        if ( ! empty( $trim_sku ) ) {
+            return $trim_sku;
+        }
+    }
+    return $sku;
 }
 
 /* ==========================================================================
@@ -1329,11 +1370,19 @@ function fixflip_output_cart_drawer_items_html() {
                 $item_badge        = ' <span style="background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px;">FREE SAMPLE</span>';
                 $line_desc         = '1 item &bull; ' . $cart_item['quantity'] . ' swatch sample (FREE)';
             } elseif ( $is_trim ) {
+                $trim_sku   = ! empty( $cart_item['trim_sku'] ) ? $cart_item['trim_sku'] : ( $_product ? $_product->get_sku() : '' );
                 $subtotal   = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
-                $item_badge = ' <span style="background: #f1f5f9; color: #0f172a; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px; border: 1px solid #cbd5e1;">MOLDING / TRIM</span>';
+                $item_badge = ' <span style="background: #f1f5f9; color: #0f172a; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; margin-left: 6px; border: 1px solid #cbd5e1;">SKU: ' . esc_html($trim_sku) . '</span> <span style="background: #fef3c7; color: #92400e; font-size: 9.5px; font-weight: 900; padding: 2px 6px; border-radius: 2px; border: 1px solid #fde68a;">MOLDING / TRIM</span>';
                 $pieces = (int) $cart_item['quantity'];
                 $piece_unit = $pieces === 1 ? 'piece' : 'pieces';
-                $matching_note = ! empty( $cart_item['matching_color'] ) ? ' &bull; Matches ' . esc_html($cart_item['matching_color']) : '';
+                $coordinating_bits = array();
+                if ( ! empty( $cart_item['matching_color'] ) ) {
+                    $coordinating_bits[] = 'Matches ' . esc_html($cart_item['matching_color']);
+                }
+                if ( ! empty( $cart_item['collection_name'] ) ) {
+                    $coordinating_bits[] = esc_html($cart_item['collection_name']);
+                }
+                $matching_note = ! empty( $coordinating_bits ) ? ' &bull; ' . implode( ' &bull; ', $coordinating_bits ) : '';
                 $line_desc  = $pieces . ' ' . $piece_unit . ' ($' . number_format((float)$_product->get_price(), 2) . ' / pc)' . $matching_note;
             } else {
                 $subtotal   = WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] );
@@ -3388,23 +3437,51 @@ function fixflip_resolve_sku( $input = '' ) {
         '01015', '02012', '05014',
         '11100', '11101', '11102', '15041', '17065'
     );
-    if ( is_string( $input ) && in_array( trim( $input ), $known_skus, true ) ) {
-        return trim( $input );
-    }
-    if ( is_string( $input ) && function_exists('fixflip_is_trim_sku') && fixflip_is_trim_sku( trim( $input ) ) ) {
-        return trim( $input );
+
+    // 1. Direct string SKU check
+    if ( is_string( $input ) ) {
+        $trimmed = trim( $input );
+        if ( in_array( $trimmed, $known_skus, true ) ) {
+            return $trimmed;
+        }
+        if ( function_exists( 'fixflip_is_trim_sku' ) && fixflip_is_trim_sku( $trimmed ) ) {
+            return $trimmed;
+        }
     }
 
+    // 2. WC_Product instance check
     if ( is_a( $input, 'WC_Product' ) ) {
+        $p_sku = $input->get_sku();
+        if ( ! empty( $p_sku ) ) {
+            if ( in_array( $p_sku, $known_skus, true ) ) {
+                return $p_sku;
+            }
+            if ( function_exists( 'fixflip_is_trim_sku' ) && fixflip_is_trim_sku( $p_sku ) ) {
+                return $p_sku;
+            }
+            if ( $input->get_meta( 'is_trim' ) === 'yes' ) {
+                return $p_sku;
+            }
+        }
         $slug = $input->get_slug();
         $title = $input->get_name();
-        $sku = $input->get_sku();
-        if ( in_array( $sku, $known_skus, true ) ) {
-            return $sku;
-        }
-        $text = strtolower( $slug . ' ' . $title . ' ' . $sku );
+        $text = strtolower( $slug . ' ' . $title . ' ' . $p_sku );
     } elseif ( is_numeric( $input ) && intval( $input ) > 0 ) {
-        $post = get_post( $input );
+        $p_id = (int) $input;
+        if ( get_post_meta( $p_id, 'is_trim', true ) === 'yes' ) {
+            $t_sku = get_post_meta( $p_id, '_sku', true );
+            if ( ! empty( $t_sku ) ) {
+                return $t_sku;
+            }
+        }
+        $prod = wc_get_product( $p_id );
+        if ( $prod ) {
+            $p_sku = $prod->get_sku();
+            if ( in_array( $p_sku, $known_skus, true ) || ( function_exists( 'fixflip_is_trim_sku' ) && fixflip_is_trim_sku( $p_sku ) ) ) {
+                return $p_sku;
+            }
+        }
+        $post = get_post( $p_id );
         $text = strtolower( ( $post ? $post->post_name . ' ' . $post->post_title : '' ) );
     } else {
         $text = strtolower( strval( $input ) );
@@ -3416,6 +3493,7 @@ function fixflip_resolve_sku( $input = '' ) {
         }
     }
 
+    // Match exact flooring keywords
     if ( strpos( $text, '56103' ) !== false || strpos( $text, 'zion' ) !== false ) return '56103';
     if ( strpos( $text, '56140' ) !== false || strpos( $text, 'riverside' ) !== false ) return '56140';
     if ( strpos( $text, '56240' ) !== false || strpos( $text, 'prairie' ) !== false ) return '56240';
@@ -3432,8 +3510,13 @@ function fixflip_resolve_sku( $input = '' ) {
     if ( strpos( $text, '11102' ) !== false || strpos( $text, 'naturale' ) !== false ) return '11102';
     if ( strpos( $text, '15041' ) !== false || strpos( $text, 'ashen' ) !== false ) return '15041';
     if ( strpos( $text, '17065' ) !== false || strpos( $text, 'fawn' ) !== false ) return '17065';
-    
-    return '56103';
+
+    // If WC_Product instance, return its native SKU
+    if ( is_a( $input, 'WC_Product' ) && ! empty( $input->get_sku() ) ) {
+        return $input->get_sku();
+    }
+
+    return '';
 }
 
 /**
@@ -4729,7 +4812,45 @@ function fixflip_exclude_trims_from_catalog( $q ) {
 }
 
 /**
- * Ensure Trims Exist in WooCommerce Database (Run only on demand to prevent blocking DB operations on page loads)
+ * Authoritative lookup for Trim Accessory Product ID by SKU
+ */
+function fixflip_get_trim_product_id( $sku ) {
+    $sku = trim( (string) $sku );
+    if ( empty( $sku ) ) {
+        return 0;
+    }
+    $cached_map = get_option( 'fixflip_accessory_product_map', array() );
+    if ( ! empty( $cached_map[ $sku ] ) ) {
+        $p_id = (int) $cached_map[ $sku ];
+        if ( get_post_status( $p_id ) === 'publish' ) {
+            return $p_id;
+        }
+    }
+    $product_id = wc_get_product_id_by_sku( $sku );
+    if ( $product_id && get_post_status( $product_id ) === 'publish' ) {
+        $cached_map[ $sku ] = (int) $product_id;
+        update_option( 'fixflip_accessory_product_map', $cached_map, false );
+        return (int) $product_id;
+    }
+    // Fallback: search in postmeta
+    global $wpdb;
+    $found_id = $wpdb->get_var( $wpdb->prepare(
+        "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_sku' AND meta_value = %s ORDER BY post_id DESC LIMIT 1",
+        $sku
+    ) );
+    if ( $found_id && get_post_status( $found_id ) === 'publish' ) {
+        $cached_map[ $sku ] = (int) $found_id;
+        update_option( 'fixflip_accessory_product_map', $cached_map, false );
+        if ( function_exists( 'wc_update_product_lookup_tables' ) ) {
+            wc_update_product_lookup_tables( (int) $found_id );
+        }
+        return (int) $found_id;
+    }
+    return 0;
+}
+
+/**
+ * Ensure Trims Exist in WooCommerce Database With Clean Visibility & Lookup Sync
  */
 if ( isset( $_GET['sync_trims'] ) ) {
     add_action( 'init', 'fixflip_ensure_trim_products', 25 );
@@ -4737,53 +4858,63 @@ if ( isset( $_GET['sync_trims'] ) ) {
 function fixflip_ensure_trim_products() {
     if ( ! class_exists( 'WooCommerce' ) ) return;
 
-    $all_trims = fixflip_get_all_trims_data();
+    $all_trims  = fixflip_get_all_trims_data();
+    $cached_map = get_option( 'fixflip_accessory_product_map', array() );
 
     foreach ( $all_trims as $sku => $data ) {
-        $product_id = wc_get_product_id_by_sku( $sku );
+        $product_id = fixflip_get_trim_product_id( $sku );
+        $product    = $product_id ? wc_get_product( $product_id ) : null;
 
-        if ( ! $product_id ) {
-            $post_id = wp_insert_post( array(
-                'post_title'   => $data['full_name'],
-                'post_name'    => sanitize_title( $data['full_name'] ),
-                'post_content' => $data['description'],
-                'post_excerpt' => $data['title'] . ' - Wholesale contractor trim accessory. Sold by the single ' . $data['length'] . ' piece.',
-                'post_status'  => 'publish',
-                'post_type'    => 'product',
-            ) );
+        if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+            $new_product = new WC_Product_Simple();
+            $new_product->set_name( $data['full_name'] );
+            $new_product->set_status( 'publish' );
+            $new_product->set_catalog_visibility( 'hidden' );
+            $new_product->set_description( $data['description'] );
+            $new_product->set_short_description( $data['title'] . ' - Wholesale contractor trim accessory. Sold by the single ' . $data['length'] . ' piece.' );
+            $new_product->set_sku( $sku );
+            $new_product->set_regular_price( (string)$data['price'] );
+            $new_product->set_price( (string)$data['price'] );
+            $new_product->set_manage_stock( false );
+            $new_product->set_stock_status( 'instock' );
+            $new_product->set_sold_individually( false );
+            $new_product->update_meta_data( 'is_trim', 'yes' );
+            $new_product->update_meta_data( 'custom_unit', 'piece' );
+            $new_product->update_meta_data( 'custom_length', $data['length'] );
+            $new_product->update_meta_data( 'custom_trim_type', $data['type'] );
+            $new_product->update_meta_data( 'trim_sku', $sku );
+            $product_id = $new_product->save();
 
-            if ( $post_id && ! is_wp_error( $post_id ) ) {
-                $product_id = $post_id;
-                wp_set_object_terms( $product_id, 'simple', 'product_type' );
-
-                // Strictly hide from all shop catalogs and search queries
-                wp_set_object_terms( $product_id, array( 'exclude-from-catalog', 'exclude-from-search' ), 'product_visibility' );
-
-                update_post_meta( $product_id, '_visibility', 'hidden' );
-                update_post_meta( $product_id, '_stock_status', 'instock' );
-                update_post_meta( $product_id, 'total_sales', '0' );
-                update_post_meta( $product_id, '_downloadable', 'no' );
-                update_post_meta( $product_id, '_virtual', 'no' );
-                update_post_meta( $product_id, '_sku', $sku );
-                update_post_meta( $product_id, '_regular_price', (string)$data['price'] );
-                update_post_meta( $product_id, '_price', (string)$data['price'] );
-                update_post_meta( $product_id, 'is_trim', 'yes' );
-                update_post_meta( $product_id, 'custom_unit', 'piece' );
-                update_post_meta( $product_id, 'custom_length', $data['length'] );
-                update_post_meta( $product_id, 'custom_trim_type', $data['type'] );
-            }
-        } else {
-            // Strictly enforce hidden visibility, piece rate, and trim flag
             wp_set_object_terms( $product_id, array( 'exclude-from-catalog', 'exclude-from-search' ), 'product_visibility' );
             update_post_meta( $product_id, '_visibility', 'hidden' );
-            update_post_meta( $product_id, '_regular_price', (string)$data['price'] );
-            update_post_meta( $product_id, '_price', (string)$data['price'] );
-            update_post_meta( $product_id, 'is_trim', 'yes' );
-            update_post_meta( $product_id, 'custom_unit', 'piece' );
-            update_post_meta( $product_id, 'custom_length', $data['length'] );
-            update_post_meta( $product_id, 'custom_trim_type', $data['type'] );
+        } else {
+            $dirty = false;
+            if ( $product->get_sku() !== $sku ) {
+                $product->set_sku( $sku );
+                $dirty = true;
+            }
+            if ( (float)$product->get_price() !== (float)$data['price'] ) {
+                $product->set_regular_price( (string)$data['price'] );
+                $product->set_price( (string)$data['price'] );
+                $dirty = true;
+            }
+            if ( $product->get_meta( 'is_trim' ) !== 'yes' ) {
+                $product->update_meta_data( 'is_trim', 'yes' );
+                $dirty = true;
+            }
+            if ( $dirty ) {
+                $product->save();
+            }
+            wp_set_object_terms( $product_id, array( 'exclude-from-catalog', 'exclude-from-search' ), 'product_visibility' );
+            update_post_meta( $product_id, '_visibility', 'hidden' );
+        }
+
+        if ( $product_id ) {
+            $cached_map[ $sku ] = (int) $product_id;
         }
     }
+
+    update_option( 'fixflip_accessory_product_map', $cached_map, false );
 }
 
 /**
@@ -4809,9 +4940,11 @@ function fixflip_ajax_add_trim_handler() {
         }
     }
 
-    $sku      = isset( $_POST['trim_sku'] ) ? sanitize_text_field( $_POST['trim_sku'] ) : '';
-    $quantity = isset( $_POST['quantity'] ) ? max( 1, absint( $_POST['quantity'] ) ) : 1;
-    $color    = isset( $_POST['color_name'] ) ? sanitize_text_field( $_POST['color_name'] ) : '';
+    $sku             = isset( $_POST['trim_sku'] ) ? sanitize_text_field( $_POST['trim_sku'] ) : '';
+    $quantity        = isset( $_POST['quantity'] ) ? max( 1, absint( $_POST['quantity'] ) ) : 1;
+    $color           = isset( $_POST['color_name'] ) ? sanitize_text_field( $_POST['color_name'] ) : '';
+    $parent_sku      = isset( $_POST['parent_sku'] ) ? sanitize_text_field( $_POST['parent_sku'] ) : '';
+    $collection_name = isset( $_POST['collection_name'] ) ? sanitize_text_field( $_POST['collection_name'] ) : '';
 
     $all_trims = fixflip_get_all_trims_data();
     if ( ! isset( $all_trims[$sku] ) ) {
@@ -4819,12 +4952,12 @@ function fixflip_ajax_add_trim_handler() {
         return;
     }
 
-    $trim_data = $all_trims[$sku];
-    $product_id = wc_get_product_id_by_sku( $sku );
+    $trim_data  = $all_trims[$sku];
+    $product_id = fixflip_get_trim_product_id( $sku );
 
     if ( ! $product_id ) {
         fixflip_ensure_trim_products();
-        $product_id = wc_get_product_id_by_sku( $sku );
+        $product_id = fixflip_get_trim_product_id( $sku );
     }
 
     if ( ! $product_id ) {
@@ -4832,13 +4965,16 @@ function fixflip_ajax_add_trim_handler() {
         return;
     }
 
+    // Build rich cart item data with unique key per coordinating color
     $cart_item_data = array(
-        'is_trim'        => true,
-        'trim_sku'       => $sku,
-        'trim_length'    => $trim_data['length'],
-        'trim_price'     => $trim_data['price'],
-        'matching_color' => $color,
-        'unique_key'     => md5( $product_id . '_' . $sku . '_' . $color . '_' . microtime() )
+        'is_trim'         => true,
+        'trim_sku'        => $sku,
+        'trim_length'     => $trim_data['length'],
+        'trim_price'      => $trim_data['price'],
+        'matching_color'  => $color,
+        'parent_sku'      => $parent_sku,
+        'collection_name' => $collection_name,
+        'unique_key'      => md5( $product_id . '_' . $sku . '_' . $parent_sku . '_' . $color )
     );
 
     $cart_item_key = WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $cart_item_data );
@@ -4848,6 +4984,7 @@ function fixflip_ajax_add_trim_handler() {
         $product_obj   = wc_get_product( $product_id );
         if ( $product_obj ) {
             $product_obj->set_price( (float)$trim_data['price'] );
+            $product_obj->set_sku( $sku );
             WC()->cart->cart_contents[ $cart_item_key ] = array_merge( $cart_item_data, array(
                 'key'          => $cart_item_key,
                 'product_id'   => $product_id,
@@ -4871,6 +5008,7 @@ function fixflip_ajax_add_trim_handler() {
         'drawer_html' => $drawer_html,
         'cart_count'  => count( WC()->cart->get_cart() ),
         'box_count'   => WC()->cart->get_cart_contents_count(),
+        'trim_sku'    => $sku,
         'trim_title'  => $trim_data['title'],
         'quantity'    => $quantity
     ) );

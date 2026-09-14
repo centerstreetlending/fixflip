@@ -68,9 +68,9 @@ do_action( 'woocommerce_before_cart' ); ?>
 
                                 if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
                                     $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
-                                    $sku = fixflip_resolve_sku( $_product );
                                     $is_sample = ! empty( $cart_item['is_sample'] );
                                     $is_trim = ! empty( $cart_item['is_trim'] ) || get_post_meta( $product_id, 'is_trim', true ) === 'yes' || ( isset($cart_item['variation_id']) && get_post_meta( $cart_item['variation_id'], 'is_trim', true ) === 'yes' );
+                                    $sku = $is_trim ? ( ! empty( $cart_item['trim_sku'] ) ? $cart_item['trim_sku'] : ( $_product ? $_product->get_sku() : '' ) ) : fixflip_resolve_sku( $_product );
                                     $coverage = function_exists('fixflip_get_product_coverage') ? fixflip_get_product_coverage( $_product ) : 20.00;
                                     $total_sqft = round($cart_item['quantity'] * $coverage, 1);
                                     ?>
@@ -126,7 +126,16 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                     <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">
                                                         Jobsite Molding &bull; <strong style="color: #007bff;"><?php echo esc_html( $cart_item['quantity'] ); ?> piece<?php echo $cart_item['quantity'] > 1 ? 's' : ''; ?> total</strong>
                                                         <?php if ( ! empty( $cart_item['matching_color'] ) ) : ?>
-                                                            &bull; <span style="color: #0f172a; font-weight: 700;">Matches <?php echo esc_html( $cart_item['matching_color'] ); ?></span>
+                                                            &bull; <span style="color: #0f172a; font-weight: 700;">Matches: <?php echo esc_html( $cart_item['matching_color'] ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( ! empty( $cart_item['collection_name'] ) ) : ?>
+                                                            &bull; <span>Collection: <?php echo esc_html( $cart_item['collection_name'] ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( ! empty( $cart_item['parent_sku'] ) ) : ?>
+                                                            &bull; <span>Color #: <?php echo esc_html( $cart_item['parent_sku'] ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( ! empty( $cart_item['trim_length'] ) ) : ?>
+                                                            &bull; <span>Length: <?php echo esc_html( $cart_item['trim_length'] ); ?></span>
                                                         <?php endif; ?>
                                                     </div>
                                                 <?php elseif ( ! $is_sample ) : ?>
