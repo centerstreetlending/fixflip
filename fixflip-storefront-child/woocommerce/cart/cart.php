@@ -125,6 +125,9 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                 <?php if ( $is_trim ) : ?>
                                                     <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">
                                                         Jobsite Molding &bull; <strong style="color: #007bff;"><?php echo esc_html( $cart_item['quantity'] ); ?> piece<?php echo $cart_item['quantity'] > 1 ? 's' : ''; ?> total</strong>
+                                                        <?php if ( ! empty( $cart_item['matching_color'] ) ) : ?>
+                                                            &bull; <span style="color: #0f172a; font-weight: 700;">Matches <?php echo esc_html( $cart_item['matching_color'] ); ?></span>
+                                                        <?php endif; ?>
                                                     </div>
                                                 <?php elseif ( ! $is_sample ) : ?>
                                                     <div style="font-size: 12.5px; color: #475569; font-weight: 600; margin-top: 2px;">

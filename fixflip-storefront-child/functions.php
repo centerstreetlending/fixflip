@@ -878,7 +878,7 @@ function fixflip_filter_cart_item_product_sample( $product, $cart_item, $cart_it
     return $product;
 }
 
-// 5. Display Calculated Sqft & Sample Info in Cart and Checkout
+// 5. Display Calculated Sqft, Sample Info & Trim Specs in Cart and Checkout
 add_filter( 'woocommerce_get_item_data', 'fixflip_display_cart_item_data', 10, 2 );
 function fixflip_display_cart_item_data( $item_data, $cart_item ) {
     if ( ! empty( $cart_item['is_sample'] ) ) {
@@ -887,6 +887,21 @@ function fixflip_display_cart_item_data( $item_data, $cart_item ) {
             'value'   => 'Sample Swatch (FREE - $0.00)',
             'display' => ''
         );
+    } elseif ( ! empty( $cart_item['is_trim'] ) ) {
+        if ( ! empty( $cart_item['matching_color'] ) ) {
+            $item_data[] = array(
+                'key'     => __( 'Coordinating Floor', 'fixflip' ),
+                'value'   => sanitize_text_field( $cart_item['matching_color'] ),
+                'display' => ''
+            );
+        }
+        if ( ! empty( $cart_item['trim_length'] ) ) {
+            $item_data[] = array(
+                'key'     => __( 'Piece Length', 'fixflip' ),
+                'value'   => sanitize_text_field( $cart_item['trim_length'] ) . ' piece (sold by stick)',
+                'display' => ''
+            );
+        }
     } elseif ( isset( $cart_item['calculated_sqft'] ) ) {
         $item_data[] = array(
             'key'     => __( 'Project Coverage', 'fixflip' ),
@@ -897,11 +912,22 @@ function fixflip_display_cart_item_data( $item_data, $cart_item ) {
     return $item_data;
 }
 
-// 6. Save Calculated Sqft & Sample Info to Order Line Items
+// 6. Save Calculated Sqft, Sample Info & Trim Specs to Order Line Items
 add_action( 'woocommerce_checkout_create_order_line_item', 'fixflip_save_order_line_item_data', 10, 4 );
 function fixflip_save_order_line_item_data( $item, $cart_item_key, $values, $order ) {
     if ( ! empty( $values['is_sample'] ) ) {
         $item->add_meta_data( 'Order Type', 'Sample Swatch (FREE - $0.00)', true );
+    } elseif ( ! empty( $values['is_trim'] ) ) {
+        $item->add_meta_data( 'Order Type', 'Jobsite Molding / Trim (Sold by Stick)', true );
+        if ( ! empty( $values['matching_color'] ) ) {
+            $item->add_meta_data( 'Coordinating Floor', sanitize_text_field( $values['matching_color'] ), true );
+        }
+        if ( ! empty( $values['trim_length'] ) ) {
+            $item->add_meta_data( 'Piece Length', sanitize_text_field( $values['trim_length'] ), true );
+        }
+        if ( ! empty( $values['trim_sku'] ) ) {
+            $item->add_meta_data( 'Trim SKU', sanitize_text_field( $values['trim_sku'] ), true );
+        }
     } elseif ( isset( $values['calculated_sqft'] ) ) {
         $item->add_meta_data( 'Project Coverage', $values['calculated_sqft'] . ' sqft', true );
     }
@@ -4657,9 +4683,18 @@ function fixflip_get_coordinating_trims( $sku_or_product ) {
             }
         }
     }
-    // 3. Good & Better Tier Hardwood: CA303 Oak Traditions & CA308 Refined Oak
-    elseif ( in_array( $sku, array( '00135', '01102', '07087', '07091', '01015', '02012', '05014' ) ) ) {
-        $target_skus = array( 'CSH12', 'COSH2', 'CRH12', 'CCH12', 'CAQTR', 'CFS18', 'CSO18' );
+    // 3. Good Tier Hardwood: CA303 Oak Traditions (3/8" Thickness)
+    elseif ( in_array( $sku, array( '00135', '01102', '07087', '07091' ) ) ) {
+        $target_skus = array( 'CSH12', 'COSH2', 'CRH12', 'CCH12', 'CAQTR' );
+        foreach ( $target_skus as $tsku ) {
+            if ( isset( $all[$tsku] ) ) {
+                $matched[$tsku] = $all[$tsku];
+            }
+        }
+    }
+    // 4. Better Tier Hardwood: CA308 Refined Oak (1/2" Thickness)
+    elseif ( in_array( $sku, array( '01015', '02012', '05014' ) ) ) {
+        $target_skus = array( 'CFS18', 'CSO18', 'CRH12', 'CCH12', 'CAQTR' );
         foreach ( $target_skus as $tsku ) {
             if ( isset( $all[$tsku] ) ) {
                 $matched[$tsku] = $all[$tsku];
