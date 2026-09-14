@@ -264,12 +264,19 @@ $theme_uri = get_stylesheet_directory_uri();
 
         <!-- TOP HERO HEADER TEXT SECTION -->
         <section class="fd-hero-banner" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 0px; padding: 32px 40px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-            <h1 style="font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
-                <?php echo esc_html( $page_heading ); ?>
-            </h1>
-            <p style="font-size: 14px; color: #64748b; margin: 0; font-weight: 500;">
-                Curated Wholesale Commercial Flooring Catalog &bull; Center Street Lending Materials Partner
-            </p>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <h1 style="font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
+                        <?php echo esc_html( $page_heading ); ?>
+                    </h1>
+                    <p style="font-size: 14px; color: #64748b; margin: 0; font-weight: 500;">
+                        Curated Wholesale Commercial Flooring Catalog &bull; Center Street Lending Materials Partner
+                    </p>
+                </div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 8px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 700; color: #1e293b;">
+                    <span>📦 11 public products &bull; 5 Contractor Desk products (16 total)</span>
+                </div>
+            </div>
         </section>
 
         <?php
@@ -394,7 +401,7 @@ $theme_uri = get_stylesheet_directory_uri();
                             if ( $product && ( $product->get_meta('is_trim') === 'yes' || ! $product->is_visible() ) ) {
                                 continue;
                             }
-                            if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) && ! is_user_logged_in() ) {
+                            if ( in_array($sku, array('11100', '11101', '11102', '15041', '17065')) && ! ( function_exists('fixflip_is_best_tier_unlocked') ? fixflip_is_best_tier_unlocked() : is_user_logged_in() ) ) {
                                 continue;
                             }
                             $price = (float)($product->get_price() ?: 2.55);

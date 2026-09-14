@@ -4,6 +4,14 @@
  * Institutional Borrower & Renovation Material Financing Platform
  * In partnership with Center Street Lending
  */
+if ( ! headers_sent() ) {
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Pragma: no-cache' );
+    header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
+    header( 'Surrogate-Control: no-store' );
+    header( 'x-accel-expires: 0' );
+}
+
 get_header(); 
 $theme_uri = get_stylesheet_directory_uri();
 $is_logged_in = is_user_logged_in();
@@ -1191,9 +1199,14 @@ body.home #colophon {
                     <h2 class="fd-sec-title">Featured Products</h2>
                     <p class="fd-sec-subtitle">Top commercial-grade flooring warehoused and ready for direct jobsite dispatch.</p>
                 </div>
-                <a href="/commercial-flooring/" class="fd-btn-secondary" style="padding: 10px 18px; font-size: 12px;">
-                    <span>View All Materials &rarr;</span>
-                </a>
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #475569; background: #f8fafc; border: 1px solid #cbd5e1; padding: 7px 12px; border-radius: 4px;">
+                        11 public products &bull; 5 Contractor Desk products
+                    </span>
+                    <a href="/commercial-flooring/" class="fd-btn-secondary" style="padding: 10px 18px; font-size: 12px;">
+                        <span>View All Materials &rarr;</span>
+                    </a>
+                </div>
             </div>
 
             <div class="fd-products-grid">

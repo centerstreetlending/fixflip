@@ -103,7 +103,44 @@ function fixflip_disable_wc_cart_fragments_on_front() {
 // 4. Defer Non-Critical JavaScript Files for Instant Page Paint
 add_filter('script_loader_tag', 'fixflip_defer_non_critical_scripts', 10, 2);
 function fixflip_defer_non_critical_scripts($tag, $handle) {
-    if (is_admin() || strpos($tag, 'jquery.min.js') !== false || strpos($tag, 'jquery.js') !== false) {
+    if ( is_admin() ) {
+        return $tag;
+    }
+    // Never defer jQuery, core WP dependencies, or scripts that inline scripts depend upon
+    $no_defer_handles = array(
+        'jquery',
+        'jquery-core',
+        'jquery-migrate',
+        'wp-i18n',
+        'wp-hooks',
+        'wp-polyfill',
+        'wp-api-fetch',
+        'wp-url',
+        'wp-data',
+        'wp-element',
+        'wp-compose',
+        'wp-components',
+        'wp-autop',
+        'wp-blob',
+        'wp-dom-ready',
+        'wp-html-entities',
+        'wp-primitives',
+        'wp-keycodes',
+    );
+    if ( in_array( $handle, $no_defer_handles, true ) || strpos( $handle, 'wp-' ) === 0 ) {
+        return $tag;
+    }
+    // Check if inline scripts are attached to this handle (e.g. wp_add_inline_script 'after'/'before'/'data')
+    $wp_scripts = wp_scripts();
+    if ( $wp_scripts && isset( $wp_scripts->registered[ $handle ] ) ) {
+        $has_inline = ! empty( $wp_scripts->get_data( $handle, 'data' ) ) ||
+                      ! empty( $wp_scripts->get_data( $handle, 'after' ) ) ||
+                      ! empty( $wp_scripts->get_data( $handle, 'before' ) );
+        if ( $has_inline ) {
+            return $tag;
+        }
+    }
+    if ( strpos( $tag, 'jquery.min.js' ) !== false || strpos( $tag, 'jquery.js' ) !== false ) {
         return $tag;
     }
     return str_replace(' src=', ' defer="defer" src=', $tag);
@@ -1352,14 +1389,14 @@ function fixflip_output_cart_drawer_items_html() {
             echo '</div>';
             echo '<div style="font-size: 11px; color: #475569; font-weight: 600;">Eligible for 100% CSL Draw Financing &amp; Direct Jobsite Delivery!</div>';
         } else {
-            echo '<div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between;">';
-            echo '<span>$2,000 LOAN ADVANCE REQUIREMENT</span>';
-            echo '<span>' . $percent . '%</span>';
+            echo '<div style="font-size: 11px; font-weight: 900; color: #9a3412; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">';
+            echo '<span>Card Checkout Available</span>';
+            echo '<span style="background: #fed7aa; color: #7c2d12; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">Not Yet Eligible for CSL Financing</span>';
             echo '</div>';
             echo '<div style="height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 6px;">';
-            echo '<div style="width: ' . $percent . '%; height: 100%; background: #007bff;"></div>';
+            echo '<div style="width: ' . $percent . '%; height: 100%; background: #ea580c;"></div>';
             echo '</div>';
-            echo '<div style="font-size: 11.5px; color: #0f172a; font-weight: 600;">Add $' . $needed . ' more in materials to finance via CSL Loan Draw ($2,000.00 min).</div>';
+            echo '<div style="font-size: 11.5px; color: #7c2d12; font-weight: 600;">Add $' . $needed . ' More for CSL Financing ($2,000 min materials).</div>';
         }
         echo '</div>';
     } else {
@@ -1368,35 +1405,37 @@ function fixflip_output_cart_drawer_items_html() {
         echo '</div>';
     }
 
-    // Line items breakdown
-    echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
-    echo '<span>Order Subtotal (' . $item_label . '):</span>';
+    // Line items breakdown (Explicit pre-address labeling and freight/tax estimates)
+    echo '<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
+    echo '<span>Materials subtotal &mdash; shipping and tax not yet included:</span>';
     echo '<span style="font-weight: 800; color: #0f172a;">' . WC()->cart->get_cart_subtotal() . '</span>';
     echo '</div>';
 
     if ( $has_bulk ) {
-        echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
-        echo '<span>Direct Jobsite Freight:</span>';
+        echo '<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
+        echo '<span>Estimated Pallet Freight ($450 base + $0.40/sq ft):</span>';
         echo '<span style="color: #007bff; font-weight: 800;">$' . number_format($freight_cost, 2) . '</span>';
         echo '</div>';
     }
     if ( $sample_count > 0 ) {
         $pkg_word = $sample_packages === 1 ? '1 package' : $sample_packages . ' packages';
-        echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
-        echo '<span>Sample Shipping (' . $pkg_word . '):</span>';
+        echo '<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px;">';
+        echo '<span>Sample Shipping (' . $pkg_word . ' &bull; $15/pkg):</span>';
         echo '<span style="color: #007bff; font-weight: 800;">$' . number_format($sample_shipping, 2) . '</span>';
         echo '</div>';
     }
 
+    echo '<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
+    echo '<span>Sales Tax:</span>';
     if ( $tax_cost > 0 ) {
-        echo '<div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 700; color: #475569; margin-bottom: 8px;">';
-        echo '<span>Jobsite Sales Tax:</span>';
         echo '<span style="color: #0f172a; font-weight: 800;">$' . number_format($tax_cost, 2) . '</span>';
-        echo '</div>';
+    } else {
+        echo '<span style="color: #64748b; font-style: italic; font-size: 12px;">Calculated after delivery address</span>';
     }
+    echo '</div>';
 
-    echo '<div style="display: flex; justify-content: space-between; font-size: 15.5px; font-weight: 900; color: #0f172a; margin-bottom: 16px; padding-top: 8px; border-top: 1.5px dashed #cbd5e1;">';
-    echo '<span>Estimated Total:</span>';
+    echo '<div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 900; color: #0f172a; margin-bottom: 16px; padding-top: 8px; border-top: 1.5px dashed #cbd5e1;">';
+    echo '<span>Estimated Order Total (Pre-Address):</span>';
     echo '<span style="color: #007bff;">$' . number_format($est_total, 2) . '</span>';
     echo '</div>';
     
@@ -1410,7 +1449,7 @@ function fixflip_output_cart_drawer_items_html() {
         echo '<a href="' . esc_url( wc_get_checkout_url() ) . '" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 14px 16px; background: #007bff; color: #ffffff; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.8px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">PAY WITH CARD &amp; CHECKOUT &rarr;</a>';
         
         // 2. Add Materials to Qualify for CSL Financing
-        echo '<a href="/commercial-flooring/" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 12px 14px; background: #f0fdf4; color: #166534; border: 1.5px solid #86efac; font-size: 12px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">+ ADD MATERIALS FOR CSL FINANCING (Need $' . $needed . ' more)</a>';
+        echo '<a href="/commercial-flooring/" style="display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 12px 14px; background: #f0fdf4; color: #166534; border: 1.5px solid #86efac; font-size: 12px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">+ ADD $' . $needed . ' MORE FOR CSL FINANCING</a>';
     }
     
     echo '<button type="button" onclick="window.fdCloseCartDrawer()" style="width: 100%; min-height: 44px; padding: 12px; background: #ffffff; color: #475569; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 700; text-transform: uppercase; border-radius: 4px; cursor: pointer;">Continue Shopping</button>';
@@ -2724,6 +2763,14 @@ if ( class_exists( 'WC_Payment_Gateway' ) ) {
             $this->enabled            = 'yes';
         }
 
+        public function is_available() {
+            if ( ! parent::is_available() ) {
+                return false;
+            }
+            $material_subtotal = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
+            return ( $material_subtotal >= 2000.00 );
+        }
+
         public function get_title() {
             return 'Center Street Lending (CSL) Draw Advance <span style="font-size: 10.5px; font-weight: 900; background: #16a34a; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 6px; text-transform: uppercase;">100% Loan Financed</span>';
         }
@@ -2808,15 +2855,18 @@ function fixflip_restrict_to_two_payment_gateways( $gateways ) {
     if ( is_admin() ) return $gateways;
 
     $filtered = array();
+    $materials = function_exists( 'fixflip_get_csl_eligible_materials_subtotal' ) ? fixflip_get_csl_eligible_materials_subtotal() : 0.00;
 
-    // 1. Center Street Lending Draw Advance
-    if ( isset( $gateways['csl_draw_advance'] ) ) {
-        $filtered['csl_draw_advance'] = $gateways['csl_draw_advance'];
-    } elseif ( class_exists( 'WC_Gateway_CSL_Draw_Advance' ) ) {
-        $filtered['csl_draw_advance'] = new WC_Gateway_CSL_Draw_Advance();
+    // 1. Center Street Lending Draw Advance - strictly available only if $2,000+ eligible materials
+    if ( $materials >= 2000.00 ) {
+        if ( isset( $gateways['csl_draw_advance'] ) ) {
+            $filtered['csl_draw_advance'] = $gateways['csl_draw_advance'];
+        } elseif ( class_exists( 'WC_Gateway_CSL_Draw_Advance' ) ) {
+            $filtered['csl_draw_advance'] = new WC_Gateway_CSL_Draw_Advance();
+        }
     }
 
-    // 2. Stripe Card / Apple Pay Gateway
+    // 2. Stripe Card / Apple Pay Gateway (Default payment method)
     if ( isset( $gateways['stripe'] ) ) {
         $filtered['stripe'] = $gateways['stripe'];
     } elseif ( isset( $gateways['stripe_cc'] ) ) {
@@ -3246,19 +3296,39 @@ function fixflip_add_csl_draw_notification_recipient( $recipient, $order ) {
 }
 
 /**
- * Brand Leakage Filter: Guarantee zero customer-facing leakage of supplier brand names (e.g. Shaw)
+ * Brand Leakage Filter: Guarantee zero customer-facing leakage of supplier brand names (e.g. Shaw, Shaw Contract, Shaw Contracting)
  */
 function fixflip_filter_brand_leakage( $text ) {
     if ( empty( $text ) || ! is_string( $text ) ) {
         return $text;
     }
-    return preg_replace( '/\bshaw\b/i', 'FixFlip Commercial', $text );
+    $patterns = array(
+        '/\bshaw\s*contracting\b/i',
+        '/\bshaw\s*contract\b/i',
+        '/\bshaw\s*industries\b/i',
+        '/\bshaw\b/i',
+    );
+    return preg_replace( $patterns, 'FixFlip Commercial', $text );
 }
 add_filter( 'the_title', 'fixflip_filter_brand_leakage', 99 );
 add_filter( 'the_content', 'fixflip_filter_brand_leakage', 99 );
 add_filter( 'the_excerpt', 'fixflip_filter_brand_leakage', 99 );
 add_filter( 'woocommerce_product_get_name', 'fixflip_filter_brand_leakage', 99 );
 add_filter( 'woocommerce_product_title', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_short_description', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_cart_item_name', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_order_item_name', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_attribute_label', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'woocommerce_attribute', 'fixflip_filter_brand_leakage', 99 );
+add_filter( 'wp_get_attachment_image_attributes', function( $attr ) {
+    if ( ! empty( $attr['alt'] ) ) {
+        $attr['alt'] = fixflip_filter_brand_leakage( $attr['alt'] );
+    }
+    if ( ! empty( $attr['title'] ) ) {
+        $attr['title'] = fixflip_filter_brand_leakage( $attr['title'] );
+    }
+    return $attr;
+}, 99 );
 
 /**
  * Inject Loan Number into WooCommerce Order Emails for CSL Review
@@ -3448,8 +3518,9 @@ function fixflip_get_curated_product_images( $sku_or_product = '' ) {
     );
 
     if ( isset( $sku_galleries[ $sku ] ) ) {
+        $unique_paths = array_values( array_unique( $sku_galleries[ $sku ] ) );
         $urls = array();
-        foreach ( $sku_galleries[ $sku ] as $rel_path ) {
+        foreach ( $unique_paths as $rel_path ) {
             $urls[] = $theme_dir . $rel_path . '?v=' . time();
         }
         return $urls;
@@ -3692,28 +3763,178 @@ add_filter( 'site_icon_meta_tags', function( $meta_tags ) {
 
 
 /**
- * Check if the visitor has unlocked Best Tier trade access (Logged in member, cookie, or passcode)
+ * IP-based Rate Limiting for Authentication and Passcodes
  */
-function fixflip_is_best_tier_unlocked() {
-    if ( is_user_logged_in() ) {
-        return true;
+function fixflip_check_rate_limit( $action, $max_attempts = 5, $decay_seconds = 900 ) {
+    $ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
+    $transient_key = 'fixflip_rl_' . substr( md5( $action . '_' . $ip ), 0, 24 );
+    $attempts = (int) get_transient( $transient_key );
+    if ( $attempts >= $max_attempts ) {
+        fixflip_log_security_event( 'rate_limit_exceeded', array( 'action' => $action, 'attempts' => $attempts ) );
+        return false;
     }
-    if ( isset( $_GET['trade_pass'] ) && strtolower( trim( sanitize_text_field( $_GET['trade_pass'] ) ) ) === 'flooring' ) {
-        return true;
+    set_transient( $transient_key, $attempts + 1, $decay_seconds );
+    return true;
+}
+
+function fixflip_reset_rate_limit( $action ) {
+    $ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
+    delete_transient( 'fixflip_rl_' . substr( md5( $action . '_' . $ip ), 0, 24 ) );
+}
+
+/**
+ * Audit Security Event Logger (Zero Credential Leakage)
+ */
+function fixflip_log_security_event( $event_type, $details = array() ) {
+    $logs = get_option( 'fixflip_security_logs', array() );
+    if ( ! is_array( $logs ) ) {
+        $logs = array();
     }
-    if ( isset( $_COOKIE['fixflip_best_tier_auth'] ) && $_COOKIE['fixflip_best_tier_auth'] === 'flooring_unlocked' ) {
+    if ( count( $logs ) > 250 ) {
+        $logs = array_slice( $logs, -200 );
+    }
+    $ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
+    $ip_hash = substr( hash( 'sha256', $ip . ( defined( 'AUTH_SALT' ) ? AUTH_SALT : 'fixflip_salt' ) ), 0, 16 );
+
+    $sanitized_details = array();
+    foreach ( (array) $details as $k => $v ) {
+        if ( in_array( strtolower( (string) $k ), array( 'password', 'pass', 'code', 'token', 'user_password' ), true ) ) {
+            continue; // Never store passwords or raw passcodes
+        }
+        $sanitized_details[ sanitize_key( $k ) ] = sanitize_text_field( (string) $v );
+    }
+
+    $logs[] = array(
+        'time'      => current_time( 'mysql' ),
+        'event'     => sanitize_key( $event_type ),
+        'ip_hash'   => $ip_hash,
+        'details'   => $sanitized_details,
+    );
+    update_option( 'fixflip_security_logs', $logs, false );
+}
+
+/**
+ * Trade Passcode Storage & Verification (SHA-256 Hashed, Expiring, Single-Use Support)
+ */
+function fixflip_get_trade_passcodes() {
+    $codes = get_option( 'fixflip_trade_passcodes', null );
+    if ( ! is_array( $codes ) || empty( $codes ) ) {
+        // Seed default initial secure trade passcodes
+        $now = time();
+        $codes = array(
+            hash( 'sha256', 'protrade2026' ) => array(
+                'label'      => 'Pro Desk Initial Access Code',
+                'created_at' => $now,
+                'expires_at' => $now + ( 90 * 86400 ),
+                'max_uses'   => 50,
+                'used_count' => 0,
+                'revoked'    => false,
+            ),
+            hash( 'sha256', 'flip7050' ) => array(
+                'label'      => 'Trade Access Support Code',
+                'created_at' => $now,
+                'expires_at' => $now + ( 90 * 86400 ),
+                'max_uses'   => 50,
+                'used_count' => 0,
+                'revoked'    => false,
+            ),
+        );
+        update_option( 'fixflip_trade_passcodes', $codes, false );
+    }
+    return $codes;
+}
+
+function fixflip_verify_trade_passcode( $entered_code ) {
+    $clean_code = strtolower( trim( (string) $entered_code ) );
+    if ( empty( $clean_code ) ) {
+        return false;
+    }
+    $code_hash = hash( 'sha256', $clean_code );
+    $codes = fixflip_get_trade_passcodes();
+
+    if ( isset( $codes[ $code_hash ] ) ) {
+        $rec = $codes[ $code_hash ];
+        if ( ! empty( $rec['revoked'] ) ) {
+            return false;
+        }
+        if ( ! empty( $rec['expires_at'] ) && time() > (int) $rec['expires_at'] ) {
+            return false;
+        }
+        $max_uses   = isset( $rec['max_uses'] ) ? (int) $rec['max_uses'] : 1;
+        $used_count = isset( $rec['used_count'] ) ? (int) $rec['used_count'] : 0;
+        if ( $max_uses > 0 && $used_count >= $max_uses ) {
+            return false;
+        }
+
+        // Valid passcode: update use counter
+        $codes[ $code_hash ]['used_count'] = $used_count + 1;
+        $codes[ $code_hash ]['last_used_at'] = time();
+        update_option( 'fixflip_trade_passcodes', $codes, false );
         return true;
     }
     return false;
 }
 
+function fixflip_issue_trade_session() {
+    $expires = time() + 2592000; // 30 days
+    $salt = defined( 'AUTH_SALT' ) ? AUTH_SALT : 'fixflip_secure_trade_salt';
+    $sig = wp_hash( 'trade_session_verified|' . $expires, 'auth' );
+    $val = $expires . '|' . $sig;
+    setcookie( 'fixflip_trade_session', $val, $expires, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+    $_COOKIE['fixflip_trade_session'] = $val;
+}
+
+function fixflip_is_trade_session_valid() {
+    if ( ! empty( $_COOKIE['fixflip_trade_session'] ) ) {
+        $parts = explode( '|', (string) $_COOKIE['fixflip_trade_session'] );
+        if ( count( $parts ) === 2 ) {
+            $expires = (int) $parts[0];
+            $sig     = $parts[1];
+            if ( $expires > time() ) {
+                $expected = wp_hash( 'trade_session_verified|' . $expires, 'auth' );
+                if ( hash_equals( $expected, $sig ) ) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 /**
- * Handle Member Sign In, Registration, and Quick Passcode Submissions
+ * Authoritative check if visitor has unlocked Best Tier trade access
+ */
+function fixflip_is_best_tier_unlocked() {
+    if ( is_user_logged_in() ) {
+        $status = get_user_meta( get_current_user_id(), 'fixflip_contractor_status', true );
+        // Allow if approved, or empty for established legacy accounts
+        if ( empty( $status ) || $status === 'approved' ) {
+            return true;
+        }
+        return false;
+    }
+    return fixflip_is_trade_session_valid();
+}
+
+/**
+ * Handle Member Sign In, Registration, and Passcode Submissions
  */
 add_action( 'init', 'fixflip_handle_member_auth_actions', 1 );
 function fixflip_handle_member_auth_actions() {
     // 1. Member Sign In
     if ( isset( $_POST['fixflip_auth_action'] ) && $_POST['fixflip_auth_action'] === 'member_login' ) {
+        $nonce = isset( $_POST['fixflip_member_login_nonce'] ) ? $_POST['fixflip_member_login_nonce'] : '';
+        if ( ! wp_verify_nonce( $nonce, 'fixflip_member_login_action' ) ) {
+            fixflip_log_security_event( 'login_nonce_failure' );
+            wp_redirect( add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
+            exit;
+        }
+
+        if ( ! fixflip_check_rate_limit( 'member_login', 5, 900 ) ) {
+            wp_redirect( add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
+            exit;
+        }
+
         $username    = isset( $_POST['member_username'] ) ? sanitize_text_field( $_POST['member_username'] ) : '';
         $password    = isset( $_POST['member_password'] ) ? $_POST['member_password'] : '';
         $remember    = isset( $_POST['rememberme'] ) && $_POST['rememberme'] === 'forever';
@@ -3728,44 +3949,66 @@ function fixflip_handle_member_auth_actions() {
         $user = wp_signon( $creds, is_ssl() );
 
         if ( is_wp_error( $user ) ) {
-            $redirect = add_query_arg( array( 'auth_error' => 'invalid_creds', 'tab' => 'login' ), home_url( '/member-login/' ) );
-            wp_redirect( $redirect );
+            fixflip_log_security_event( 'login_failure', array( 'identity' => $username ) );
+            wp_redirect( add_query_arg( array( 'auth_error' => 'invalid_creds', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
             exit;
         } else {
+            fixflip_reset_rate_limit( 'member_login' );
+            fixflip_log_security_event( 'login_success', array( 'user_id' => $user->ID ) );
             wp_set_current_user( $user->ID );
             wp_set_auth_cookie( $user->ID, $remember );
-            setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
-            $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
+            fixflip_issue_trade_session();
             wp_redirect( $redirect_to );
             exit;
         }
     }
 
-    // 2. Create Trade Account / Registration
+    // 2. Create Trade Account / Registration (4-Stage Workflow)
     if ( isset( $_POST['fixflip_auth_action'] ) && $_POST['fixflip_auth_action'] === 'member_register' ) {
-        $first_name   = isset( $_POST['reg_first_name'] ) ? sanitize_text_field( $_POST['reg_first_name'] ) : '';
-        $last_name    = isset( $_POST['reg_last_name'] ) ? sanitize_text_field( $_POST['reg_last_name'] ) : '';
-        $company      = isset( $_POST['reg_company'] ) ? sanitize_text_field( $_POST['reg_company'] ) : '';
-        $email        = isset( $_POST['reg_email'] ) ? sanitize_email( $_POST['reg_email'] ) : '';
-        $phone        = isset( $_POST['reg_phone'] ) ? sanitize_text_field( $_POST['reg_phone'] ) : '';
+        $nonce = isset( $_POST['fixflip_member_register_nonce'] ) ? $_POST['fixflip_member_register_nonce'] : '';
+        if ( ! wp_verify_nonce( $nonce, 'fixflip_member_register_action' ) ) {
+            fixflip_log_security_event( 'register_nonce_failure' );
+            wp_redirect( add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            exit;
+        }
+
+        if ( ! fixflip_check_rate_limit( 'member_register', 3, 900 ) ) {
+            wp_redirect( add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            exit;
+        }
+
+        if ( empty( $_POST['terms_consent'] ) ) {
+            wp_redirect( add_query_arg( array( 'auth_error' => 'terms_required', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            exit;
+        }
+
+        $first_name      = isset( $_POST['reg_first_name'] ) ? sanitize_text_field( $_POST['reg_first_name'] ) : '';
+        $last_name       = isset( $_POST['reg_last_name'] ) ? sanitize_text_field( $_POST['reg_last_name'] ) : '';
+        $company         = isset( $_POST['reg_company'] ) ? sanitize_text_field( $_POST['reg_company'] ) : '';
+        $email           = isset( $_POST['reg_email'] ) ? sanitize_email( $_POST['reg_email'] ) : '';
+        $phone           = isset( $_POST['reg_phone'] ) ? sanitize_text_field( $_POST['reg_phone'] ) : '';
         $license_loan    = isset( $_POST['reg_license_loan'] ) ? sanitize_text_field( $_POST['reg_license_loan'] ) : '';
         $project_address = isset( $_POST['reg_project_address'] ) ? sanitize_text_field( $_POST['reg_project_address'] ) : '';
         $password        = isset( $_POST['reg_password'] ) ? $_POST['reg_password'] : '';
-        $redirect_to     = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : home_url( '/member-login/' );
 
-        if ( empty( $email ) || empty( $password ) || empty( $first_name ) || empty( $last_name ) ) {
-            $redirect = add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) );
-            wp_redirect( $redirect );
+        if ( empty( $email ) || empty( $password ) || empty( $first_name ) || empty( $last_name ) || empty( $company ) || ! is_email( $email ) ) {
+            wp_redirect( add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
             exit;
         }
 
+        // Generic error on existing email prevents account enumeration
         if ( email_exists( $email ) ) {
-            $redirect = add_query_arg( array( 'auth_error' => 'email_exists', 'tab' => 'login' ), home_url( '/member-login/' ) );
-            wp_redirect( $redirect );
+            fixflip_log_security_event( 'reg_duplicate_email_attempt' );
+            wp_redirect( add_query_arg( array( 'auth_error' => 'invalid_reg', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
             exit;
         }
 
-        // Generate username from email
+        if ( strlen( $password ) < 8 ) {
+            wp_redirect( add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            exit;
+        }
+
+        // Generate clean username from email
         $username_base = sanitize_user( current( explode( '@', $email ) ) );
         $username = $username_base;
         $counter = 1;
@@ -3777,18 +4020,18 @@ function fixflip_handle_member_auth_actions() {
         $user_id = wp_create_user( $username, $password, $email );
 
         if ( is_wp_error( $user_id ) ) {
-            $redirect = add_query_arg( array( 'auth_error' => 'error', 'tab' => 'register' ), home_url( '/member-login/' ) );
-            wp_redirect( $redirect );
+            fixflip_log_security_event( 'reg_create_user_error' );
+            wp_redirect( add_query_arg( array( 'auth_error' => 'invalid_reg', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
             exit;
         }
 
-        // Set user details and roles
+        // Set user details and role
         wp_update_user( array(
             'ID'           => $user_id,
             'first_name'   => $first_name,
             'last_name'    => $last_name,
             'display_name' => $first_name . ' ' . $last_name,
-            'role'         => 'customer'
+            'role'         => 'customer',
         ) );
 
         update_user_meta( $user_id, 'billing_first_name', $first_name );
@@ -3803,35 +4046,71 @@ function fixflip_handle_member_auth_actions() {
         update_user_meta( $user_id, 'fixflip_company_name', $company );
         update_user_meta( $user_id, 'fixflip_phone', $phone );
         update_user_meta( $user_id, 'fixflip_license_loan', $license_loan );
-        update_user_meta( $user_id, 'fixflip_member_tier', 'verified_trade' );
+        // Set contractor status to pending_review (4-Stage Workflow)
+        update_user_meta( $user_id, 'fixflip_contractor_status', 'pending_review' );
+        update_user_meta( $user_id, 'fixflip_registered_at', time() );
 
-        // Instant auto-login
-        wp_set_current_user( $user_id );
-        wp_set_auth_cookie( $user_id, true );
-        setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
-        $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
+        fixflip_reset_rate_limit( 'member_register' );
+        fixflip_log_security_event( 'contractor_registered', array( 'user_id' => $user_id ) );
 
-        // Redirect to target with success flag
-        $redirect = add_query_arg( 'registered', '1', $redirect_to );
-        wp_redirect( $redirect );
+        // Notify Pro Desk of new application
+        $admin_email = get_option( 'admin_email' ) ?: 'orders@fixflip.com';
+        $subject = 'New Contractor Trade Application: ' . $company . ' (' . $first_name . ' ' . $last_name . ')';
+        $message = "A new contractor trade application has been submitted on FixFlip.com:
+
+" .
+                   "Name: " . $first_name . " " . $last_name . "
+" .
+                   "Company: " . $company . "
+" .
+                   "Email: " . $email . "
+" .
+                   "Phone: " . $phone . "
+" .
+                   "License / CSL Loan #: " . ( $license_loan ?: 'None provided' ) . "
+" .
+                   "Active Jobsite: " . ( $project_address ?: 'None provided' ) . "
+
+" .
+                   "Status: Pending Review
+" .
+                   "Review in WP Admin -> Users.";
+        @wp_mail( $admin_email, $subject, $message, array( 'From: FixFlip Pro Desk <orders@fixflip.com>' ) );
+
+        // Redirect with success confirmation to sign in
+        wp_redirect( add_query_arg( array( 'registered' => '1', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
         exit;
     }
 
     // 3. Fast-Track Trade Passcode
     if ( isset( $_POST['fixflip_trade_action'] ) && $_POST['fixflip_trade_action'] === 'unlock_best_tier' ) {
-        $entered_pass = isset( $_POST['fixflip_trade_pass'] ) ? strtolower( trim( sanitize_text_field( $_POST['fixflip_trade_pass'] ) ) ) : '';
-        $redirect_to  = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : ( wp_get_referer() ?: home_url( '/category/hardwood-best/' ) );
+        $nonce = isset( $_POST['fixflip_trade_passcode_nonce'] ) ? $_POST['fixflip_trade_passcode_nonce'] : '';
+        $redirect_to = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : ( wp_get_referer() ?: home_url( '/category/hardwood-best/' ) );
 
-        if ( $entered_pass === 'flooring' ) {
-            setcookie( 'fixflip_best_tier_auth', 'flooring_unlocked', time() + 2592000, '/' );
-            $_COOKIE['fixflip_best_tier_auth'] = 'flooring_unlocked';
+        if ( ! wp_verify_nonce( $nonce, 'fixflip_trade_passcode_action' ) ) {
+            fixflip_log_security_event( 'passcode_nonce_failure' );
+            wp_redirect( add_query_arg( 'auth_error', 'security_check', $redirect_to ) );
+            exit;
+        }
 
-            $redirect_to = remove_query_arg( 'auth_error', $redirect_to );
-            wp_redirect( $redirect_to );
+        if ( ! fixflip_check_rate_limit( 'trade_passcode', 5, 900 ) ) {
+            wp_redirect( add_query_arg( 'auth_error', 'rate_limit', $redirect_to ) );
+            exit;
+        }
+
+        $entered_pass = isset( $_POST['fixflip_trade_pass'] ) ? trim( sanitize_text_field( $_POST['fixflip_trade_pass'] ) ) : '';
+
+        if ( fixflip_verify_trade_passcode( $entered_pass ) ) {
+            fixflip_reset_rate_limit( 'trade_passcode' );
+            fixflip_issue_trade_session();
+            fixflip_log_security_event( 'passcode_unlock_success' );
+
+            $clean_redirect = remove_query_arg( 'auth_error', $redirect_to );
+            wp_redirect( $clean_redirect );
             exit;
         } else {
-            $redirect_to = add_query_arg( 'auth_error', '1', $redirect_to );
-            wp_redirect( $redirect_to );
+            fixflip_log_security_event( 'passcode_unlock_failure' );
+            wp_redirect( add_query_arg( 'auth_error', 'passcode_invalid', $redirect_to ) );
             exit;
         }
     }
@@ -3841,12 +4120,11 @@ function fixflip_handle_member_auth_actions() {
  * Render Contractor & Trade Partner Password Protection Gate
  */
 function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' ) {
-    $has_error    = isset( $_GET['auth_error'] ) && $_GET['auth_error'] === '1';
-    $current_url  = esc_url( ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
-    $current_url  = remove_query_arg( 'auth_error', $current_url );
-    $login_url    = add_query_arg( 'redirect_to', urlencode( $current_url ), home_url( '/member-login/' ) );
-    $reg_url      = add_query_arg( array( 'tab' => 'register', 'redirect_to' => urlencode( $current_url ) ), home_url( '/member-login/' ) );
-    $theme_uri    = get_stylesheet_directory_uri();
+    $auth_err = isset( $_GET['auth_error'] ) ? sanitize_text_field( $_GET['auth_error'] ) : '';
+    $current_url = esc_url( ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+    $clean_url   = remove_query_arg( 'auth_error', $current_url );
+    $login_url   = add_query_arg( 'redirect_to', urlencode( $clean_url ), home_url( '/member-login/' ) );
+    $reg_url     = add_query_arg( array( 'tab' => 'register', 'redirect_to' => urlencode( $clean_url ) ), home_url( '/member-login/' ) );
     ?>
     <div class="fd-trade-gate-container" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; background: #f8fafc; font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="max-width: 560px; width: 100%; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 4px; box-shadow: 0 16px 40px rgba(0,0,0,0.08); padding: 36px 32px; box-sizing: border-box; text-align: center;">
@@ -3894,22 +4172,31 @@ function fixflip_render_trade_password_gate( $item_title = '', $item_image = '' 
                 </a>
             </div>
 
-            <!-- Fast-Track Passcode Accordion/Form -->
+            <!-- Fast-Track Passcode Form -->
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 16px;">
                 <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; display: block; margin-bottom: 8px;">
-                    Or Unlock with Instant Trade Passcode:
+                    Or Unlock with Temporary Trade Access Code:
                 </span>
                 
-                <?php if ( $has_error ) : ?>
-                    <div style="background: #fef2f2; border: 1px solid #f87171; color: #991b1b; padding: 6px 10px; border-radius: 3px; font-size: 12px; font-weight: 700; margin-bottom: 10px;">
-                        Incorrect passcode. Try again or sign in above.
+                <?php if ( ! empty( $auth_err ) ) : ?>
+                    <div style="background: #fef2f2; border: 1px solid #f87171; color: #991b1b; padding: 8px 12px; border-radius: 3px; font-size: 12px; font-weight: 700; margin-bottom: 10px;">
+                        <?php 
+                        if ( $auth_err === 'rate_limit' ) {
+                            echo 'Too many attempts. Please wait 15 minutes before trying again.';
+                        } elseif ( $auth_err === 'security_check' ) {
+                            echo 'Security verification expired. Please refresh the page.';
+                        } else {
+                            echo 'Invalid or expired temporary trade passcode. Please try again or sign in above.';
+                        }
+                        ?>
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="<?php echo esc_url( $current_url ); ?>" style="display: flex; gap: 8px;">
+                <form method="POST" action="<?php echo esc_url( $clean_url ); ?>" style="display: flex; gap: 8px;">
                     <input type="hidden" name="fixflip_trade_action" value="unlock_best_tier">
-                    <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $current_url ); ?>">
-                    <input type="password" name="fixflip_trade_pass" placeholder="Enter passcode (e.g. flooring)" required style="flex: 1; padding: 10px 12px; font-size: 13.5px; border: 1.5px solid #cbd5e1; border-radius: 3px; font-weight: 700; text-align: center;">
+                    <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $clean_url ); ?>">
+                    <?php wp_nonce_field( 'fixflip_trade_passcode_action', 'fixflip_trade_passcode_nonce' ); ?>
+                    <input type="password" name="fixflip_trade_pass" placeholder="Enter temporary trade access code" required style="flex: 1; padding: 10px 12px; font-size: 13px; border: 1.5px solid #cbd5e1; border-radius: 3px; font-weight: 600; text-align: center;">
                     <button type="submit" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 16px; font-size: 12px; font-weight: 900; text-transform: uppercase; border-radius: 3px; cursor: pointer;">Unlock</button>
                 </form>
             </div>

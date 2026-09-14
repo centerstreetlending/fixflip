@@ -61,12 +61,13 @@ if ( in_array($sku, array('56103', '56140', '56240', '56516')) ) {
 $unit  = $product->get_meta('custom_unit') ?: 'sqft';
 $box_price = round( $price * $coverage, 2 );
 
-// Gallery Thumbnails via Curated High-Definition SKU Mapping
+// Gallery Thumbnails via Curated High-Definition SKU Mapping (Strict deduplication)
 if ( function_exists('fixflip_get_curated_product_images') ) {
     $thumbs = fixflip_get_curated_product_images( $sku );
 } else {
     $thumbs = array( $theme_dir . '/images/hero_' . $sku . '.webp' );
 }
+$thumbs = array_values( array_unique( $thumbs ) );
 $main_image_url = $thumbs[0];
 
 // Best Tier Trade Password Lock Gate
@@ -125,21 +126,112 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
         }
         .fd-main-product-layout {
             display: grid;
-            grid-template-columns: 1.05fr 0.95fr;
-            gap: 48px;
+            grid-template-columns: 1.12fr 0.88fr;
+            gap: 40px;
             align-items: start;
-        }
-        .fd-gallery-grid-2x2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
         }
         .fd-related-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
+        @media (min-width: 901px) {
+            .fd-right-details {
+                position: -webkit-sticky;
+                position: sticky;
+                top: 96px;
+                align-self: start;
+            }
+            .fd-desktop-gallery {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+            }
+            .fd-mobile-carousel {
+                display: none !important;
+            }
+            .fd-primary-img-wrap {
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                max-height: 520px;
+                background: #f8fafc;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 4px;
+                overflow: hidden;
+                position: relative;
+                cursor: zoom-in;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .fd-primary-img-wrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.25s ease;
+                display: block;
+            }
+            .fd-primary-img-wrap.is-plank img {
+                object-fit: contain;
+                padding: 16px;
+                box-sizing: border-box;
+            }
+            .fd-thumb-strip {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                padding: 4px 2px;
+                scrollbar-width: thin;
+            }
+            .fd-thumb-strip::-webkit-scrollbar {
+                height: 5px;
+            }
+            .fd-thumb-strip::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 3px;
+            }
+            .fd-thumb-box {
+                flex: 0 0 74px;
+                width: 74px;
+                height: 74px;
+                aspect-ratio: 1 / 1;
+                border: 2px solid #e2e8f0;
+                border-radius: 4px;
+                overflow: hidden;
+                background: #f8fafc;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-sizing: border-box;
+                position: relative;
+            }
+            .fd-thumb-box:hover {
+                border-color: #94a3b8;
+                transform: translateY(-1px);
+            }
+            .fd-thumb-box.is-active {
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0,123,255,0.3);
+            }
+            .fd-thumb-box img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+            .fd-thumb-box.is-plank img {
+                object-fit: contain;
+                padding: 4px;
+                box-sizing: border-box;
+            }
+        }
         @media (max-width: 900px) {
+            .fd-desktop-gallery {
+                display: none !important;
+            }
+            .fd-mobile-carousel {
+                display: block !important;
+                width: 100% !important;
+            }
             .fd-single-product-container {
                 padding: 16px 12px !important;
                 max-width: 100% !important;
@@ -237,52 +329,58 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
     <!-- MAIN 2-COLUMN GRID -->
     <div class="fd-main-product-layout">
         
-        <!-- LEFT COLUMN: Top 2x2 Grid Gallery (Max 4 Unique Main Boxes) + Extra Views Strip Below (If > 4 Unique Images) -->
+        <!-- LEFT COLUMN: Desktop Single Primary Image + Thumbnail Strip; Mobile Swipe Carousel -->
         <div class="fd-left-gallery">
-            <?php 
-            $main_4_thumbs = array_slice($thumbs, 0, 4);
-            $extra_thumbs  = array_slice($thumbs, 4);
-            ?>
-            <div class="fd-gallery-grid-2x2">
-                <?php foreach ( $main_4_thumbs as $idx => $t_url ) : 
-                    $is_plank = ( strpos($t_url, 'plank_') !== false || strpos($t_url, '1TO1') !== false || strpos($t_url, '5x70_1') !== false || strpos($t_url, '7x48_1') !== false );
-                    $box_img_style = $is_plank ? 'width: 100%; height: 100%; object-fit: contain; background: #f8fafc; padding: 12px; box-sizing: border-box;' : 'width: 100%; height: 100%; object-fit: cover;';
+            
+            <!-- 1. DESKTOP GALLERY VIEW (>= 901px) -->
+            <div class="fd-desktop-gallery">
+                <?php
+                $first_url = $thumbs[0];
+                $first_is_plank = ( strpos($first_url, 'plank_') !== false || strpos($first_url, '1TO1') !== false || strpos($first_url, '5x70_1') !== false || strpos($first_url, '7x48_1') !== false );
                 ?>
-                    <div class="fd-gallery-box" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #e2e8f0; border-radius: 0px; background: #f8fafc; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $idx; ?>)">
-                        <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $idx + 1; ?>" style="<?php echo $box_img_style; ?> transition: transform 0.2s ease; display: block;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <!-- Mobile Gallery Dots -->
-            <div class="fd-gallery-dots" style="display: none;">
-                <?php foreach ( $main_4_thumbs as $d_idx => $d_url ) : ?>
-                    <span class="fd-gallery-dot <?php echo $d_idx === 0 ? 'active' : ''; ?>"></span>
-                <?php endforeach; ?>
+                <div class="fd-primary-img-wrap <?php echo $first_is_plank ? 'is-plank' : ''; ?>" id="fd-desktop-primary-wrap" onclick="window.fdOpenLightbox(window.fdActivePhotoIndex || 0)">
+                    <img id="fd-desktop-primary-img" src="<?php echo esc_url($first_url); ?>" alt="<?php echo esc_attr($title); ?>">
+                    <span style="position: absolute; bottom: 12px; right: 12px; background: rgba(15,23,42,0.85); color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; display: flex; align-items: center; gap: 6px; pointer-events: none;">
+                        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#ffffff;stroke-width:2;fill:none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                        Click to Zoom
+                    </span>
+                </div>
+
+                <!-- Compact Thumbnail Strip Underneath -->
+                <div class="fd-thumb-strip" id="fd-desktop-thumb-strip">
+                    <?php foreach ( $thumbs as $t_idx => $t_url ) : 
+                        $is_pl = ( strpos($t_url, 'plank_') !== false || strpos($t_url, '1TO1') !== false || strpos($t_url, '5x70_1') !== false || strpos($t_url, '7x48_1') !== false );
+                    ?>
+                        <div class="fd-thumb-box <?php echo $t_idx === 0 ? 'is-active' : ''; ?> <?php echo $is_pl ? 'is-plank' : ''; ?>" data-photo-idx="<?php echo $t_idx; ?>" data-is-plank="<?php echo $is_pl ? '1' : '0'; ?>" onclick="window.fdSelectDesktopPhoto(<?php echo $t_idx; ?>, this)">
+                            <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $t_idx + 1; ?>">
+                            <?php if ( $is_pl ) : ?>
+                                <span style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15,23,42,0.85); color: #ffffff; font-size: 7.5px; font-weight: 800; text-align: center; padding: 1px 0; text-transform: uppercase;">PLANK</span>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
-            <?php if ( ! empty($extra_thumbs) ) : ?>
-                <!-- Additional Unique Gallery Images Strip Below 2x2 Grid -->
-                <div style="margin-top: 16px; padding: 14px 16px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
-                    <div style="font-size: 11px; font-weight: 900; color: #007bff; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>MORE UNIQUE JOBSITE &amp; ROOM VIEWS</span>
-                        <span style="font-size: 10px; color: #64748b; font-weight: 700;"><?php echo count($thumbs); ?> UNIQUE PHOTOS</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-                        <?php foreach ( $extra_thumbs as $e_idx => $t_url ) : 
-                            $real_idx = $e_idx + 4;
-                            $is_plank = ( strpos($t_url, 'plank_') !== false || strpos($t_url, '1TO1') !== false || strpos($t_url, '5x70_1') !== false || strpos($t_url, '7x48_1') !== false );
-                            $mini_style = $is_plank ? 'width: 100%; height: 100%; object-fit: contain; background: #ffffff; padding: 4px; box-sizing: border-box;' : 'width: 100%; height: 100%; object-fit: cover;';
-                        ?>
-                            <div class="fd-gallery-thumb-mini" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #cbd5e1; background: #ffffff; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $real_idx; ?>)" onmouseover="this.style.borderColor='#007bff'" onmouseout="this.style.borderColor='#cbd5e1'">
-                                <img src="<?php echo esc_url($t_url); ?>" alt="Extra View <?php echo $e_idx+1; ?>" style="<?php echo $mini_style; ?>">
-                                <?php if ( $is_plank ) : ?>
-                                    <span style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15,23,42,0.85); color: #ffffff; font-size: 8px; font-weight: 900; text-align: center; padding: 2px 0; letter-spacing: 0.5px; text-transform: uppercase;">FULL PLANK</span>
-                                <?php endif; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+            <!-- 2. MOBILE SWIPE CAROUSEL (< 901px) -->
+            <div class="fd-mobile-carousel">
+                <div class="fd-gallery-grid-2x2" id="fd-mobile-slider">
+                    <?php foreach ( $thumbs as $idx => $t_url ) : 
+                        $is_plank = ( strpos($t_url, 'plank_') !== false || strpos($t_url, '1TO1') !== false || strpos($t_url, '5x70_1') !== false || strpos($t_url, '7x48_1') !== false );
+                        $box_img_style = $is_plank ? 'width: 100%; height: 100%; object-fit: contain; background: #f8fafc; padding: 12px; box-sizing: border-box;' : 'width: 100%; height: 100%; object-fit: cover;';
+                    ?>
+                        <div class="fd-gallery-box" style="aspect-ratio: 1 / 1; overflow: hidden; border: 1.5px solid #e2e8f0; border-radius: 4px; background: #f8fafc; cursor: pointer; position: relative;" onclick="window.fdOpenLightbox(<?php echo $idx; ?>)">
+                            <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr($title); ?> View <?php echo $idx + 1; ?>" style="<?php echo $box_img_style; ?> display: block;">
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-            <?php endif; ?>
+                <!-- Mobile Gallery Dots -->
+                <div class="fd-gallery-dots">
+                    <?php foreach ( $thumbs as $d_idx => $d_url ) : ?>
+                        <span class="fd-gallery-dot <?php echo $d_idx === 0 ? 'active' : ''; ?>"></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
         </div>
 
         <!-- LIGHTBOX POPUP MODAL -->
@@ -312,6 +410,36 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
         (function() {
             const galleryUrls = <?php echo json_encode($thumbs); ?>;
             let currentIndex = 0;
+            window.fdActivePhotoIndex = 0;
+
+            window.fdSelectDesktopPhoto = function(idx, el) {
+                window.fdActivePhotoIndex = idx;
+                currentIndex = idx;
+                const primaryImg = document.getElementById('fd-desktop-primary-img');
+                const primaryWrap = document.getElementById('fd-desktop-primary-wrap');
+                const strip = document.getElementById('fd-desktop-thumb-strip');
+                if (primaryImg && galleryUrls[idx]) {
+                    primaryImg.src = galleryUrls[idx];
+                    const isPlank = el && el.getAttribute('data-is-plank') === '1';
+                    if (primaryWrap) {
+                        if (isPlank) {
+                            primaryWrap.classList.add('is-plank');
+                        } else {
+                            primaryWrap.classList.remove('is-plank');
+                        }
+                    }
+                }
+                if (strip) {
+                    const boxes = strip.querySelectorAll('.fd-thumb-box');
+                    boxes.forEach(function(b, i) {
+                        if (i === idx) {
+                            b.classList.add('is-active');
+                        } else {
+                            b.classList.remove('is-active');
+                        }
+                    });
+                }
+            };
 
             window.fdOpenLightbox = function(idx) {
                 currentIndex = idx;
@@ -346,6 +474,23 @@ if ( $is_best_tier_product && function_exists('fixflip_is_best_tier_unlocked') &
                     if (e.key === 'Escape') window.fdCloseLightbox();
                     if (e.key === 'ArrowLeft') window.fdNavLightbox(-1);
                     if (e.key === 'ArrowRight') window.fdNavLightbox(1);
+                }
+            });
+
+            // Mobile Carousel Swipe Dot Tracking
+            document.addEventListener('DOMContentLoaded', function() {
+                const mobileSlider = document.getElementById('fd-mobile-slider');
+                if (mobileSlider) {
+                    mobileSlider.addEventListener('scroll', function() {
+                        const scrollLeft = mobileSlider.scrollLeft;
+                        const cardWidth = mobileSlider.offsetWidth * 0.86;
+                        const activeIndex = Math.round(scrollLeft / (cardWidth + 12));
+                        const dots = document.querySelectorAll('.fd-gallery-dot');
+                        dots.forEach(function(dot, idx) {
+                            if (idx === activeIndex) dot.classList.add('active');
+                            else dot.classList.remove('active');
+                        });
+                    }, { passive: true });
                 }
             });
         })();

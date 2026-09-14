@@ -9,6 +9,9 @@
         <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Filter by:</h3>
         <button type="button" id="fd-reset-filters-btn" style="background: none; border: none; color: #007bff; font-size: 12px; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline;">Clear All</button>
     </div>
+    <div style="font-size: 11px; font-weight: 700; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 8px; margin: 10px 0 14px 0;">
+        11 public products &bull; 5 Contractor Desk products
+    </div>
 
     <!-- MOBILE TOGGLE BUTTON (Hidden on Desktop) -->
     <button type="button" id="fd-mobile-filter-toggle-btn" class="fd-mobile-filter-toggle-btn">
@@ -52,7 +55,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(7)</span>
                 </label>
-                <?php if ( is_user_logged_in() ) : ?>
+                <?php if ( function_exists('fixflip_is_best_tier_unlocked') ? fixflip_is_best_tier_unlocked() : is_user_logged_in() ) : ?>
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="cat" value="best" style="width: 16px; height: 16px; accent-color: #007bff;">
@@ -91,7 +94,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
                 </label>
-                <?php if ( is_user_logged_in() ) : ?>
+                <?php if ( function_exists('fixflip_is_best_tier_unlocked') ? fixflip_is_best_tier_unlocked() : is_user_logged_in() ) : ?>
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="collection" value="ca399" style="width: 16px; height: 16px; accent-color: #007bff;">
@@ -130,7 +133,7 @@
                     </span>
                     <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">(3)</span>
                 </label>
-                <?php if ( is_user_logged_in() ) : ?>
+                <?php if ( function_exists('fixflip_is_best_tier_unlocked') ? fixflip_is_best_tier_unlocked() : is_user_logged_in() ) : ?>
                 <label style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #334155; cursor: pointer;">
                     <span style="display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" class="fd-filter-chk" data-filter-type="size" value="7.5x74.8" style="width: 16px; height: 16px; accent-color: #007bff;">

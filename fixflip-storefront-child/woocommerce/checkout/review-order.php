@@ -93,7 +93,7 @@ defined( 'ABSPATH' ) || exit;
     <tfoot>
         <!-- Subtotal -->
         <tr class="cart-subtotal" style="border-top: 2px solid #e2e8f0;">
-            <th style="padding: 12px 0 6px; font-size: 13.5px; font-weight: 700; color: #64748b;">Materials Subtotal</th>
+            <th style="padding: 12px 0 6px; font-size: 13px; font-weight: 700; color: #64748b;">Materials Subtotal &mdash; shipping and tax not yet included</th>
             <td style="padding: 12px 0 6px; font-size: 14px; font-weight: 800; color: #0f172a; text-align: right;">
                 <?php wc_cart_totals_subtotal_html(); ?>
             </td>
@@ -120,7 +120,24 @@ defined( 'ABSPATH' ) || exit;
 
         <!-- Tax -->
         <?php if ( wc_tax_enabled() && ! WC()->cart->display_prices_including_tax() ) : ?>
-            <?php if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
+            <?php 
+            $has_postcode = ( WC()->customer && ( WC()->customer->get_shipping_postcode() || WC()->customer->get_billing_postcode() ) );
+            $has_state    = ( WC()->customer && ( WC()->customer->get_shipping_state() || WC()->customer->get_billing_state() ) );
+            $tax_total    = WC()->cart->get_total_tax();
+
+            if ( ! $has_postcode && ! $has_state ) : ?>
+                <tr class="tax-rate tax-rate-estimated" style="border-top: 1px dashed #e2e8f0;">
+                    <th style="padding: 8px 0; font-size: 13px; font-weight: 700; color: #64748b;">Sales Tax</th>
+                    <td style="padding: 8px 0; font-size: 12.5px; font-style: italic; color: #64748b; text-align: right;">Calculated after delivery address</td>
+                </tr>
+            <?php elseif ( $tax_total <= 0 && $has_state ) : 
+                $state_code = strtoupper( WC()->customer->get_shipping_state() ?: WC()->customer->get_billing_state() );
+                ?>
+                <tr class="tax-rate tax-rate-exempt" style="border-top: 1px dashed #e2e8f0;">
+                    <th style="padding: 8px 0; font-size: 13px; font-weight: 700; color: #64748b;">Sales Tax (<?php echo esc_html( $state_code ); ?> - 0.00%)</th>
+                    <td style="padding: 8px 0; font-size: 13.5px; font-weight: 800; color: #0f172a; text-align: right;">$0.00</td>
+                </tr>
+            <?php elseif ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
                 <?php foreach ( WC()->cart->get_tax_totals() as $code => $tax ) : // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited ?>
                     <tr class="tax-rate tax-rate-<?php echo esc_attr( sanitize_title( $code ) ); ?>" style="border-top: 1px dashed #e2e8f0;">
                         <th style="padding: 8px 0; font-size: 13px; font-weight: 700; color: #64748b;"><?php echo esc_html( $tax->label ); ?></th>
