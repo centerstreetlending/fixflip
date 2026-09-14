@@ -26,13 +26,16 @@ defined( 'ABSPATH' ) || exit;
                 $is_sample = ! empty( $cart_item['is_sample'] );
                 $is_trim   = ( ! empty( $cart_item['is_trim'] ) || ( $_product && $_product->get_meta('is_trim') === 'yes' ) || ( isset($cart_item['variation_id']) && get_post_meta( $cart_item['variation_id'], 'is_trim', true ) === 'yes' ) );
                 $sku       = $is_trim ? ( ! empty( $cart_item['trim_sku'] ) ? $cart_item['trim_sku'] : ( $_product ? $_product->get_sku() : '' ) ) : ( function_exists('fixflip_resolve_sku') ? fixflip_resolve_sku( $_product ) : ( $_product ? $_product->get_sku() : '' ) );
-                $theme_dir = get_stylesheet_directory_uri();
+                $theme_dir   = get_stylesheet_directory_uri();
+                $parent_sku  = ! empty( $cart_item['parent_sku'] ) ? $cart_item['parent_sku'] : '';
 
-                if ( file_exists( get_stylesheet_directory() . '/images/hero_' . $sku . '.webp' ) ) {
+                if ( $is_trim && $parent_sku && file_exists( get_stylesheet_directory() . '/images/hero_' . $parent_sku . '.webp' ) ) {
+                    $img_url = $theme_dir . '/images/hero_' . $parent_sku . '.webp?v=' . time();
+                } elseif ( file_exists( get_stylesheet_directory() . '/images/hero_' . $sku . '.webp' ) ) {
                     $img_url = $theme_dir . '/images/hero_' . $sku . '.webp?v=' . time();
                 } else {
                     $thumb_id = $_product->get_image_id();
-                    $img_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'thumbnail' ) : ( $theme_dir . '/images/hero_56103.webp' );
+                    $img_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'thumbnail' ) : ( function_exists( 'wc_placeholder_img_src' ) ? wc_placeholder_img_src( 'woocommerce_thumbnail' ) : ( $theme_dir . '/images/hero_56103.webp' ) );
                 }
 
                 if ( $is_sample ) {

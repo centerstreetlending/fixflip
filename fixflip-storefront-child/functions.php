@@ -974,6 +974,28 @@ function fixflip_filter_order_item_sku( $sku, $item ) {
     return $sku;
 }
 
+add_filter( 'woocommerce_order_item_product', 'fixflip_filter_order_item_product', 10, 2 );
+function fixflip_filter_order_item_product( $product, $item ) {
+    if ( $product && is_a( $item, 'WC_Order_Item_Product' ) ) {
+        $trim_sku = $item->get_meta( 'Accessory SKU' );
+        if ( ! empty( $trim_sku ) && $product->get_sku() !== $trim_sku ) {
+            $product->set_sku( $trim_sku );
+        }
+    }
+    return $product;
+}
+
+add_filter( 'woocommerce_cart_item_thumbnail', 'fixflip_trim_cart_item_thumbnail', 10, 3 );
+function fixflip_trim_cart_item_thumbnail( $thumbnail, $cart_item, $cart_item_key ) {
+    if ( ! empty( $cart_item['is_trim'] ) ) {
+        $parent_sku = ! empty( $cart_item['parent_sku'] ) ? $cart_item['parent_sku'] : '';
+        if ( $parent_sku && file_exists( get_stylesheet_directory() . '/images/hero_' . $parent_sku . '.webp' ) ) {
+            return '<img src="' . esc_url( get_stylesheet_directory_uri() . '/images/hero_' . $parent_sku . '.webp' ) . '" style="width:72px;height:72px;min-width:72px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;display:block;" />';
+        }
+    }
+    return $thumbnail;
+}
+
 /* ==========================================================================
    B2B CHECKOUT MODIFICATIONS (LOAN REQUEST)
    ========================================================================== */
@@ -1364,6 +1386,13 @@ function fixflip_output_cart_drawer_items_html() {
             $is_sample     = ! empty( $cart_item['is_sample'] );
             $is_trim       = ( ! empty( $cart_item['is_trim'] ) || get_post_meta( $_product->get_id(), 'is_trim', true ) === 'yes' );
             $remove_url    = wc_get_cart_remove_url( $cart_item_key );
+
+            if ( $is_trim ) {
+                $parent_sku = ! empty( $cart_item['parent_sku'] ) ? $cart_item['parent_sku'] : '';
+                if ( $parent_sku && file_exists( get_stylesheet_directory() . '/images/hero_' . $parent_sku . '.webp' ) ) {
+                    $thumbnail = '<img src="' . esc_url( get_stylesheet_directory_uri() . '/images/hero_' . $parent_sku . '.webp' ) . '" alt="' . esc_attr( $product_name ) . '" style="width:64px;height:64px;min-width:64px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;" />';
+                }
+            }
 
             if ( $is_sample ) {
                 $subtotal          = '<span style="color: #16a34a; font-weight: 800;">$0.00 (FREE)</span>';
