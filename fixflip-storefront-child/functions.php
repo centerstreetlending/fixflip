@@ -53,6 +53,8 @@ add_action( 'wp_enqueue_scripts', 'fixflip_enqueue_styles', 20 );
  */
 add_action( 'init', 'fixflip_disable_auth_caching', -999 );
 add_action( 'send_headers', 'fixflip_disable_auth_caching', -999 );
+add_action( 'send_headers', 'fixflip_disable_auth_caching', 99999 );
+add_action( 'template_redirect', 'fixflip_disable_auth_caching', -9999 );
 function fixflip_disable_auth_caching() {
     $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
     $is_auth_route = (
