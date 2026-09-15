@@ -8,12 +8,13 @@ defined( 'ABSPATH' ) || exit;
 
 // Prevent CDN / Gateway caching on auth pages
 if ( ! headers_sent() ) {
-    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private' );
     header( 'Pragma: no-cache' );
-    header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
+    header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
     header( 'Surrogate-Control: no-store' );
-    header( 'CDN-Cache-Control: no-cache' );
-    header( 'Cloudflare-CDN-Cache-Control: no-cache' );
+    header( 'CDN-Cache-Control: no-store' );
+    header( 'Cloudflare-CDN-Cache-Control: no-store' );
+    header( 'X-Accel-Expires: 0' );
 }
 
 get_header();
@@ -372,14 +373,16 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
             <div class="fd-member-body">
                 
                 <?php if ( ! empty( $auth_error ) ) : ?>
-                    <div class="fd-alert-error">
+                    <div class="fd-alert-error" id="fd-auth-alert" role="alert" tabindex="-1">
                         <?php 
                         if ( $auth_error === 'invalid_creds' ) {
                             echo 'Invalid email or password. Please verify your credentials and try again.';
                         } elseif ( $auth_error === 'invalid_reg' ) {
                             echo 'Unable to complete registration with the details provided. If you already have an account, please sign in or use password recovery.';
                         } elseif ( $auth_error === 'missing_fields' ) {
-                            echo 'Please fill in all required fields to submit your contractor registration.';
+                            echo 'Please fill in all required fields to continue.';
+                        } elseif ( $auth_error === 'password_short' ) {
+                            echo 'Password must be at least 8 characters long.';
                         } elseif ( $auth_error === 'terms_required' ) {
                             echo 'Please accept the Terms of Service and Privacy Policy to continue.';
                         } elseif ( $auth_error === 'rate_limit' ) {
@@ -396,14 +399,14 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                 <?php endif; ?>
 
                 <?php if ( $auth_success ) : ?>
-                    <div class="fd-alert-success">
+                    <div class="fd-alert-success" id="fd-auth-alert" role="status" tabindex="-1">
                         Trade account registered successfully! Your credentials have been submitted to the Pro Desk for verification. You may sign in now.
                     </div>
                 <?php endif; ?>
 
                 <!-- TAB 1: MEMBER SIGN IN FORM -->
                 <div id="fd-member-pane-login" style="<?php echo ($active_tab === 'login') ? 'display: block;' : 'display: none;'; ?>">
-                    <form method="POST" action="<?php echo esc_url( home_url('/member-login/') ); ?>">
+                    <form method="POST" id="fd-login-form" action="<?php echo esc_url( home_url('/member-login/') ); ?>">
                         <input type="hidden" name="fixflip_auth_action" value="member_login">
                         <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>">
                         <?php wp_nonce_field( 'fixflip_member_login_action', 'fixflip_member_login_nonce' ); ?>
@@ -431,7 +434,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                             </label>
                         </div>
 
-                        <button type="submit" class="fd-submit-btn">
+                        <button type="submit" id="fd-login-submit-btn" class="fd-submit-btn">
                             Sign In to Project Portal &rarr;
                         </button>
                     </form>
@@ -441,12 +444,12 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                         <span style="font-size: 11.5px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 10px;">
                             Have a Temporary Trade Passcode?
                         </span>
-                        <form method="POST" action="<?php echo esc_url( home_url('/member-login/') ); ?>" style="display: flex; gap: 8px; max-width: 380px; margin: 0 auto;">
+                        <form method="POST" id="fd-passcode-form" action="<?php echo esc_url( home_url('/member-login/') ); ?>" style="display: flex; gap: 8px; max-width: 380px; margin: 0 auto;">
                             <input type="hidden" name="fixflip_trade_action" value="unlock_best_tier">
                             <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>">
                             <?php wp_nonce_field( 'fixflip_trade_passcode_action', 'fixflip_trade_passcode_nonce' ); ?>
                             <input type="password" name="fixflip_trade_pass" placeholder="Enter temporary trade access code" required style="flex: 1; padding: 10px 12px; font-size: 13px; border: 1.5px solid #cbd5e1; border-radius: 3px; font-weight: 600; text-align: center;">
-                            <button type="submit" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 16px; font-size: 12px; font-weight: 800; border-radius: 3px; cursor: pointer;">Unlock</button>
+                            <button type="submit" id="fd-passcode-submit-btn" style="background: #0f172a; color: #ffffff; border: none; padding: 10px 16px; font-size: 12px; font-weight: 800; border-radius: 3px; cursor: pointer;">Unlock</button>
                         </form>
                     </div>
                 </div>
@@ -473,7 +476,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                         </div>
                     </div>
 
-                    <form method="POST" action="<?php echo esc_url( home_url('/member-login/') ); ?>">
+                    <form method="POST" id="fd-register-form" action="<?php echo esc_url( home_url('/member-login/') ); ?>">
                         <input type="hidden" name="fixflip_auth_action" value="member_register">
                         <input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>">
                         <?php wp_nonce_field( 'fixflip_member_register_action', 'fixflip_member_register_nonce' ); ?>
@@ -542,7 +545,7 @@ $redirect_to = ! empty( $_GET['redirect_to'] ) ? esc_url_raw( $_GET['redirect_to
                             </label>
                         </div>
 
-                        <button type="submit" class="fd-submit-btn" style="background: #007bff; margin-top: 10px;">
+                        <button type="submit" id="fd-register-submit-btn" class="fd-submit-btn" style="background: #007bff; margin-top: 10px;">
                             Submit Trade Application &rarr;
                         </button>
 
@@ -632,6 +635,35 @@ function evaluatePasswordStrength(val) {
         text.style.color = '#10b981';
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    var alertEl = document.getElementById('fd-auth-alert');
+    if (alertEl) {
+        alertEl.focus();
+    }
+
+    var forms = [
+        { formId: 'fd-login-form', btnId: 'fd-login-submit-btn', text: 'Signing in...' },
+        { formId: 'fd-passcode-form', btnId: 'fd-passcode-submit-btn', text: 'Unlocking...' },
+        { formId: 'fd-register-form', btnId: 'fd-register-submit-btn', text: 'Submitting application...' }
+    ];
+
+    forms.forEach(function(item) {
+        var f = document.getElementById(item.formId);
+        var b = document.getElementById(item.btnId);
+        if (f && b) {
+            f.addEventListener('submit', function() {
+                if (f.checkValidity && !f.checkValidity()) {
+                    return;
+                }
+                b.disabled = true;
+                b.style.opacity = '0.75';
+                b.style.cursor = 'wait';
+                b.innerHTML = item.text;
+            });
+        }
+    });
+});
 </script>
 
 <?php

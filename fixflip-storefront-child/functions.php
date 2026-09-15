@@ -49,6 +49,74 @@ function fixflip_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'fixflip_enqueue_styles', 20 );
 
 /**
+ * EARLY AUTH CACHE BYPASS & MEMBER PAGE REGISTRATION
+ */
+add_action( 'init', 'fixflip_disable_auth_caching', -999 );
+add_action( 'send_headers', 'fixflip_disable_auth_caching', -999 );
+function fixflip_disable_auth_caching() {
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    $is_auth_route = (
+        strpos( $uri, '/member-login' ) !== false ||
+        strpos( $uri, '/my-account' ) !== false ||
+        strpos( $uri, '/trade-login' ) !== false ||
+        strpos( $uri, 'wc_reset_password' ) !== false ||
+        strpos( $uri, 'lost-password' ) !== false ||
+        isset( $_POST['fixflip_auth_action'] ) ||
+        isset( $_POST['fixflip_trade_action'] ) ||
+        isset( $_POST['wc_reset_password'] ) ||
+        isset( $_POST['login'] ) ||
+        isset( $_POST['register'] )
+    );
+
+    if ( $is_auth_route ) {
+        if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+            define( 'DONOTCACHEPAGE', true );
+        }
+        if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
+            define( 'DONOTCACHEOBJECT', true );
+        }
+        if ( ! defined( 'DONOTCACHEDB' ) ) {
+            define( 'DONOTCACHEDB', true );
+        }
+        if ( ! headers_sent() ) {
+            nocache_headers();
+            if ( function_exists( 'header_remove' ) ) {
+                header_remove( 'Cache-Control' );
+            }
+            header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private' );
+            header( 'Pragma: no-cache' );
+            header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+            header( 'CDN-Cache-Control: no-store' );
+            header( 'Cloudflare-CDN-Cache-Control: no-store' );
+            header( 'Surrogate-Control: no-store' );
+            header( 'X-Accel-Expires: 0' );
+        }
+    }
+}
+
+add_action( 'init', 'fixflip_ensure_member_login_page', 5 );
+function fixflip_ensure_member_login_page() {
+    if ( get_option( 'fixflip_member_login_page_registered' ) ) {
+        return;
+    }
+    $page = get_page_by_path( 'member-login' );
+    if ( ! $page ) {
+        $page_id = wp_insert_post( array(
+            'post_title'     => 'Member Login',
+            'post_name'      => 'member-login',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'post_author'    => 1,
+            'comment_status' => 'closed',
+        ) );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-member-login.php' );
+        }
+    }
+    update_option( 'fixflip_member_login_page_registered', 1, false );
+}
+
+/**
  * HIGH-VELOCITY SPEED ACCELERATOR PACKAGE FOR FIXFLIP.COM
  */
 
@@ -3046,12 +3114,28 @@ function fixflip_restrict_checkout_countries( $countries ) {
 }
 
 /**
- * Redirect My-Account Registration Requests to Dedicated Member Portal
+ * Redirect Unauthenticated My-Account Access to Dedicated Member Portal
  */
-add_action( 'template_redirect', 'fixflip_redirect_account_register' );
-function fixflip_redirect_account_register() {
-    if ( function_exists('is_account_page') && is_account_page() && isset( $_GET['action'] ) && $_GET['action'] === 'register' ) {
-        wp_safe_redirect( home_url( '/member-login/?tab=register' ) );
+add_action( 'template_redirect', 'fixflip_redirect_account_to_member_portal' );
+function fixflip_redirect_account_to_member_portal() {
+    if ( ! is_user_logged_in() && function_exists( 'is_account_page' ) && is_account_page() ) {
+        // Allow lost-password, reset-password, and customer-logout endpoints
+        if ( function_exists( 'is_wc_endpoint_url' ) ) {
+            if ( is_wc_endpoint_url( 'lost-password' ) || is_wc_endpoint_url( 'customer-logout' ) || is_wc_endpoint_url( 'reset-password' ) ) {
+                return;
+            }
+        }
+        $uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+        if ( strpos( $uri, 'lost-password' ) !== false || strpos( $uri, 'customer-logout' ) !== false || strpos( $uri, 'reset-password' ) !== false ) {
+            return;
+        }
+
+        $target_url = esc_url_raw( ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $uri );
+        $redirect = add_query_arg( 'redirect_to', urlencode( $target_url ), home_url( '/member-login/' ) );
+        if ( isset( $_GET['action'] ) && $_GET['action'] === 'register' ) {
+            $redirect = add_query_arg( 'tab', 'register', $redirect );
+        }
+        wp_safe_redirect( $redirect );
         exit;
     }
 }
@@ -4022,6 +4106,16 @@ function fixflip_issue_trade_session() {
     $_COOKIE['fixflip_trade_session'] = $val;
 }
 
+function fixflip_clear_trade_session() {
+    $expire = time() - 86400;
+    setcookie( 'fixflip_trade_session', '', $expire, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+    setcookie( 'fixflip_trade_session', '', $expire, '/', COOKIE_DOMAIN, is_ssl(), true );
+    setcookie( 'fixflip_trade_session', '', $expire, '/' );
+    if ( isset( $_COOKIE['fixflip_trade_session'] ) ) {
+        unset( $_COOKIE['fixflip_trade_session'] );
+    }
+}
+
 function fixflip_is_trade_session_valid() {
     if ( ! empty( $_COOKIE['fixflip_trade_session'] ) ) {
         $parts = explode( '|', (string) $_COOKIE['fixflip_trade_session'] );
@@ -4043,6 +4137,9 @@ function fixflip_is_trade_session_valid() {
  * Authoritative check if visitor has unlocked Best Tier trade access
  */
 function fixflip_is_best_tier_unlocked() {
+    if ( fixflip_is_trade_session_valid() ) {
+        return true;
+    }
     if ( is_user_logged_in() ) {
         $status = get_user_meta( get_current_user_id(), 'fixflip_contractor_status', true );
         // Allow if approved, or empty for established legacy accounts
@@ -4051,7 +4148,29 @@ function fixflip_is_best_tier_unlocked() {
         }
         return false;
     }
-    return fixflip_is_trade_session_valid();
+    return false;
+}
+
+/**
+ * Sync Session Lifecycle on Core WordPress / WooCommerce Login & Logout
+ */
+add_action( 'wp_login', 'fixflip_on_user_login', 10, 2 );
+function fixflip_on_user_login( $user_login, $user ) {
+    fixflip_issue_trade_session();
+}
+
+add_action( 'wp_logout', 'fixflip_on_user_logout' );
+function fixflip_on_user_logout() {
+    fixflip_clear_trade_session();
+}
+
+add_filter( 'login_url', 'fixflip_custom_login_url', 10, 3 );
+function fixflip_custom_login_url( $login_url, $redirect, $force_reauth ) {
+    $custom_url = home_url( '/member-login/' );
+    if ( ! empty( $redirect ) ) {
+        $custom_url = add_query_arg( 'redirect_to', urlencode( $redirect ), $custom_url );
+    }
+    return $custom_url;
 }
 
 /**
@@ -4061,22 +4180,41 @@ add_action( 'init', 'fixflip_handle_member_auth_actions', 1 );
 function fixflip_handle_member_auth_actions() {
     // 1. Member Sign In
     if ( isset( $_POST['fixflip_auth_action'] ) && $_POST['fixflip_auth_action'] === 'member_login' ) {
+        $raw_redirect = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : '';
+        $redirect_to  = $raw_redirect ? wp_validate_redirect( $raw_redirect, home_url( '/category/hardwood-best/' ) ) : home_url( '/category/hardwood-best/' );
+
         $nonce = isset( $_POST['fixflip_member_login_nonce'] ) ? $_POST['fixflip_member_login_nonce'] : '';
         if ( ! wp_verify_nonce( $nonce, 'fixflip_member_login_action' ) ) {
             fixflip_log_security_event( 'login_nonce_failure' );
-            wp_redirect( add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'login' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
         if ( ! fixflip_check_rate_limit( 'member_login', 5, 900 ) ) {
-            wp_redirect( add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'login' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
-        $username    = isset( $_POST['member_username'] ) ? sanitize_text_field( $_POST['member_username'] ) : '';
-        $password    = isset( $_POST['member_password'] ) ? $_POST['member_password'] : '';
-        $remember    = isset( $_POST['rememberme'] ) && $_POST['rememberme'] === 'forever';
-        $redirect_to = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : home_url( '/category/hardwood-best/' );
+        $username = isset( $_POST['member_username'] ) ? sanitize_text_field( $_POST['member_username'] ) : '';
+        $password = isset( $_POST['member_password'] ) ? $_POST['member_password'] : '';
+        $remember = isset( $_POST['rememberme'] ) && $_POST['rememberme'] === 'forever';
+
+        if ( empty( $username ) || empty( $password ) ) {
+            $err_url = add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'login' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
+            exit;
+        }
 
         $creds = array(
             'user_login'    => $username,
@@ -4088,7 +4226,11 @@ function fixflip_handle_member_auth_actions() {
 
         if ( is_wp_error( $user ) ) {
             fixflip_log_security_event( 'login_failure', array( 'identity' => $username ) );
-            wp_redirect( add_query_arg( array( 'auth_error' => 'invalid_creds', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'invalid_creds', 'tab' => 'login' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         } else {
             fixflip_reset_rate_limit( 'member_login' );
@@ -4103,20 +4245,35 @@ function fixflip_handle_member_auth_actions() {
 
     // 2. Create Trade Account / Registration (4-Stage Workflow)
     if ( isset( $_POST['fixflip_auth_action'] ) && $_POST['fixflip_auth_action'] === 'member_register' ) {
+        $raw_redirect = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : '';
+        $redirect_to  = $raw_redirect ? wp_validate_redirect( $raw_redirect, home_url( '/category/hardwood-best/' ) ) : home_url( '/category/hardwood-best/' );
+
         $nonce = isset( $_POST['fixflip_member_register_nonce'] ) ? $_POST['fixflip_member_register_nonce'] : '';
         if ( ! wp_verify_nonce( $nonce, 'fixflip_member_register_action' ) ) {
             fixflip_log_security_event( 'register_nonce_failure' );
-            wp_redirect( add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
         if ( ! fixflip_check_rate_limit( 'member_register', 3, 900 ) ) {
-            wp_redirect( add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
         if ( empty( $_POST['terms_consent'] ) ) {
-            wp_redirect( add_query_arg( array( 'auth_error' => 'terms_required', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'terms_required', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
@@ -4130,19 +4287,31 @@ function fixflip_handle_member_auth_actions() {
         $password        = isset( $_POST['reg_password'] ) ? $_POST['reg_password'] : '';
 
         if ( empty( $email ) || empty( $password ) || empty( $first_name ) || empty( $last_name ) || empty( $company ) || ! is_email( $email ) ) {
-            wp_redirect( add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
+            exit;
+        }
+
+        if ( strlen( $password ) < 8 ) {
+            $err_url = add_query_arg( array( 'auth_error' => 'password_short', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
         // Generic error on existing email prevents account enumeration
         if ( email_exists( $email ) ) {
             fixflip_log_security_event( 'reg_duplicate_email_attempt' );
-            wp_redirect( add_query_arg( array( 'auth_error' => 'invalid_reg', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
-            exit;
-        }
-
-        if ( strlen( $password ) < 8 ) {
-            wp_redirect( add_query_arg( array( 'auth_error' => 'missing_fields', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'invalid_reg', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
@@ -4159,7 +4328,11 @@ function fixflip_handle_member_auth_actions() {
 
         if ( is_wp_error( $user_id ) ) {
             fixflip_log_security_event( 'reg_create_user_error' );
-            wp_redirect( add_query_arg( array( 'auth_error' => 'invalid_reg', 'tab' => 'register' ), home_url( '/member-login/' ) ) );
+            $err_url = add_query_arg( array( 'auth_error' => 'invalid_reg', 'tab' => 'register' ), home_url( '/member-login/' ) );
+            if ( ! empty( $raw_redirect ) ) {
+                $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
@@ -4194,45 +4367,56 @@ function fixflip_handle_member_auth_actions() {
         // Notify Pro Desk of new application
         $admin_email = get_option( 'admin_email' ) ?: 'orders@fixflip.com';
         $subject = 'New Contractor Trade Application: ' . $company . ' (' . $first_name . ' ' . $last_name . ')';
-        $message = "A new contractor trade application has been submitted on FixFlip.com:
-
-" .
-                   "Name: " . $first_name . " " . $last_name . "
-" .
-                   "Company: " . $company . "
-" .
-                   "Email: " . $email . "
-" .
-                   "Phone: " . $phone . "
-" .
-                   "License / CSL Loan #: " . ( $license_loan ?: 'None provided' ) . "
-" .
-                   "Active Jobsite: " . ( $project_address ?: 'None provided' ) . "
-
-" .
-                   "Status: Pending Review
-" .
+        $message = "A new contractor trade application has been submitted on FixFlip.com:\n\n" .
+                   "Name: " . $first_name . " " . $last_name . "\n" .
+                   "Company: " . $company . "\n" .
+                   "Email: " . $email . "\n" .
+                   "Phone: " . $phone . "\n" .
+                   "License / CSL Loan #: " . ( $license_loan ?: 'None provided' ) . "\n" .
+                   "Active Jobsite: " . ( $project_address ?: 'None provided' ) . "\n\n" .
+                   "Status: Pending Review\n" .
                    "Review in WP Admin -> Users.";
         @wp_mail( $admin_email, $subject, $message, array( 'From: FixFlip Pro Desk <orders@fixflip.com>' ) );
 
         // Redirect with success confirmation to sign in
-        wp_redirect( add_query_arg( array( 'registered' => '1', 'tab' => 'login' ), home_url( '/member-login/' ) ) );
+        $success_url = add_query_arg( array( 'registered' => '1', 'tab' => 'login' ), home_url( '/member-login/' ) );
+        if ( ! empty( $raw_redirect ) ) {
+            $success_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $success_url );
+        }
+        wp_redirect( $success_url );
         exit;
     }
 
     // 3. Fast-Track Trade Passcode
     if ( isset( $_POST['fixflip_trade_action'] ) && $_POST['fixflip_trade_action'] === 'unlock_best_tier' ) {
-        $nonce = isset( $_POST['fixflip_trade_passcode_nonce'] ) ? $_POST['fixflip_trade_passcode_nonce'] : '';
-        $redirect_to = ! empty( $_POST['redirect_to'] ) ? esc_url_raw( $_POST['redirect_to'] ) : ( wp_get_referer() ?: home_url( '/category/hardwood-best/' ) );
+        $raw_redirect = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : ( wp_get_referer() ?: home_url( '/category/hardwood-best/' ) );
+        $redirect_to  = wp_validate_redirect( $raw_redirect, home_url( '/category/hardwood-best/' ) );
 
+        $nonce = isset( $_POST['fixflip_trade_passcode_nonce'] ) ? $_POST['fixflip_trade_passcode_nonce'] : '';
         if ( ! wp_verify_nonce( $nonce, 'fixflip_trade_passcode_action' ) ) {
             fixflip_log_security_event( 'passcode_nonce_failure' );
-            wp_redirect( add_query_arg( 'auth_error', 'security_check', $redirect_to ) );
+            if ( strpos( $redirect_to, '/member-login' ) !== false ) {
+                $err_url = add_query_arg( array( 'auth_error' => 'security_check', 'tab' => 'login' ), home_url( '/member-login/' ) );
+                if ( ! empty( $raw_redirect ) ) {
+                    $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+                }
+            } else {
+                $err_url = add_query_arg( 'auth_error', 'security_check', $redirect_to );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
         if ( ! fixflip_check_rate_limit( 'trade_passcode', 5, 900 ) ) {
-            wp_redirect( add_query_arg( 'auth_error', 'rate_limit', $redirect_to ) );
+            if ( strpos( $redirect_to, '/member-login' ) !== false ) {
+                $err_url = add_query_arg( array( 'auth_error' => 'rate_limit', 'tab' => 'login' ), home_url( '/member-login/' ) );
+                if ( ! empty( $raw_redirect ) ) {
+                    $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+                }
+            } else {
+                $err_url = add_query_arg( 'auth_error', 'rate_limit', $redirect_to );
+            }
+            wp_redirect( $err_url );
             exit;
         }
 
@@ -4248,7 +4432,15 @@ function fixflip_handle_member_auth_actions() {
             exit;
         } else {
             fixflip_log_security_event( 'passcode_unlock_failure' );
-            wp_redirect( add_query_arg( 'auth_error', 'passcode_invalid', $redirect_to ) );
+            if ( strpos( $redirect_to, '/member-login' ) !== false ) {
+                $err_url = add_query_arg( array( 'auth_error' => 'passcode_invalid', 'tab' => 'login' ), home_url( '/member-login/' ) );
+                if ( ! empty( $raw_redirect ) ) {
+                    $err_url = add_query_arg( 'redirect_to', urlencode( $raw_redirect ), $err_url );
+                }
+            } else {
+                $err_url = add_query_arg( 'auth_error', 'passcode_invalid', $redirect_to );
+            }
+            wp_redirect( $err_url );
             exit;
         }
     }

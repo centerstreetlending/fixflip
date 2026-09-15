@@ -9,8 +9,13 @@ defined( 'ABSPATH' ) || exit;
 
 // Prevent gateway caching on auth pages
 if ( ! headers_sent() ) {
-    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+    header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private' );
     header( 'Pragma: no-cache' );
+    header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+    header( 'Surrogate-Control: no-store' );
+    header( 'CDN-Cache-Control: no-store' );
+    header( 'Cloudflare-CDN-Cache-Control: no-store' );
+    header( 'X-Accel-Expires: 0' );
 }
 ?>
 
@@ -34,7 +39,7 @@ if ( ! headers_sent() ) {
 
             <?php wc_print_notices(); ?>
 
-            <form method="post" class="woocommerce-ResetPassword lost_reset_password">
+            <form method="post" id="fd-lost-password-form" class="woocommerce-ResetPassword lost_reset_password">
 
                 <div style="margin-bottom: 24px;">
                     <label for="user_login" style="display: block; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: #0f172a; margin-bottom: 8px; text-align: left;">
@@ -49,7 +54,7 @@ if ( ! headers_sent() ) {
 
                 <div style="margin-bottom: 24px;">
                     <input type="hidden" name="wc_reset_password" value="true" />
-                    <button type="submit" class="woocommerce-Button button" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>" style="width: 100%; min-height: 48px; background: #0f172a; color: #ffffff; border: none; padding: 14px 20px; font-size: 13.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; border-radius: 3px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s ease;" onmouseover="this.style.background='#007bff'" onmouseout="this.style.background='#0f172a'">
+                    <button type="submit" id="fd-lost-password-submit-btn" class="woocommerce-Button button" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>" style="width: 100%; min-height: 48px; background: #0f172a; color: #ffffff; border: none; padding: 14px 20px; font-size: 13.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; border-radius: 3px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s ease;" onmouseover="this.style.background='#007bff'" onmouseout="this.style.background='#0f172a'">
                         Send Reset Link &rarr;
                     </button>
                 </div>
@@ -70,3 +75,26 @@ if ( ! headers_sent() ) {
 
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var f = document.getElementById('fd-lost-password-form');
+    var b = document.getElementById('fd-lost-password-submit-btn');
+    if (f && b) {
+        f.addEventListener('submit', function() {
+            if (f.checkValidity && !f.checkValidity()) {
+                return;
+            }
+            b.disabled = true;
+            b.style.opacity = '0.75';
+            b.style.cursor = 'wait';
+            b.innerHTML = 'Sending Reset Link...';
+        });
+    }
+    var notices = document.querySelector('.woocommerce-error, .woocommerce-message, .woocommerce-info');
+    if (notices) {
+        notices.setAttribute('tabindex', '-1');
+        notices.focus();
+    }
+});
+</script>
