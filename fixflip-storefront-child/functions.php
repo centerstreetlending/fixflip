@@ -3987,10 +3987,24 @@ add_filter( 'site_icon_meta_tags', function( $meta_tags ) {
 
 
 /**
+ * Accurately resolve real client IP behind Cloudflare and proxy layers
+ */
+function fixflip_get_client_ip() {
+    if ( ! empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
+        return sanitize_text_field( $_SERVER['HTTP_CF_CONNECTING_IP'] );
+    }
+    if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        $parts = explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] );
+        return sanitize_text_field( trim( $parts[0] ) );
+    }
+    return ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
+}
+
+/**
  * IP-based Rate Limiting for Authentication and Passcodes
  */
 function fixflip_check_rate_limit( $action, $max_attempts = 5, $decay_seconds = 900 ) {
-    $ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
+    $ip = fixflip_get_client_ip();
     $transient_key = 'fixflip_rl_' . substr( md5( $action . '_' . $ip ), 0, 24 );
     $attempts = (int) get_transient( $transient_key );
     if ( $attempts >= $max_attempts ) {
@@ -4002,8 +4016,13 @@ function fixflip_check_rate_limit( $action, $max_attempts = 5, $decay_seconds = 
 }
 
 function fixflip_reset_rate_limit( $action ) {
-    $ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
-    delete_transient( 'fixflip_rl_' . substr( md5( $action . '_' . $ip ), 0, 24 ) );
+    $ips = array( fixflip_get_client_ip() );
+    if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ips[] = sanitize_text_field( $_SERVER['REMOTE_ADDR'] );
+    }
+    foreach ( array_unique( $ips ) as $ip ) {
+        delete_transient( 'fixflip_rl_' . substr( md5( $action . '_' . $ip ), 0, 24 ) );
+    }
 }
 
 /**
@@ -4017,7 +4036,7 @@ function fixflip_log_security_event( $event_type, $details = array() ) {
     if ( count( $logs ) > 250 ) {
         $logs = array_slice( $logs, -200 );
     }
-    $ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '127.0.0.1';
+    $ip = fixflip_get_client_ip();
     $ip_hash = substr( hash( 'sha256', $ip . ( defined( 'AUTH_SALT' ) ? AUTH_SALT : 'fixflip_salt' ) ), 0, 16 );
 
     $sanitized_details = array();
