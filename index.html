@@ -3,957 +3,2984 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FixFlip Materials Market | Blue Theme</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Fix & Flip Hammer & Saw Favicon -->
+  <link rel="shortcut icon" href="fixflip-storefront-child/favicon.ico?v=">
+  <link rel="icon" type="image/png" sizes="32x32" href="fixflip-storefront-child/favicon.png?v=">
+  <link rel="icon" type="image/png" sizes="16x16" href="fixflip-storefront-child/favicon.png?v=">
+  <link rel="apple-touch-icon" sizes="180x180" href="fixflip-storefront-child/apple-touch-icon.png?v=">
+  <link rel="icon" type="image/svg+xml" href="fixflip-storefront-child/favicon.svg?v=">
+  
+  
   <style>
-    :root {
-      --ink: #141414;
-      --muted: #5f6f82;
-      --line: #d7e0ea;
-      --paper: #f6f9fc;
-      --white: #ffffff;
-      --signal: #2f80ed;
-      --signal-dark: #1d5fb8;
-      --forest: #12365f;
-      --clay: #5d7fa6;
-      --steel: #65727a;
-      --blue: #1e5d9e;
-      --shadow: 0 24px 70px rgba(22, 22, 18, .13);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      color: var(--ink);
-      background: var(--paper);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.4;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .site-shell {
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 28px;
-      align-items: center;
-      min-height: 78px;
-      padding: 0 clamp(18px, 4vw, 54px);
-      border-bottom: 1px solid rgba(20, 20, 20, .1);
-      background: rgba(246, 249, 252, .92);
-      backdrop-filter: blur(18px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 188px;
-    }
-
-    .brand img {
-      width: 138px;
-      height: auto;
-      display: block;
-    }
-
-    .brand span {
-      width: 9px;
-      height: 9px;
-      background: var(--signal);
-      border-radius: 999px;
-      box-shadow: 18px 0 0 var(--forest), 36px 0 0 var(--clay);
-    }
-
-    .nav {
-      display: flex;
-      justify-content: center;
-      gap: clamp(18px, 3vw, 42px);
-      font-size: 13px;
-      font-weight: 750;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-    .nav a {
-      padding: 29px 0;
-      border-bottom: 3px solid transparent;
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible {
-      border-color: var(--signal);
-      outline: 0;
-    }
-
-    .cart-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 44px;
-      padding: 0 16px;
-      border: 1px solid var(--ink);
-      border-radius: 4px;
-      color: var(--white);
-      background: var(--ink);
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      cursor: pointer;
-    }
-
-    .cart-button svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2.2;
-    }
-
-    .hero {
-      min-height: calc(100vh - 78px);
-      display: grid;
-      grid-template-columns: minmax(0, 1.04fr) minmax(360px, .96fr);
-      align-items: stretch;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .hero-copy {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: clamp(54px, 7vw, 104px) clamp(22px, 5vw, 74px);
-    }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 850;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 48px;
-      height: 5px;
-      background: var(--signal);
-    }
-
-    h1 {
-      max-width: 820px;
-      margin: 0;
-      font-size: clamp(50px, 8.4vw, 126px);
-      line-height: .86;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    .hero-copy p {
-      max-width: 630px;
-      margin: 28px 0 0;
-      color: #26384a;
-      font-size: clamp(18px, 2vw, 24px);
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 36px;
-    }
-
-    .primary,
-    .secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 0 22px;
-      border-radius: 4px;
-      border: 1px solid var(--ink);
-      font-size: 13px;
-      font-weight: 850;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    .primary {
-      background: var(--signal);
-      color: var(--ink);
-      box-shadow: 8px 8px 0 var(--ink);
-    }
-
-    .secondary {
-      background: transparent;
-      color: var(--ink);
-    }
-
-    .hero-market {
-      display: grid;
-      grid-template-rows: 1fr auto;
-      min-height: 640px;
-      background: var(--ink);
-      color: var(--white);
-      position: relative;
-      isolation: isolate;
-    }
-
-    .material-wall {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      min-height: 100%;
-    }
-
-    .tile {
-      position: relative;
-      min-height: 210px;
-      padding: 18px;
-      overflow: hidden;
-      border-left: 1px solid rgba(255, 255, 255, .14);
-      border-bottom: 1px solid rgba(255, 255, 255, .14);
-    }
-
-    .tile::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, .24), transparent 38%),
-        var(--tile-bg);
-      opacity: .95;
-      transform: scale(1.02);
-      transition: transform .45s ease;
-    }
-
-    .tile:hover::before {
-      transform: scale(1.08);
-    }
-
-    .tile:nth-child(1) { --tile-bg: repeating-linear-gradient(90deg, #d5c7ab 0 18px, #b8a88a 18px 36px); }
-    .tile:nth-child(2) { --tile-bg: linear-gradient(150deg, #d9d6ce, #8d9698 46%, #4d575c); }
-    .tile:nth-child(3) { --tile-bg: radial-gradient(circle at 35% 35%, #eef0e9 0 18%, #c0c4b7 19% 21%, #727a70 22% 100%); }
-    .tile:nth-child(4) { --tile-bg: repeating-linear-gradient(45deg, #9e4028 0 20px, #c3673c 20px 40px, #77331f 40px 60px); }
-    .tile:nth-child(5) { --tile-bg: linear-gradient(90deg, #214c61, #7aa2a2 52%, #e7e0ce); }
-    .tile:nth-child(6) { --tile-bg: repeating-linear-gradient(0deg, #2f3b3b 0 14px, #4e5b58 14px 28px); }
-
-    .tile span,
-    .tile strong {
-      position: relative;
-      z-index: 1;
-      display: block;
-      text-shadow: 0 1px 12px rgba(0, 0, 0, .34);
-    }
-
-    .tile span {
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      opacity: .9;
-    }
-
-    .tile strong {
-      margin-top: 8px;
-      font-size: clamp(22px, 2.3vw, 34px);
-      line-height: .96;
-      text-transform: uppercase;
-    }
-
-    .quote-panel {
-      position: absolute;
-      right: clamp(16px, 4vw, 46px);
-      bottom: 104px;
-      width: min(360px, calc(100% - 32px));
-      padding: 22px;
-      border: 1px solid rgba(255, 255, 255, .2);
-      background: rgba(20, 20, 20, .86);
-      box-shadow: var(--shadow);
-    }
-
-    .quote-panel h2 {
-      margin: 0 0 18px;
-      font-size: 20px;
-      line-height: 1;
-      text-transform: uppercase;
-    }
-
-    .quote-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
-      padding: 12px 0;
-      border-top: 1px solid rgba(255, 255, 255, .16);
-      color: rgba(255, 255, 255, .82);
-      font-size: 14px;
-    }
-
-    .quote-row strong {
-      color: var(--white);
-      font-size: 18px;
-    }
-
-    .hero-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid rgba(255, 255, 255, .16);
-      background: var(--signal);
-      color: var(--ink);
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-
-    .hero-strip div {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      border-left: 1px solid rgba(20, 20, 20, .18);
-      font-size: 13px;
-      letter-spacing: .06em;
-    }
-
-    .section {
-      padding: clamp(54px, 7vw, 96px) clamp(22px, 5vw, 74px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: minmax(0, .8fr) minmax(280px, .45fr);
-      gap: 34px;
-      align-items: end;
-      margin-bottom: 34px;
-    }
-
-    .section h2 {
-      margin: 0;
-      font-size: clamp(34px, 5vw, 76px);
-      line-height: .92;
-      text-transform: uppercase;
-    }
-
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 17px;
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
-    }
-
-    .category {
-      min-height: 250px;
-      padding: 22px;
-      background: var(--white);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: background .2s ease, transform .2s ease;
-    }
-
-    .category:hover {
-      background: #fff7d2;
-      transform: translateY(-3px);
-    }
-
-    .category svg {
-      width: 42px;
-      height: 42px;
-      stroke: var(--ink);
-      stroke-width: 1.8;
-      fill: none;
-    }
-
-    .category h3 {
-      margin: 36px 0 8px;
-      font-size: 24px;
-      line-height: 1;
-      text-transform: uppercase;
-    }
-
-    .category p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .deal-band {
-      display: grid;
-      grid-template-columns: minmax(0, .9fr) minmax(320px, .55fr);
-      background: var(--forest);
-      color: var(--white);
-    }
-
-    .deal-copy {
-      padding: clamp(44px, 6vw, 86px) clamp(22px, 5vw, 74px);
-    }
-
-    .deal-copy h2 {
-      max-width: 860px;
-      margin: 0;
-      font-size: clamp(38px, 6vw, 92px);
-      line-height: .9;
-      text-transform: uppercase;
-    }
-
-    .deal-copy p {
-      max-width: 650px;
-      margin: 24px 0 0;
-      color: rgba(255, 255, 255, .75);
-      font-size: 19px;
-    }
-
-    .deal-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      margin-top: 36px;
-      background: rgba(255, 255, 255, .17);
-      border: 1px solid rgba(255, 255, 255, .17);
-    }
-
-    .deal-stats div {
-      min-height: 106px;
-      padding: 16px;
-      background: rgba(255, 255, 255, .06);
-    }
-
-    .deal-stats strong {
-      display: block;
-      color: var(--signal);
-      font-size: 34px;
-      line-height: 1;
-    }
-
-    .deal-stats span {
-      display: block;
-      margin-top: 10px;
-      color: rgba(255, 255, 255, .76);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-    }
-
-    .order-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 28px;
-      min-height: 560px;
-      padding: clamp(28px, 4vw, 52px);
-      background:
-        linear-gradient(rgba(245, 196, 0, .9), rgba(245, 196, 0, .9)),
-        repeating-linear-gradient(135deg, #000 0 12px, #fff 12px 24px);
-      color: var(--ink);
-    }
-
-    .order-card h3 {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 58px);
-      line-height: .92;
-      text-transform: uppercase;
-    }
-
-    .order-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .loan-field {
-      display: grid;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .loan-field label {
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .loan-field input {
-      width: 100%;
-      min-height: 50px;
-      border: 1px solid rgba(20, 20, 20, .32);
-      border-radius: 4px;
-      background: rgba(255, 255, 255, .75);
-      color: var(--ink);
-      padding: 0 14px;
-      font: inherit;
-      font-weight: 800;
-      letter-spacing: .04em;
-    }
-
-    .loan-field input::placeholder {
-      color: rgba(20, 20, 20, .48);
-    }
-
-    .order-item {
-      display: grid;
-      grid-template-columns: 44px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      min-height: 64px;
-      padding: 10px;
-      background: rgba(255, 255, 255, .64);
-      border: 1px solid rgba(20, 20, 20, .16);
-    }
-
-    .swatch {
-      width: 44px;
-      height: 44px;
-      border: 1px solid rgba(20, 20, 20, .18);
-      background: var(--swatch);
-    }
-
-    .order-item strong,
-    .order-item span {
-      display: block;
-    }
-
-    .order-item span {
-      color: #425466;
-      font-size: 13px;
-    }
-
-    .order-item b {
-      font-size: 14px;
-    }
-
-    .product-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 22px;
-    }
-
-    .product {
-      display: grid;
-      grid-template-rows: 220px auto;
-      min-height: 430px;
-      background: var(--white);
-      border: 1px solid var(--line);
-    }
-
-    .product-art {
-      position: relative;
-      overflow: hidden;
-      background: var(--art);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .product-art::after {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      border: 1px solid rgba(255, 255, 255, .58);
-      box-shadow: inset 0 0 0 10px rgba(255, 255, 255, .08);
-    }
-
-    .product-info {
-      display: flex;
-      flex-direction: column;
-      padding: 22px;
-    }
-
-    .product-info h3 {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1;
-      text-transform: uppercase;
-    }
-
-    .product-info p {
-      margin: 12px 0 26px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .product-meta {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      font-weight: 850;
-    }
-
-    .product-actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .bundle-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .add {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-width: 42px;
-      height: 42px;
-      padding: 0 12px;
-      border: 1px solid var(--ink);
-      border-radius: 4px;
-      background: var(--ink);
-      color: var(--white);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    .add-cart {
-      background: var(--signal);
-      color: var(--ink);
-    }
-
-    .add-loan {
-      background: var(--ink);
-      color: var(--white);
-    }
-
-    .add svg {
-      width: 20px;
-      height: 20px;
-      stroke-width: 2.4;
-    }
-
-    .footer {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 24px;
-      align-items: center;
-      padding: 30px clamp(22px, 5vw, 74px);
-      background: var(--ink);
-      color: var(--white);
-    }
-
-    .footer strong {
-      display: block;
-      font-size: 18px;
-      text-transform: uppercase;
-    }
-
-    .footer span {
-      color: rgba(255, 255, 255, .66);
-      font-size: 13px;
-    }
-
-    .footer a {
-      color: var(--signal);
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      font-size: 13px;
-    }
-
-    @media (max-width: 980px) {
-      .topbar {
-        grid-template-columns: 1fr auto;
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .hero,
-      .deal-band,
-      .section-head {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-market {
-        min-height: 560px;
-      }
-
-      .category-grid,
-      .product-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .topbar {
-        min-height: 70px;
-        padding-inline: 16px;
-      }
-
-      .brand {
-        min-width: 0;
-      }
-
-      .brand img {
-        width: 116px;
-      }
-
-      .cart-button {
-        width: 44px;
-        padding: 0;
-        justify-content: center;
-      }
-
-      .cart-button span {
-        display: none;
-      }
-
-      .hero-copy {
-        padding: 42px 18px 48px;
-      }
-
-      h1 {
-        font-size: clamp(48px, 15vw, 76px);
-      }
-
-      .hero-market {
-        min-height: auto;
-      }
-
-      .material-wall {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .tile {
-        min-height: 160px;
-      }
-
-      .quote-panel {
-        position: relative;
-        right: auto;
-        bottom: auto;
-        width: auto;
-        margin: 16px;
-      }
-
-      .hero-strip,
-      .deal-stats,
-      .category-grid,
-      .product-row,
-      .footer {
-        grid-template-columns: 1fr;
-      }
-
-      .product-meta {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .product-actions,
-      .bundle-actions {
-        width: 100%;
-        grid-template-columns: 1fr;
-        justify-content: stretch;
-      }
-
-      .add {
-        width: 100%;
-      }
-
-      .section {
-        padding: 48px 18px;
-      }
+    /* Global Proportional Typography Override - Unified Inter (Atoms / Manors style) */
+    *, *::before, *::after,
+    html, body, button, input, select, textarea,
+    h1, h2, h3, h4, h5, h6, p, span, a, div, li, ul, ol, label, table, th, td, b, strong, em, small {
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+        letter-spacing: -0.011em !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        letter-spacing: -0.025em !important;
+    }
+
+    /* FORCE DRAWER RIGHT SIDE SLIDE-OUT ONLY (NO BOTTOM WIDGETS) */
+    .widget_shopping_cart,
+    .site-header-cart .widget_shopping_cart,
+    .storefront-handheld-footer-bar,
+    .storefront-handheld-footer-bar-cart,
+    .storefront-handheld-footer-bar-links,
+    #handheld-navigation,
+    .footer-cart-contents,
+    ul.storefront-handheld-footer-bar {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    #fd-cart-drawer-panel {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: auto !important;
+        bottom: auto !important;
+        width: 420px !important;
+        max-width: 90vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+        transform: translateX(100%) !important;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    #fd-cart-drawer-panel.is-open {
+        transform: translateX(0) !important;
+    }
+
+    /* CRITICAL MOBILE RESPONSIVE ENGINE */
+    @media (max-width: 900px) {
+        .fd-responsive-4-grid,
+        .fd-responsive-3-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+        }
+        .fd-home-card {
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            border-radius: 4px !important;
+            overflow: hidden !important;
+        }
+        .fd-home-card div[style*="padding: 18px 16px"] {
+            padding: 12px 10px !important;
+        }
+        .fd-home-card h3 {
+            font-size: 15px !important;
+            line-height: 1.2 !important;
+            margin: 0 0 4px 0 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        .fd-home-card span[style*="font-size: 22px"] {
+            font-size: 18px !important;
+        }
+        .fd-home-card span[style*="font-size: 14px"] {
+            font-size: 12px !important;
+        }
+        .fd-home-card span[style*="SELECT SQ FT"] {
+            font-size: 10.5px !important;
+            padding: 8px 4px !important;
+            letter-spacing: 0.3px !important;
+            white-space: nowrap !important;
+        }
+        .fd-home-card span[style*="ORDER SAMPLE"] {
+            font-size: 9.5px !important;
+            padding: 5px 4px !important;
+            letter-spacing: 0.2px !important;
+            white-space: nowrap !important;
+        }
+    }
+
+    .desktop-nav-txt {
+        display: inline !important;
+    }
+    .mobile-nav-txt {
+        display: none !important;
+    }
+
+    /* ACCESSIBLE FOCUS STYLES */
+    :focus-visible {
+        outline: 2px solid #007bff !important;
+        outline-offset: 2px !important;
+    }
+
+    /* DESKTOP / MOBILE VISIBILITY SWITCHES */
+    .mobile-only-header-row {
+        display: none !important;
+    }
+
+    @media (max-width: 768px) {
+        /* Hide desktop header tiers on mobile */
+        .header-tier-1,
+        .header-tier-2,
+        .mega-menu-wrapper {
+            display: none !important;
+        }
+
+        /* Show compact 58px mobile header row */
+        .mobile-only-header-row {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            height: 58px;
+            padding: 0 16px;
+            background: #f2f2f2;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .mobile-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        #fd-mobile-menu-btn,
+        #fd-mobile-search-toggle,
+        .mobile-header-icon-btn {
+            min-width: 44px;
+            min-height: 44px;
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Consolidated Announcement Bar Mobile Polish */
+        .fd-combined-announcement-bar {
+            padding: 8px 12px !important;
+            font-size: 11px !important;
+            line-height: 1.35 !important;
+            text-align: center !important;
+            justify-content: center !important;
+            gap: 4px 8px !important;
+        }
+        .fd-combined-announcement-bar span span:first-child {
+            font-size: 8px !important;
+            padding: 2px 5px !important;
+        }
+
+        /* Cart Drawer Full-Width Sheet on Mobile */
+        #fd-cart-drawer-panel {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            right: 0 !important;
+        }
+    }
+        .fd-footer-grid {
+            grid-template-columns: 1fr !important;
+            gap: 28px !important;
+            padding: 36px 20px 24px !important;
+        }
+        .fd-archive-container {
+            flex-direction: column !important;
+            gap: 16px !important;
+            width: 100% !important;
+        }
+        .fd-sidebar-filter {
+            width: 100% !important;
+            position: static !important;
+            padding: 12px !important;
+            box-sizing: border-box !important;
+            border-radius: 6px !important;
+            margin-bottom: 8px !important;
+        }
+        .fd-sidebar-header {
+            display: none !important;
+        }
+        .fd-mobile-filter-toggle-btn {
+            display: flex !important;
+        }
+        .fd-sidebar-filter-body {
+            display: none;
+            padding-top: 16px;
+        }
+        .fd-sidebar-filter-body.is-open {
+            display: block !important;
+        }
+        .fd-archive-main-col {
+            width: 100% !important;
+        }
+        .fd-single-product-container {
+            padding: 16px 12px !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+        }
+        .fd-main-product-layout {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 20px !important;
+            width: 100% !important;
+        }
+        .fd-left-gallery {
+            width: 100% !important;
+        }
+        .fd-gallery-grid-2x2 {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+        .fd-right-details {
+            width: 100% !important;
+        }
+        .fd-right-details h1 {
+            font-size: 23px !important;
+            line-height: 1.2 !important;
+            margin-bottom: 8px !important;
+        }
+        .fd-related-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+        }
+    }
+
+    /* NUCLEAR INJECTION FOR LULULEMON LAYOUT */
+    html, body, .site, .site-content, .site-shell, #page, #content, .content-area, .site-main, .col-full {
+        background-color: #f9f9f9 !important;
+    }
+    
+    /* Sticky Navigation & Original #f2f2f2 Header Color */
+    .top-header-wrapper {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999999 !important;
+        background-color: #f2f2f2 !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+    }
+    .header-tier-0,
+    .header-tier-1,
+    .header-tier-2,
+    .mega-menu-wrapper {
+        background-color: #f2f2f2 !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #e5e5e5 !important;
+    }
+    .mega-menu-link {
+        color: #111111 !important;
+    }
+    .mega-menu-link:hover {
+        color: #007bff !important;
+    }
+    .mega-dropdown {
+        background-color: #007bff !important;
+        border-top: none !important;
+    }
+    .mega-column h4,
+    .mega-column ul li a {
+        color: #ffffff !important;
+        border-color: rgba(255,255,255,0.2) !important; /* For the h4 border-bottom */
+    }
+    .mega-column ul li a:hover {
+        color: #ffffff !important;
+        text-decoration: underline !important;
+    }
+    .search-container form.woocommerce-product-search input.search-field,
+    .search-container form.custom-search-form input.custom-search-input {
+        background-color: #ffffff !important;
+        border: 1px solid #d4d4d4 !important;
+        border-radius: 4px !important;
+        box-shadow: none !important;
+    }
+    body.single-product .col-full {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+        box-sizing: border-box !important;
+        max-width: 1400px !important;
+        margin: 0 auto !important;
+    }
+    
+    /* Pro Breadcrumbs Styling */
+    .fd-breadcrumbs,
+    .woocommerce-breadcrumb {
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #888888 !important; /* Muted separators */
+        margin-bottom: 24px !important;
+    }
+    .fd-breadcrumbs a,
+    .woocommerce-breadcrumb a {
+        color: #555555 !important; /* Subtle medium grey for parent links */
+        text-decoration: none !important;
+        transition: color 0.15s ease !important;
+    }
+    .fd-breadcrumbs a:hover,
+    .woocommerce-breadcrumb a:hover {
+        color: #111111 !important; /* Turns dark charcoal on hover */
+        text-decoration: underline !important;
+    }
+    
+    /* Product Title Typography Softening */
+    body.single-product .fd-title,
+    body.single-product .product_title,
+    body.single-product h1.entry-title {
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-weight: 600 !important; /* Reduced from heavy 800 to clean 600 */
+        font-size: 28px !important;
+        color: #111111 !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* Pro E-Commerce Vertical Rhythm Spacing */
+    body.single-product .fd-meta-row {
+        margin-bottom: 12px !important;
+    }
+    body.single-product .fd-price-row {
+        margin-bottom: 6px !important;
+    }
+    body.single-product .fd-price {
+        font-size: 36px !important;
+        font-weight: 800 !important;
+    }
+    body.single-product .fd-unit {
+        font-size: 15px !important;
+        color: #555 !important;
+    }
+    body.single-product .fd-sku {
+        margin-bottom: 12px !important;
+        font-size: 12px !important;
+        color: #777 !important;
+    }
+    body.single-product .fd-short-desc {
+        margin-top: 12px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* Global insert styling for summary card */
+    body.single-product .fd-product-summary,
+    body.single-product div.product .summary.entry-summary {
+        box-sizing: border-box !important;
+        background-color: transparent !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    /* Make EVERYTHING inside the summary box capable of shrinking/wrapping */
+    body.single-product .fd-product-summary *,
+    body.single-product div.product .summary.entry-summary * {
+        min-width: 0; 
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+    
+    /* Force wrapping on all internal flex rows */
+    body.single-product .fd-product-summary div[style*="display: flex"],
+    body.single-product div.product .summary.entry-summary div[style*="display: flex"] {
+        flex-wrap: wrap !important;
+    }
+    
+    /* Desktop Product Layout */
+    @media (min-width: 992px) {
+        body.single-product .fd-product-grid,
+        body.single-product div.product {
+            display: flex !important;
+            gap: 24px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            flex-wrap: nowrap !important;
+            align-items: flex-start !important;
+        }
+        body.single-product .fd-gallery-container,
+        body.single-product div.product .woocommerce-product-gallery {
+            flex: 1 1 55% !important;
+            min-width: 0 !important;
+            width: auto !important;
+        }
+        body.single-product .fd-gallery-container *,
+        body.single-product div.product .woocommerce-product-gallery * {
+            min-width: 0 !important;
+        }
+        body.single-product .fd-product-summary,
+        body.single-product div.product .summary.entry-summary {
+            flex: 1 1 45% !important; 
+            min-width: 0 !important;
+            max-width: none !important;
+            width: auto !important;
+        }
+    }
+    
+    /* Mobile / Responsive Product Layout */
+    @media (max-width: 991px) {
+        body.single-product .col-full {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+        body.single-product .fd-product-grid,
+        body.single-product div.product {
+            display: block !important;
+        }
+        body.single-product .fd-gallery-container,
+        body.single-product .fd-product-summary,
+        body.single-product div.product .woocommerce-product-gallery,
+        body.single-product div.product .summary.entry-summary {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: none !important;
+            margin-bottom: 32px !important;
+        }
+    }
+    
+    body.single-product .fd-gallery-container img,
+    body.single-product div.product .woocommerce-product-gallery img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Make the square footage calculator box white like Lululemon checkout card */
+    .fd-beige-box,
+    .fd-beige-box input,
+    .fd-beige-box input[type="number"] {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        border: 1px solid #d4d4d4 !important;
+        border-radius: 6px !important;
+    }
+    .fd-beige-box {
+        padding: 24px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+    }
+    
+    /* Make the calculator fully responsive so it doesn't break the column width */
+    .fd-beige-box .fd-calc-header {
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+    .fd-calc-row > div {
+        flex-wrap: wrap !important;
+    }
+    .fd-calc-row .input-group {
+        min-width: 120px !important;
+        flex: 1 1 auto !important;
+    }
+    
+    body.single-product .fd-product-summary > div,
+    body.single-product div.product .summary.entry-summary > div {
+        background: transparent !important;
+    }
+    
+    /* ULTIMATE EDGE-TO-EDGE FULL-WIDTH RESPONSIVE OVERRIDE */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: clip !important;
+        background-color: #ffffff !important;
+    }
+
+    #page,
+    .site,
+    .site-shell,
+    #content,
+    .site-content,
+    .site-header,
+    .top-header-wrapper,
+    .mega-menu-wrapper,
+    .fd-single-product,
+    body.single-product .fd-product-grid,
+    body.single-product div.product {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .site-main,
+    #main {
+        max-width: 1400px !important;
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    @media (min-width: 769px) {
+        .header-tier-1,
+        .mega-menu-container,
+        .fd-single-product,
+        #content {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+        }
+
+        .header-tier-1 {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 20px !important;
+            padding: 14px 24px !important;
+            max-width: 1320px !important;
+            margin: 0 auto !important;
+        }
     }
   </style>
 </head>
-<body>
+<body >
   <div class="site-shell">
-    <header class="topbar" aria-label="Main navigation">
-      <a class="brand" href="#">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtgAAACJCAMAAAAhQL9MAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAM1BMVEUAAABkYWFMSkk1MzMtLCxBPz9cWllUUlEPEA9QTk0lJCRhXl5YVlY7OjkaGhpFREQFBwiCt9ByAAAAEHRSTlMAH6/n789Xh/6c9jxw3PvAchUu8QAADoJJREFUeNrtnd2W3CoOhQFjEJi/93/aOTNrJTlrut2yJUCU432buKq6SmJL4jNWj5M2m7W7U69ePUke2v+06/e7ePUchfZL8Xi/jVcncmmEtDpXOpVTF+Sg/Rb49wd89a1MG6JNnUnndq6kUOnS/q1dSSu2EQJ1qgDnV42wsK2dy2DuCu2+orV7TU6xZFtX4fHm2w/S97/mqJWoUpsd2NDOFVR36faDPHYtR7YyDBkaXaQvuLZzFYrDQFKSqm2IrDrT0X6Qm5y5iEN4vvUHTUzHMTpIFpEVJte+UVWC2toQVVKwwOTMhRlZnykrl1/KSA1x+di0YkrE8mgevyPr/MzM3eYUujasb6SusXpHHdt3Ku62wW6tlf1QXB1iljfLuwryflOy3qY1eseKDKFPRA8kCISERqYIIpaHdxvIyjC1d0zzsn47VjDSRDNSjjNm0h7PtmjvuNEsTyuqhkyxQusoMOq6XBsjTbKInRVJ5kZcI5b/qZZXJveOEbl2b11lNeEXFjBS2hC28jcnHPSrSttsy8uEqdKozM2Tsx6cuqh9lpHyh6L4D2sIcU1Y5IQtL7ZzmclTHzM968OqRmq4Q1gNSDrdGazwa5Hw9N7xQN5vdtaHDzRSyyz5LCGuCcGwsOUpsoZMsUyTiuw03UgLcwjrgNl7qtx1EzrOtrw6bXuGP8XKbYSCHNpXqEANKh25ubyzBgnylrchU6WZveMuk/We2IjxlWkWoXlxXUjOmsXQPprHl2loH3+K1cYInJSRmt5o3xECDvcm0m5DWJFmj7Re7lDd5Rjvl9ogRSm0L3UGag5orVhbWmNX6IR0ELQ8ebTPCKB9uKqQkRKHoixjsQrXAb3tu4yyPPnekT/F2towOZGUKsShKGekVjSt88SjQdLy5NG+yHi/0obJiqTURgNqiPxcsVeHdpGwLbyq5a2P9vGznv7eMLsC2gkdwQEozOirY7hqXg7tiwJoX/8plm9NaMk+ljLSnTDha6HHTkNeDe3LH4H2Fca1fCUBRl73HIrme95ACom81m1h0SHZOQ/t2wahfSV9K19z5CU/nlJOTR6KuvuogiV7qkkpYqAvrgMJT67k0b7CeD+grUg6bHRsA08pO/1wnttoSAN9PaXgy2+iM/twEj9ot+QBaB/r2iPzkBHE5AWGoqMKbA3f2Rg7svexFa882ucZ7xc4fe6xjbp5zqsVhqIbwYzw/MhK9YlsS/jeWTKTPJa/HYRPwLhnowExpWYbqb9NYkRiAGaluJEtb3nro32W2ec6oO4+5qWM9ED+PyOw8/lKkzndnhtU8T4f7TOqQ2QHSmGwKfmh6IGlrCa97X5qW+CG9sJ86aegfa7HbXc7LaXEz8rSsSGqpK8HHBLZfrd2D5pXGMTZlgeTbwuDCVm/kTYf01JGWglEKBykVQfS+a+31fzLJzL66nF0xbs+2se/lr41XmgpJT0U9Q1XIhZq4dq6FFgVKF2PR/tqH9ydsM5bJT0U1dAlsHVpjR7ZmlNFciWP9qlRJ777PvQknlLyRhopDHam93fhUv+dGOdGD9DxQWhf6tPnEu4F1EsZaSaAh1Fffk9wBolspIUWsDx5tM8MQvtKp1P103KcAx5CudM5bvb3V2AJkV0ZVSRL66N925xN2YoENsFIRdE+3XDZGy6Rv8mUjEe2YfTCA2QfgvaZPibVEiGlhM/KMg1XOW7EArRGiOyDcW70AE1uVrUE2sefScNKRmop552Av/nbRHsS2ScWZhi98AC5pdA+/rX8wBbgHHjbGUe7pqzvvGfUavshsisS14Re+LloX+SsYsMCGy8MhNG+0C6qpBvz/aRU/SEAt57bMy/ah1/LD2wCLSuL9uV2WfX6EhePBOcPf8jIzIXQC0+0PD96O0gg6/HAJhQGsmdlxXZd8WAd+hH1tyZRHAsQejza5zhY4KjAxlNKGu1rdwQBoUTwxDjS/iXcWYDQ09G+xlnFun0IRygMRNE+1+5p09jtYIQXZAFCs4mE7YNOfN+6nUhESCnZoWhqNwWp6/Ftmd8LD9C2FNrHv5a/pU5IKdnHYJqGCW8LdsmHnOgX7TtX6uXz9u4FRhrtq/zTk0KjCgL/NrfHo30H49puf3QmpJQs2rexH0jsGlXg+B6ZZ1te/CC0L/b6EK0SdjyFHoOJJwFUAxdavtqIim7R+8VVXQntm5X1EVmAxW+ew6GY8yTYnVJph9/jZR3xHtJQ41r3+Hvc09G+Ompr5xaVrwk7nrJD0W9LA19r9eq/0hn/7B4aQVn3KAxAvWgf+7PiO9Dxbkp5abTPoSVvxUsJbfuN+QiW92y0T/Oznr9g7wLPVONZRMJNLwDSQ1LKkbDw/eIq/GVoHz5ESJNvnuNDMebCQcEO8G1DF9sNge92nO/T0b7cN+tprA98HNqnKvKTYTvmkAi7NNF1Kwz009E+MyXrdblfN9rWW64jFJOxl8VayLbrXwkF7ZJK7dgLF0sQVgc9Be3ThEKEjPbxBT1ROHvRPWq70ENuaEoeKTn5B/L6B6F9/HoAd9sy5+mEtudQtFwtHgNcsEsD978ggWfQH38H2pcZmYWXQ6b1Vu05FEU87yJybZEekhAVApa3Itq3D38AFB6ioAWMlInCHchqehW6Bo8tP9FCTIogUcuTR/vGbyVl2kpaBI0UrwXSHd/SuV3pIQt9SjbJ8l60749cbKQFW480Uv5QNNwbY9VG7SEDAxDqLf85aB8M3pTVtaGqAkbKHorWm92+v/TqAWi2OMny9OegfXZoO6DPm310365KGileIea7v5gr7UIPeUTSlGyO5ZUHoX2FUZ67HRjwg229lXqed2Vvlwo6IlvlXxI611oTAxDqre3xaB9uTNrvhVcgwEgj5Q9FI6Epypdg1FR4PIyA5T0M7UsnMnWL7argwFNK3kj309Vp6zanKH96SMJLC1jeymhfmZP1hNorSBopXi5p2tDCw6UVMQChLBW0PNyQ6uJo37xo2yWNFB+KppN/YbWQzR6//MqyqSHX3/KehPYNVtQiRsofinrqeFbHa7j1kchxLW958mhfwq4dK3ATU0r3POWu0qdYGbuhkSR5y0uExV4K7QttrPxEziF2Pe9qvzvF0rV6xBuQE1TF0b70JLRvqMJMziF3HYrauytR/tfyngBdGflq3bUY2mdZaN9IhakpZTho39m3ut8b9OVr/Iw9FEEClrcs2hcke8cwl3NIXYeiN3+w9H/NsrbYyXwEyVreMW17hv8o7SQW11rWSPGf9B7I4eBLBZ0JZ1/Lon3mQWifQFwvifadfb58f8QH/lpjXpJCJWh58mhfZqF9owRudkoZDtp3FtiesHoiLSSh4VqfZg/LoX2DZDUjpYqbDdSc+qAmzKUut5AtHoP+npAI0s9B+3QbIzAKE6x04rs9++8bYSMBaSGJPaT8ie9Otnfko3182YN7nK/8UNQiDovco463kHgPOf2BvC/a96NK4BcG8kPReBmA0PAjExIaqYeUtLz10b5tPtoHVROqUuEn27uTPIg3d7ZJLWSrswGh55/aBzJhLW+k+Djg8sqXUdrpiMyDKAWeQS+P9h0LoX0x9CoM5IeitrUGmreLEPXFg/vAjAeEcL1o37eC3fUrDOQfg3ls1jousAEOCUNCDyn/DHp5tC9OA3rL7snfkryRekWVg4vjvEB4qO9alrf9dbeFwWbcmMJAfiiK76RjCkgKENfZ1N/yXrTvj+JW/TGwMJAfivKJBK/wFhLvIeWfQf8YtM+eq/4jk5IWKAwEHoPJLOWqunz2OxhJy/sctK9xrg1qoNLQ0dGsZ7aHu5Dj3rr1kEXO8tZH+zIxCfmqBCOVGYryh6UOSQVSD6nHWZ482ocXqwITI4nCQGYHX0PDlNM/+jJFQbRL9MK4YCG0z2PXzkjC9Y009huI4Blz4JdFJ4v2rX9b2CE0Mfo4tI+iTLylR+eGyvAAoRftIxS6AodoCg1F+XfSZjJSafVqaN9O8FipYnXjJaF8YSC4g+85hwUFaJjAL2t58mhfZV1L0yPQPv5Oetuxy1HtWp3Lv2gf8VqvRqqtxMjbEY1j4nee0UnQ7PJoH565AoXuU9A+NmOj8afn4TJUy3s+2ic/MVqfkfcDdtKhz2M2rP4Emt18ENq3qZHaPxvtC0g01lq9whWgoQK3nOXJo31GoNCVYuRnmpMjHOxIbiFBC9DssmgfnrkSN4M+H+3TQJiH0FvIvDzNbj/ptjD1on1IMBJej9ZC6tVp9n01tE9se8Z8MtqHhqLrvIGZVrc8sFRttGL1RfsGbGcYDOa76zge8MCWtzxoQzSkWH3RPsJ2hm/dh/+uIIG9KtrHV5mO9h1qoPRSnEPut5NeRtwQDMtaHl95BJ5nHoH28Y009Gsc7ZBD8Za1PL4Mu1gVy/r1j791fVb+YgH8gHa66GXRPr7SkBPfX7Tvbu+YCUsBt4V069LsfFGnWPKF7vqMvKXnB17Q8FvIsC7NzpdlF6siWU9LR0m0T2CnFqnf88KWx9fOmWKRrn3Rvq86gPC5mS1k1AvT7HyF2Whffh7axx9sWgzm48usi/YNkZt94rsR6B2Fjr8t7AKq9ExBQNxEyvLGaMQU6yBcK3i/uPwOfpoyGnURyXIhyxsi+6J9C+zguzmjUW2RglCGZh+iyipWRbN+/eNvEzs9/KAWJC9ueXz5EZlrCZkkSdrK7+A7+O6XSf095silwZZWtzy+jtlon3/RvmuRrRA92fL4ghftWxXtUyLaBCxvhOyIzDVTOKT1j781ihHZRQnoOWhfHTHFyi/ah1gEEtk5WxuUgEROfB8iPwvtk9+e2ZbfwXeFMFV7AM0+s3fUL9onsIOvI2FlfKDl8QUjMjcRVrEnon07CcLDP+nzLY8vK4f2zU5/mG4RnoqXaiUhHO17eu+YWffYDZWxuX4ru42JlmS3eiJPTM7klJyyPVXWaoC8HaHtOKcKTrVrlEg41di26D8VHAdNTpBuRQAAAABJRU5ErkJggg==" alt="FixFlip">
-        <span aria-hidden="true"></span>
-      </a>
-      <nav class="nav" aria-label="Store sections">
-        <a href="#categories">Materials</a>
-        <a href="#bundles">Project Kits</a>
-        <a href="#pro">Pro Pricing</a>
-        <a href="more-materials-blue.html">More Materials</a>
-        <a href="contractor-login-blue.html">GC Login</a>
-        <a href="#featured">Featured</a>
-      </nav>
-      <button class="cart-button" type="button" aria-label="Open cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-          <circle cx="9" cy="20" r="1.5"></circle>
-          <circle cx="18" cy="20" r="1.5"></circle>
-          <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H7"></path>
-        </svg>
-        <span>Cart $684</span>
-      </button>
-    </header>
-
-    <main>
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Materials built for fast flips</p>
-          <h1>Buy the job, not the aisle.</h1>
-          <p>FixFlip Materials Market packages flooring, fixtures, paint, hardware, and rough supplies into project-ready carts with clear pricing and reliable delivery windows.</p>
-          <div class="hero-actions">
-            <a class="primary" href="#bundles">Shop Project Kits</a>
-            <a class="secondary" href="more-materials-blue.html">Browse Materials</a>
-          </div>
-        </div>
-
-        <div class="hero-market" aria-label="Featured material textures">
-          <div class="material-wall">
-            <div class="tile"><span>Flooring</span><strong>Oak-look LVP</strong></div>
-            <div class="tile"><span>Rough</span><strong>Steel studs</strong></div>
-            <div class="tile"><span>Tile</span><strong>Bath kits</strong></div>
-            <div class="tile"><span>Exterior</span><strong>Brick + mortar</strong></div>
-            <div class="tile"><span>Paint</span><strong>Investor neutrals</strong></div>
-            <div class="tile"><span>Roofing</span><strong>Bundle packs</strong></div>
-          </div>
-          <aside class="quote-panel" aria-label="Sample quote summary">
-            <h2>Kitchen Refresh Kit</h2>
-            <div class="quote-row"><span>Cabinet pulls, 30 pack</span><strong>$89</strong></div>
-            <div class="quote-row"><span>Sink + faucet combo</span><strong>$278</strong></div>
-            <div class="quote-row"><span>Backsplash tile, 42 sq ft</span><strong>$317</strong></div>
-          </aside>
-          <div class="hero-strip">
-            <div>Next-day local pickup</div>
-            <div>Bulk investor pricing</div>
-            <div>Jobsite delivery</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="categories">
-        <div class="section-head">
-          <h2>Everything your crew needs.</h2>
-          <p>Shop by trade, room, or punch-list phase. Each category is tuned for fast comparisons and repeatable orders.</p>
-        </div>
-        <div class="category-grid">
-          <article class="category">
-            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 14h32v20H8z"></path><path d="M14 34V14M24 34V14M34 34V14"></path></svg>
-            <div><h3>Flooring</h3><p>LVP, underlayment, trims, transitions, adhesives.</p></div>
-          </article>
-          <article class="category">
-            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 36h28M14 36V18l10-8 10 8v18"></path><path d="M20 36V24h8v12"></path></svg>
-            <div><h3>Fixtures</h3><p>Faucets, sinks, vanities, toilets, lighting, fans.</p></div>
-          </article>
-          <article class="category">
-            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 10h20l4 4v24H12z"></path><path d="M32 10v6h6M18 24h12M18 30h12"></path></svg>
-            <div><h3>Paint</h3><p>Wall, trim, primer, caulk, tape, rollers, trays.</p></div>
-          </article>
-          <article class="category">
-            <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 17h30v20H9z"></path><path d="M9 25h30M17 17v8M27 25v12"></path></svg>
-            <div><h3>Tile</h3><p>Bath surrounds, backsplash sets, grout, mortar.</p></div>
-          </article>
-        </div>
-      </section>
-
-      <section class="deal-band" id="bundles">
-        <div class="deal-copy">
-          <p class="eyebrow">Contractor-grade carts</p>
-          <h2>Room bundles priced before demo starts.</h2>
-          <p>Start with a kitchen, bath, rental reset, or exterior curb-appeal package. Adjust quantities, swap finishes, and lock pickup or delivery in one pass.</p>
-          <div class="deal-stats">
-            <div><strong>42</strong><span>Ready kits</span></div>
-            <div><strong>18%</strong><span>Typical bulk savings</span></div>
-            <div><strong>24h</strong><span>Pickup windows</span></div>
-          </div>
-        </div>
-        <aside class="order-card" id="pro" aria-label="Sample contractor order">
-          <h3>Sample bath bundle</h3>
-          <div class="loan-field">
-            <label for="bundle-loan-number">Loan number</label>
-            <input id="bundle-loan-number" name="loan-number" type="text" inputmode="numeric" placeholder="Input loan number">
-          </div>
-          <div class="order-list">
-            <div class="order-item"><span class="swatch" style="--swatch: #e6e0d1"></span><div><strong>Porcelain wall tile</strong><span>96 sq ft, matte white</span></div><b>$412</b></div>
-            <div class="order-item"><span class="swatch" style="--swatch: #879096"></span><div><strong>Vanity faucet</strong><span>Brushed nickel, 4 in.</span></div><b>$74</b></div>
-            <div class="order-item"><span class="swatch" style="--swatch: #29363a"></span><div><strong>Bath hardware</strong><span>Towel bar, hook, paper holder</span></div><b>$61</b></div>
-            <div class="order-item"><span class="swatch" style="--swatch: #f7f7f2"></span><div><strong>Primer + paint</strong><span>Walls, trim, ceiling</span></div><b>$137</b></div>
-          </div>
-          <div class="bundle-actions">
-            <a class="add add-cart" href="#featured" aria-label="Add sample bath bundle to cart">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H7"></path></svg>
-              <span>Add to cart</span>
-            </a>
-            <a class="add add-loan" href="add-to-loan-blue.html" aria-label="Add sample bath bundle to loan">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
-              <span>Add to loan</span>
-            </a>
-          </div>
-        </aside>
-      </section>
-
-      <section class="section" id="featured">
-        <div class="section-head">
-          <h2>Featured fast movers.</h2>
-          <p>High-turn materials selected for flips, rentals, and light commercial refreshes.</p>
-        </div>
-        <div class="product-row">
-          <article class="product">
-            <div class="product-art" style="--art: repeating-linear-gradient(90deg, #b89564 0 20px, #d7bc86 20px 40px, #8a6845 40px 60px)"></div>
-            <div class="product-info">
-              <h3>Waterproof LVP</h3>
-              <p>Durable oak-look planks with attached pad and matching trims available.</p>
-              <div class="product-meta"><span>$2.29 / sq ft</span><div class="product-actions"><a class="add add-cart" href="#featured" aria-label="Add Waterproof LVP to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H7"></path></svg><span>Add to cart</span></a><a class="add add-loan" href="add-to-loan-blue.html" aria-label="Add Waterproof LVP to loan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"></path></svg><span>Add to loan</span></a></div></div>
-            </div>
-          </article>
-          <article class="product">
-            <div class="product-art" style="--art: radial-gradient(circle at 28% 32%, #fff 0 12%, #cfd5d4 13% 16%, #6c7a80 17% 100%)"></div>
-            <div class="product-info">
-              <h3>Subway Tile Pack</h3>
-              <p>Classic 3x12 wall tile, grout, spacers, and edge trim in one cart.</p>
-              <div class="product-meta"><span>$184 / kit</span><div class="product-actions"><a class="add add-cart" href="#featured" aria-label="Add Subway Tile Pack to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H7"></path></svg><span>Add to cart</span></a><a class="add add-loan" href="add-to-loan-blue.html" aria-label="Add Subway Tile Pack to loan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"></path></svg><span>Add to loan</span></a></div></div>
-            </div>
-          </article>
-          <article class="product">
-            <div class="product-art" style="--art: linear-gradient(135deg, #222 0 36%, #e8e4d6 37% 54%, #5d7fa6 55% 100%)"></div>
-            <div class="product-info">
-              <h3>Exterior Punch Kit</h3>
-              <p>Door hardware, house numbers, caulk, mailbox, and satin black lighting.</p>
-              <div class="product-meta"><span>$296 / kit</span><div class="product-actions"><a class="add add-cart" href="#featured" aria-label="Add Exterior Punch Kit to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H7"></path></svg><span>Add to cart</span></a><a class="add add-loan" href="add-to-loan-blue.html" aria-label="Add Exterior Punch Kit to loan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"></path></svg><span>Add to loan</span></a></div></div>
-            </div>
-          </article>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div>
-        <strong>FixFlip Materials Market | Blue Theme</strong>
-        <span>Sample landing page concept inspired by Power Design’s bold editorial grid and high-contrast visual rhythm.</span>
+    
+    <!-- Top Navigation -->
+    <div class="top-header-wrapper">
+      <!-- Consolidated Single Announcement Bar (CSL Borrowers) -->
+      <div class="fd-combined-announcement-bar" style="background: #0f172a; color: #ffffff; padding: 10px 24px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.2px; box-sizing: border-box; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; line-height: 1.4; border-bottom: 1px solid #1e293b;">
+        <span style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: #ffffff;">
+          <span style="background: #007bff; color: #ffffff; font-size: 9px; font-weight: 900; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.6px; text-transform: uppercase;">PARTNER ADVANCE</span>
+          <span>Center Street Lending Borrowers &mdash; Advance eligible materials through your existing renovation loan.</span>
+        </span>
+        <a href="" style="color: #38bdf8; text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s ease;" onmouseover="this.style.color='#7dd3fc'" onmouseout="this.style.color='#38bdf8'">
+          <span>Learn How</span>
+          <span style="font-size: 14px;">&rarr;</span>
+        </a>
       </div>
-      <a href="#">Build a Cart</a>
-    </footer>
+
+      <!-- STICKY MAIN HEADER CONTAINER (STICKS TO TOP AS YOU SCROLL; ANNOUNCEMENT BAR SCROLLS AWAY) -->
+      <div class="fd-sticky-header-inner" id="fd-sticky-header-inner" style="background-color: #f2f2f2 !important; border-bottom: 1px solid #e5e5e5; width: 100%; transition: box-shadow 0.2s ease;">
+      
+      <!-- Tier 0 Navigation Removed -->
+
+<!-- Account Drawer -->
+<div id="account-drawer-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; backdrop-filter: blur(2px);"></div>
+<div id="account-drawer" style="position: fixed; top: 0; right: -500px; width: 450px; max-width: 100%; height: 100vh; background: #fff; z-index: 9999; transition: right 0.3s ease-in-out; box-shadow: -5px 0 15px rgba(0,0,0,0.1); overflow-y: auto; display: flex; flex-direction: column;">
+  <div style="padding: 32px 40px; position: relative;">
+    <button id="account-drawer-close" aria-label="Close Account Panel" style="position: absolute; top: 24px; right: 24px; background: none; border: none; cursor: pointer; color: #111;">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:currentColor;stroke-width:1.5;fill:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    
+    <h2 style="font-size: 20px; font-weight: 900; letter-spacing: 1px; margin-top: 16px; margin-bottom: 8px; color: #111; font-family: inherit;">WELCOME TO FIXFLIP</h2>
+    <p style="font-size: 14px; color: #444; line-height: 1.4; margin-bottom: 32px;">Log in for a faster, more personalized shopping experience</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; text-align: center; margin-bottom: 32px;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#007bff;stroke-width:2;fill:none;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span style="font-size: 11px; line-height: 1.2; font-weight: 500; color: #111;">Personalized<br>Shopping</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#007bff;stroke-width:2;fill:none;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        <span style="font-size: 11px; line-height: 1.2; font-weight: 500; color: #111;">Wishlist &amp;<br>Saved Items</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#007bff;stroke-width:2;fill:none;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        <span style="font-size: 11px; line-height: 1.2; font-weight: 500; color: #111;">Seamless<br>Experience</span>
+      </div>
+    </div>
+    
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+      <a href="/member-login/" style="background: #111; color: #fff; text-decoration: none; text-align: center; padding: 14px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Login</a>
+      <a href="/member-login/?tab=register" style="background: #fff; color: #111; border: 2px solid #111; text-decoration: none; text-align: center; padding: 12px; font-weight: 800; letter-spacing: 1px; font-size: 13px; text-transform: uppercase;">Create Account</a>
+    </div>
   </div>
+  
+  <div style="margin-top: auto; border-top: 1px solid #eee; padding: 24px 40px; background: #fafafa;">
+      <a href="" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; text-decoration: none; color: #111; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#666;stroke-width:2;fill:none;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span style="font-size: 15px; font-weight: 500;">My Account</span>
+        </div>
+        <span style="font-size: 18px; color: #999;">&rsaquo;</span>
+      </a>
+      <a href="" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; text-decoration: none; color: #111; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#666;stroke-width:2;fill:none;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span style="font-size: 15px; font-weight: 500;">Orders</span>
+        </div>
+        <span style="font-size: 18px; color: #999;">&rsaquo;</span>
+      </a>
+      <a href="" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; text-decoration: none; color: #111; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#666;stroke-width:2;fill:none;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span style="font-size: 15px; font-weight: 500;">Addresses</span>
+        </div>
+        <span style="font-size: 18px; color: #999;">&rsaquo;</span>
+      </a>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var cartToggle = document.getElementById('header-cart-toggle');
+
+
+    var accLink = document.querySelector('.account-link');
+    var drawer = document.getElementById('account-drawer');
+    var overlay = document.getElementById('account-drawer-overlay');
+    var closeBtn = document.getElementById('account-drawer-close');
+
+    if (accLink && drawer && overlay && closeBtn) {
+        accLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            drawer.style.right = '0';
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeDrawer() {
+            drawer.style.right = '-500px';
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+    }
+
+    // ROCK-SOLID STICKY NAV SCROLL ENGINE
+    var stickyHeader = document.getElementById('fd-sticky-header-inner');
+    var topAnnounce = document.querySelector('.top-header-wrapper > div:first-child');
+    
+    if (stickyHeader) {
+        var spacer = document.createElement('div');
+        spacer.id = 'fd-sticky-spacer';
+        spacer.style.display = 'none';
+        stickyHeader.parentNode.insertBefore(spacer, stickyHeader.nextSibling);
+
+        function handleStickyScroll() {
+            var announceHeight = topAnnounce ? topAnnounce.offsetHeight : 38;
+            if (window.scrollY >= announceHeight) {
+                if (!stickyHeader.classList.contains('is-sticky')) {
+                    spacer.style.height = stickyHeader.offsetHeight + 'px';
+                    spacer.style.display = 'block';
+                    stickyHeader.classList.add('is-sticky');
+                    stickyHeader.style.position = 'fixed';
+                    stickyHeader.style.top = '0';
+                    stickyHeader.style.left = '0';
+                    stickyHeader.style.right = '0';
+                    stickyHeader.style.width = '100%';
+                    stickyHeader.style.zIndex = '999999';
+                    stickyHeader.style.boxShadow = '0 4px 20px rgba(0,0,0,0.12)';
+                }
+            } else {
+                if (stickyHeader.classList.contains('is-sticky')) {
+                    stickyHeader.classList.remove('is-sticky');
+                    stickyHeader.style.position = 'relative';
+                    stickyHeader.style.top = 'auto';
+                    stickyHeader.style.left = 'auto';
+                    stickyHeader.style.right = 'auto';
+                    stickyHeader.style.boxShadow = 'none';
+                    spacer.style.display = 'none';
+                }
+            }
+        }
+
+        window.addEventListener('scroll', handleStickyScroll);
+        window.addEventListener('resize', handleStickyScroll);
+        handleStickyScroll();
+    }
+
+    // ACCESSIBLE MOBILE NAVIGATION ENGINE
+    var mobMenuBtn       = document.getElementById('fd-mobile-menu-btn');
+    var mobNavPanel      = document.getElementById('fd-mobile-nav-panel');
+    var mobNavOverlay    = document.getElementById('fd-mobile-nav-overlay');
+    var mobNavClose      = document.getElementById('fd-mobile-nav-close');
+    var mobSearchToggle  = document.getElementById('fd-mobile-search-toggle');
+    var mobSearchDropdown = document.getElementById('fd-mobile-search-dropdown');
+    var mobShopExpand    = document.getElementById('fd-mob-shop-expand');
+    var mobShopSublinks  = document.getElementById('fd-mob-shop-sublinks');
+    var mobCartToggle    = document.getElementById('fd-mobile-cart-toggle');
+
+    function openMobNav() {
+        if (!mobNavPanel || !mobNavOverlay) return;
+        mobNavPanel.style.left = '0';
+        mobNavOverlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        if (mobMenuBtn) mobMenuBtn.setAttribute('aria-expanded', 'true');
+        if (mobNavClose) mobNavClose.focus();
+    }
+
+    function closeMobNav() {
+        if (!mobNavPanel || !mobNavOverlay) return;
+        mobNavPanel.style.left = '-320px';
+        mobNavOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+        if (mobMenuBtn) {
+            mobMenuBtn.setAttribute('aria-expanded', 'false');
+            mobMenuBtn.focus();
+        }
+    }
+
+    if (mobMenuBtn) mobMenuBtn.addEventListener('click', openMobNav);
+    if (mobNavClose) mobNavClose.addEventListener('click', closeMobNav);
+    if (mobNavOverlay) mobNavOverlay.addEventListener('click', closeMobNav);
+
+    // Escape key handler for drawers
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+            if (mobNavPanel && mobNavPanel.style.left === '0px') {
+                closeMobNav();
+            }
+            if (drawer && drawer.style.right === '0px') {
+                closeDrawer();
+            }
+        }
+    });
+
+    // Keyboard focus trapping in mobile navigation drawer
+    if (mobNavPanel) {
+        mobNavPanel.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' || e.keyCode === 9) {
+                var focusables = mobNavPanel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])');
+                if (focusables.length === 0) return;
+                var first = focusables[0];
+                var last = focusables[focusables.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) {
+                        last.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === last) {
+                        first.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+    }
+
+    // Expandable Mobile Search Toggle
+    if (mobSearchToggle && mobSearchDropdown) {
+        mobSearchToggle.addEventListener('click', function() {
+            var isExpanded = (mobSearchDropdown.style.display === 'block');
+            mobSearchDropdown.style.display = isExpanded ? 'none' : 'block';
+            mobSearchToggle.setAttribute('aria-expanded', !isExpanded);
+            if (!isExpanded) {
+                var inp = mobSearchDropdown.querySelector('input[type="search"], input.search-field, input.custom-search-input');
+                if (inp) inp.focus();
+            }
+        });
+    }
+
+    // Mobile Shop Subcategories Accordion Toggle
+    if (mobShopExpand && mobShopSublinks) {
+        mobShopExpand.addEventListener('click', function() {
+            var isOpen = (mobShopSublinks.style.display === 'block');
+            mobShopSublinks.style.display = isOpen ? 'none' : 'block';
+            mobShopExpand.setAttribute('aria-expanded', !isOpen);
+            var arr = mobShopExpand.querySelector('svg');
+            if (arr) arr.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+    }
+
+    // Mobile Cart Drawer Trigger
+    if (mobCartToggle) {
+        mobCartToggle.addEventListener('click', function(e) {
+            if (typeof window.fdOpenCartDrawer === 'function') {
+                e.preventDefault();
+                window.fdOpenCartDrawer();
+            }
+        });
+    }
+});
+</script>
+
+      
+
+      <!-- SLIDE-OUT MOBILE NAVIGATION DRAWER -->
+      <div id="fd-mobile-nav-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); z-index: 999998;"></div>
+      <nav id="fd-mobile-nav-panel" role="dialog" aria-modal="true" aria-label="Main Navigation Menu" style="position: fixed; top: 0; left: -320px; width: 300px; max-width: 85vw; height: 100vh; background: #ffffff; z-index: 999999; transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 6px 0 24px rgba(0,0,0,0.18); display: flex; flex-direction: column; overflow-y: auto;">
+        
+        <!-- Header with Close Button -->
+        <div style="padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #f1f5f9; background: #f8fafc;">
+          <a href="" style="display: flex; align-items: center;" aria-label="FixFlip.com Home">
+            <img src="fixflip-storefront-child/FixFlip-dotCOM_Black.png?v=" alt="FixFlip.com" style="height: 20px; width: auto; mix-blend-mode: multiply;">
+          </a>
+          <button type="button" id="fd-mobile-nav-close" aria-label="Close Navigation Menu" style="background: none; border: none; cursor: pointer; color: #0f172a; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0;">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- All 9 Navigation Links -->
+        <div class="fd-mobile-nav-links" style="padding: 12px 0; flex: 1;">
+          <!-- 1. Shop (with expandable sub-links) -->
+          <div class="fd-mobile-nav-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+              <a href="/commercial-flooring/" class="fd-mob-link" style="flex: 1; padding: 12px 0; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <span>Shop</span>
+              </a>
+              <button type="button" id="fd-mob-shop-expand" aria-label="Toggle Shop Subcategories" aria-expanded="false" style="width: 44px; height: 44px; background: none; border: none; display: flex; align-items: center; justify-content: center; color: #007bff; cursor: pointer;">
+                <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; transition: transform 0.2s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+            <div id="fd-mob-shop-sublinks" style="display: none; background: #f8fafc; padding: 6px 20px 10px; border-left: 3px solid #007bff; margin: 0 20px 8px;">
+              <a href="/commercial-flooring/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">View All Flooring &rarr;</a>
+              <a href="/category/vinyl-flooring/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Waterproof SPC Vinyl ($3.56/sqft)</a>
+              <a href="/category/hardwood-good/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Good Tier Red Oak ($5.12/sqft)</a>
+              <a href="/category/hardwood-better/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 600; color: #334155; text-decoration: none;">Better Tier White Oak ($5.97/sqft)</a>
+              
+                <a href="/category/hardwood-best/" style="display: block; padding: 8px 0; font-size: 13px; font-weight: 700; color: #007bff; text-decoration: none;">Best Tier White Oak ($9.00/sqft) 🔒</a>
+              
+            </div>
+          </div>
+
+          <!-- 2. How It Works -->
+          <a href="" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            How It Works
+          </a>
+
+          <!-- 3. Financing -->
+          <a href="" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            Financing
+          </a>
+
+          <!-- 4. Contractor Desk -->
+          <a href="/member-login/" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            Contractor Desk
+          </a>
+
+          <!-- 5. FAQ -->
+          <a href="" class="fd-mob-link" style="display: flex; align-items: center; padding: 14px 20px; font-size: 15px; font-weight: 800; color: #0f172a; text-decoration: none;">
+            FAQ
+          </a>
+
+          <!-- 6. Account -->
+          <a href="/member-login/" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 15px; font-weight: 800; color: ; text-decoration: none; border-top: 1px solid #f1f5f9; margin-top: 6px;">
+            <span>Account </span>
+            <span style="font-size: 12px; font-weight: 600;">&rarr;</span>
+          </a>
+
+          <!-- 7. Shipping -->
+          <a href="/shipping-delivery/" class="fd-mob-link" style="display: flex; align-items: center; padding: 12px 20px; font-size: 14px; font-weight: 600; color: #475569; text-decoration: none;">
+            Shipping
+          </a>
+
+          <!-- 8. Returns -->
+          <a href="/returns-unopened-box-credit/" class="fd-mob-link" style="display: flex; align-items: center; padding: 12px 20px; font-size: 14px; font-weight: 600; color: #475569; text-decoration: none;">
+            Returns
+          </a>
+
+          <!-- 9. Order Support -->
+          <a href="tel:9497054300" class="fd-mob-link" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; text-decoration: none; border-bottom: 1px solid #f1f5f9; min-height: 52px; box-sizing: border-box;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">Order Support</span>
+              <span style="font-size: 14px; font-weight: 800; color: #007bff; letter-spacing: -0.01em;">(949) 705-4300</span>
+            </div>
+            <div style="width: 34px; height: 34px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #007bff; flex-shrink: 0;">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;stroke-width:2.2;fill:none;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+          </a>
+        </div>
+
+        <!-- Drawer Footer: CSL Partner Badge -->
+        <div style="padding: 16px 20px; background: #f8fafc; border-top: 1.5px solid #e2e8f0; font-size: 11.5px; color: #64748b;">
+          <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: #64748b; margin-bottom: 6px;">Official Financing Partner</div>
+          <img src="fixflip-storefront-child/images/center_street_lending_logo.svg?v=" alt="Center Street Lending" style="height: 15px; width: auto; margin-bottom: 6px; display: block;">
+          <div style="color: #16a34a; font-weight: 700; font-size: 11px;">100% Construction Draw Advances</div>
+        </div>
+      </nav>
+
+      <!-- MOBILE-ONLY COMPACT HEADER ROW (58PX ON MOBILE <= 768PX) -->
+      <div class="mobile-only-header-row">
+        <!-- Left: Hamburger Button -->
+        <button type="button" id="fd-mobile-menu-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="fd-mobile-nav-panel">
+          <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#0f172a;stroke-width:2.2;fill:none;stroke-linecap:round;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+
+        <!-- Center: FixFlip Logo -->
+        <a href="" class="mobile-header-logo" aria-label="FixFlip.com Home">
+          <img src="fixflip-storefront-child/FixFlip-dotCOM_Black.png?v=" alt="FixFlip.com" style="height: 22px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
+        </a>
+
+        <!-- Right: Search, Account, Cart Actions -->
+        <div class="mobile-header-actions">
+          <button type="button" id="fd-mobile-search-toggle" aria-label="Search Catalog" aria-expanded="false">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#0f172a;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+          
+          <a href="/member-login/" class="account-link mobile-header-icon-btn" aria-label="">
+            <svg viewBox="0 0 24 24" style="width:21px;height:21px;stroke:;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </a>
+
+          <a href="" id="fd-mobile-cart-toggle" class="mobile-header-icon-btn" aria-label="View Shopping Cart">
+            <svg viewBox="0 0 24 24" style="width:21px;height:21px;stroke:#007bff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <div class="cart-badge" style="position: absolute; top: 4px; right: 2px; background: #007bff; color: #ffffff; font-size: 10px; font-weight: 900; min-width: 18px; height: 18px; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; line-height: 1; border: 1.5px solid #ffffff;">
+              
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Expandable Mobile Search Dropdown -->
+      <div id="fd-mobile-search-dropdown" style="display: none; padding: 10px 16px 12px; background: #ffffff; border-bottom: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;">
+        
+      </div>
+
+      <!-- DESKTOP HEADER (TIER 1) -->
+      <header class="header-tier-1">
+        <!-- Logo & Partner Group (Beside Logo with Text Stacked Above Partner Logo) -->
+        <div class="logo-partner-group" style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; position: relative; z-index: 10;">
+          <a href="" class="logo" style="display: flex; text-decoration: none; align-items: center; flex-shrink: 0;">
+            <img src="fixflip-storefront-child/FixFlip-dotCOM_Black.png?v=" alt="FixFlip.com" style="height: 25px; width: auto; object-fit: contain; display: block; mix-blend-mode: multiply;">
+          </a>
+          
+          <!-- Partner Badge -->
+          <div class="partner-badge" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; border-left: 1.5px solid #cbd5e1; padding-left: 10px; line-height: 1.1;">
+            <span style="font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; color: #64748b;">In partnership with</span>
+            <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
+              <img src="fixflip-storefront-child/images/center_street_lending_logo.svg?v=" alt="Center Street Lending" style="height: 14px; width: auto; object-fit: contain; display: block;">
+            </a>
+          </div>
+        </div>
+        
+        <!-- Search Group -->
+        <div class="search-group" style="display: flex; align-items: center; flex: 1; max-width: 480px; margin: 0 20px; position: relative; z-index: 10;">
+          <div class="search-container" style="width: 100%;">
+            
+          </div>
+        </div>
+        
+        <div class="user-links" style="display: flex; align-items: center; gap: 20px; height: 48px;">
+
+          
+            <a href="/member-login/" class="account-link" aria-label="Hello,  - Member Account" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+              <div style="display: flex; align-items: center; justify-content: center; color: #16a34a;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+              <div style="display: flex; flex-direction: column; text-align: left;">
+                <span style="color: #0f172a; font-weight: 800; font-size: 13.5px; line-height: 1.2;">Hello, </span>
+                <span style="color: #16a34a; font-weight: 700; font-size: 11px; line-height: 1.2;">Projects &amp; Member 🔒</span>
+              </div>
+            </a>
+          
+            <a href="/member-login/" class="account-link" aria-label="Member Login - Projects and Trade Access" style="display: flex; align-items: center; gap: 8px; text-decoration: none; height: 100%;">
+              <div style="display: flex; align-items: center; justify-content: center; color: #007bff;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+              <div style="display: flex; flex-direction: column; text-align: left;">
+                <span style="color: #111; font-weight: 800; font-size: 13.5px; line-height: 1.2;">Member Login</span>
+                <span style="color: #6c757d; font-weight: 500; font-size: 11px; line-height: 1.2;">Projects &amp; Trade 🔒</span>
+              </div>
+            </a>
+          
+
+          <div class="cart-container" style="position: relative; height: 100%;">
+            <a href="" class="cart-wrapper" id="header-cart-toggle" aria-label="View Shopping Cart Drawer" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center; height: 100%; margin-left: 16px; padding-left: 24px; border-left: 1px solid #cbd5e1;">
+              <div class="cart-icon-container" id="site-header-cart-icon" style="position: relative; display: flex; align-items: center; justify-content: center; color: #007bff;">
+                <svg class="header-icon" viewBox="0 0 24 24" style="width:26px;height:26px;stroke:#007bff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <div class="cart-badge" style="position: absolute; top: -8px; right: -14px; background: #007bff; color: #ffffff; font-size: 10.5px; font-weight: 900; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; line-height: 1; box-sizing: border-box; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,0.15); border: 2px solid #ffffff; z-index: 5;">
+                  
+                </div>
+              </div>
+            </a>
+            <!-- Obsolete cart popup removed to prevent overlap with sleek Slideout Cart Drawer -->
+          </div>
+          
+        </div>
+      </header>
+
+      <!-- CLEAN CLASSIC TEXT DROPDOWN NAVIGATION TIER (FLOOR & DECOR / HOME DEPOT STYLE) -->
+      <style>
+        .nav-item:hover .text-dropdown {
+            display: block !important;
+            animation: navFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes navFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .text-dropdown a {
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .text-dropdown a:hover {
+            background: #f1f5f9 !important;
+            color: #007bff !important;
+        }
+        .nav-col-title {
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 6px 14px 4px 14px;
+        }
+        .nav-sublink {
+            display: block;
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #334155;
+            text-decoration: none;
+            border-radius: 0px;
+        }
+      </style>
+
+      <nav class="header-tier-2 mega-menu-wrapper" style="background: #ffffff !important; width: 100% !important; border-top: 1px solid #eaebed; border-bottom: 1px solid #eaebed; position: relative; z-index: 9999;">
+        <div class="mega-menu-container" style="max-width: 1180px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 40px; padding: 0 20px;">
+          
+          <!-- 1. SHOP -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/commercial-flooring/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 800; padding: 16px 8px; text-decoration: none; letter-spacing: 0.5px; font-size: 13px; display: flex; align-items: center; gap: 4px;">
+              <span>SHOP</span>
+              <svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:#007bff;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+            <!-- Simple Shop Dropdown -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; left: 0; min-width: 270px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+              <a href="/commercial-flooring/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">Commercial Flooring Catalog &rarr;</a>
+              <a href="/category/vinyl-flooring/" style="display: block; padding: 8px 18px; font-size: 12px; font-weight: 600; color: #334155; text-decoration: none;">Waterproof SPC Vinyl ($3.56/sqft)</a>
+              <a href="/category/hardwood-good/" style="display: block; padding: 8px 18px; font-size: 12px; font-weight: 600; color: #334155; text-decoration: none;">Good Tier Red Oak ($5.12/sqft)</a>
+              <a href="/category/hardwood-better/" style="display: block; padding: 8px 18px; font-size: 12px; font-weight: 600; color: #334155; text-decoration: none;">Better Tier White Oak ($5.97/sqft)</a>
+              
+              <a href="/category/hardwood-best/" style="display: block; padding: 8px 18px; font-size: 12px; font-weight: 700; color: #007bff; text-decoration: none; border-top: 1px dashed #e2e8f0;">Best Tier White Oak ($9.00/sqft) 🔒</a>
+              
+            </div>
+          </div>
+
+          <!-- 2. HOW IT WORKS -->
+          <div class="nav-item" style="position: relative;">
+            <a href="" class="mega-menu-link" style="color: #0f172a !important; font-weight: 800; padding: 16px 8px; text-decoration: none; letter-spacing: 0.5px; font-size: 13px; display: flex; align-items: center;">
+              <span>HOW IT WORKS</span>
+            </a>
+          </div>
+
+          <!-- 3. FINANCING -->
+          <div class="nav-item" style="position: relative;">
+            <a href="" class="mega-menu-link" style="color: #0f172a !important; font-weight: 800; padding: 16px 8px; text-decoration: none; letter-spacing: 0.5px; font-size: 13px; display: flex; align-items: center;">
+              <span>FINANCING</span>
+            </a>
+          </div>
+
+          <!-- 4. CONTRACTOR DESK -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/member-login/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 800; padding: 16px 8px; text-decoration: none; letter-spacing: 0.5px; font-size: 13px; display: flex; align-items: center;">
+              <span>CONTRACTOR DESK</span>
+            </a>
+          </div>
+
+          <!-- 5. FAQ -->
+          <div class="nav-item" style="position: relative;">
+            <a href="" class="mega-menu-link" style="color: #0f172a !important; font-weight: 800; padding: 16px 8px; text-decoration: none; letter-spacing: 0.5px; font-size: 13px; display: flex; align-items: center;">
+              <span>FAQ</span>
+            </a>
+          </div>
+
+          <!-- 6. ACCOUNT -->
+          <div class="nav-item" style="position: relative;">
+            <a href="/member-login/" class="mega-menu-link" style="color: #0f172a !important; font-weight: 800; padding: 16px 12px; text-decoration: none; letter-spacing: 0.5px; font-size: 13px; display: flex; align-items: center; gap: 6px; background: ; border: 1px solid ; border-radius: 3px;">
+              <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:;stroke-width:2.4;fill:none;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span></span>
+              <svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:#64748b;stroke-width:2.8;fill:none;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+
+            <!-- ACCOUNT DROPDOWN MENU -->
+            <div class="text-dropdown" style="display: none; position: absolute; top: 100%; right: 0; min-width: 270px; background: #ffffff; border: 1.5px solid #0f172a; border-radius: 0px; box-shadow: 0 16px 40px rgba(0,0,0,0.12); padding: 8px 0; z-index: 10000;">
+              
+                <a href="/member-login/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">Trade Portal &amp; Projects &rarr;</a>
+                <a href="" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Project Orders &amp; Invoices &rarr;</a>
+                <a href="/category/hardwood-best/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #0f172a; text-decoration: none;">Best Tier Hardwood ($9.00) 🔒 &rarr;</a>
+                <a href="" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 700; color: #dc2626; text-decoration: none; border-top: 1px solid #f1f5f9;">Sign Out &rarr;</a>
+              
+                <a href="/member-login/" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #0f172a; text-decoration: none;">Member Sign In &rarr;</a>
+                <a href="/member-login/?tab=register" style="display: block; padding: 10px 18px; font-size: 13px; font-weight: 800; color: #007bff; text-decoration: none;">Create Free Account &rarr;</a>
+              
+            </div>
+          </div>
+
+        </div>
+      </nav>
+      </div><!-- End fd-sticky-header-inner -->
+
+
+<style>
+/* -------------------------------------------------------------
+   FIXFLIP INSTITUTIONAL BORROWER FINANCING HOMEPAGE STYLING
+   Alternating Full-Width Section System & Minimalist Aesthetic
+------------------------------------------------------------- */
+.fd-hp-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #0f172a;
+    overflow-x: hidden;
+}
+
+/* FULL-WIDTH SECTION WRAPPERS */
+.fd-hp-section {
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.fd-sec-navy {
+    background-color: #0f172a;
+    color: #ffffff;
+}
+.fd-sec-white {
+    background-color: #ffffff;
+    color: #0f172a;
+}
+.fd-sec-gray {
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+/* SECTION PADDING & RHYTHM (Desktop 64-84px, Mobile 40-48px) */
+.fd-sec-hero {
+    padding: 68px 0 76px 0;
+    border-bottom: 1px solid #1e293b;
+}
+.fd-sec-benefits {
+    padding: 64px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-hiw {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-products {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-financing {
+    padding: 76px 0 84px 0;
+    border-bottom: 1px solid #1e293b;
+}
+.fd-sec-logistics {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-faq {
+    padding: 72px 0 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.fd-sec-cta {
+    padding: 76px 0 84px 0;
+    border-bottom: none;
+}
+
+/* SEAMLESS FOOTER TRANSITION ON HOMEPAGE */
+body.home #colophon {
+    margin-top: 0 !important;
+    border-top: 1px solid #1e293b !important;
+}
+
+/* INNER CONSTRAINED CONTAINER */
+.fd-hp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+/* SECTION HEADER UTILITIES */
+.fd-sec-header {
+    margin-bottom: 36px;
+}
+.fd-sec-kicker {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #007bff;
+    margin-bottom: 8px;
+}
+.fd-sec-kicker-sky {
+    color: #38bdf8 !important;
+}
+.fd-sec-title {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: #0f172a;
+    margin: 0 0 10px 0;
+}
+.fd-sec-title-white {
+    color: #ffffff !important;
+}
+.fd-sec-subtitle {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0;
+    max-width: 680px;
+}
+.fd-sec-subtitle-slate {
+    color: #94a3b8 !important;
+}
+
+/* BUTTONS */
+.fd-btn-primary {
+    background: #007bff;
+    color: #ffffff !important;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 14px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: none;
+}
+.fd-btn-primary:hover {
+    background: #0069d9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 123, 255, 0.25);
+    color: #ffffff !important;
+}
+
+.fd-btn-secondary {
+    background: #ffffff;
+    color: #0f172a !important;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 14px 28px;
+    border-radius: 4px;
+    border: 1.5px solid #cbd5e1;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+.fd-btn-secondary:hover {
+    border-color: #0f172a;
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
+
+.fd-btn-outline-white {
+    background: transparent;
+    color: #ffffff !important;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 14px 28px;
+    border-radius: 4px;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+.fd-btn-outline-white:hover {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+/* 1. HERO SECTION */
+.fd-hero-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.fd-hero-partner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #38bdf8;
+    margin-bottom: 20px;
+}
+
+.fd-hero-headline {
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin: 0 0 18px 0;
+    max-width: 640px;
+}
+.fd-desktop-br {
+    display: inline;
+}
+
+.fd-hero-copy {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin: 0 0 30px 0;
+    max-width: 580px;
+}
+
+.fd-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+/* Hero Borrower Preview Card */
+.fd-hero-card {
+    background: #1e293b;
+    border: 1.5px solid #334155;
+    border-radius: 6px;
+    padding: 26px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.fd-hero-card-header {
+    border-bottom: 1px solid #334155;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.fd-hero-card-kicker {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #38bdf8;
+}
+.fd-hero-card-badge {
+    background: rgba(22, 163, 74, 0.2);
+    border: 1px solid #16a34a;
+    color: #4ade80;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.fd-hero-card-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.fd-hero-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+}
+.fd-hero-card-label {
+    color: #94a3b8;
+    font-weight: 500;
+}
+.fd-hero-card-val {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.fd-hero-card-footer {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(51, 65, 85, 0.6);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 11.5px;
+    color: #94a3b8;
+    line-height: 1.45;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 2. FOUR KEY BENEFITS STRIP */
+.fd-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.fd-benefit-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 24px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.fd-benefit-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
+}
+.fd-benefit-icon {
+    width: 40px;
+    height: 40px;
+    background: #eff6ff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    margin-bottom: 16px;
+}
+.fd-benefit-title {
+    font-size: 15.5px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.015em;
+}
+.fd-benefit-desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748b;
+    margin: 0;
+}
+
+/* 3. HOW IT WORKS (5 SIMPLE STEPS) */
+.fd-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    position: relative;
+}
+
+.fd-step-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fd-step-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
+}
+.fd-step-number {
+    font-size: 10.5px;
+    font-weight: 900;
+    color: #007bff;
+    background: #eff6ff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    width: fit-content;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+}
+.fd-step-icon {
+    width: 32px;
+    height: 32px;
+    color: #0f172a;
+    margin-bottom: 14px;
+}
+.fd-step-title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.015em;
+}
+.fd-step-text {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #64748b;
+    margin: 0;
+}
+
+/* 4. FEATURED PRODUCTS SECTION */
+.fd-products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 36px;
+}
+
+.fd-prod-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.fd-prod-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    border-color: #cbd5e1;
+}
+
+.fd-prod-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #f5f0ea;
+    overflow: hidden;
+}
+.fd-prod-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+.fd-prod-card:hover .fd-prod-thumb img {
+    transform: scale(1.03);
+}
+
+.fd-prod-tier-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    z-index: 2;
+}
+
+.fd-prod-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.fd-prod-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.015em;
+}
+.fd-prod-spec {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0 0 14px 0;
+    line-height: 1.4;
+}
+
+.fd-prod-pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.fd-prod-cur-price {
+    font-size: 20px;
+    font-weight: 900;
+    color: #0f172a;
+}
+.fd-prod-unit {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+}
+.fd-prod-retail-price {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-decoration: line-through;
+    margin-left: auto;
+}
+
+.fd-prod-box-note {
+    font-size: 11.5px;
+    color: #64748b;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.fd-prod-actions {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 8px;
+}
+.fd-btn-sample {
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #0f172a !important;
+    font-size: 11.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 8px;
+    border-radius: 3px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+}
+.fd-btn-sample:hover {
+    border-color: #0f172a;
+    background: #f8fafc;
+}
+.fd-btn-shop {
+    background: #0f172a;
+    border: 1.5px solid #0f172a;
+    color: #ffffff !important;
+    font-size: 11.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 8px;
+    border-radius: 3px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+}
+.fd-btn-shop:hover {
+    background: #007bff;
+    border-color: #007bff;
+}
+
+/* 5. FINANCING SECTION ("PRESERVE YOUR CASH") */
+.fd-financing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.fd-fin-comparison-points {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 28px;
+}
+.fd-fin-point {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.fd-fin-point-icon {
+    width: 20px;
+    height: 20px;
+    color: #38bdf8;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.fd-fin-point-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin: 0;
+}
+.fd-fin-point-text strong {
+    color: #ffffff;
+}
+
+.fd-fin-example-card {
+    background: #1e293b;
+    border: 1.5px solid #334155;
+    border-radius: 6px;
+    padding: 30px;
+    color: #ffffff;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+}
+.fd-fin-card-header {
+    border-bottom: 1px solid #334155;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.fd-fin-card-title {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #38bdf8;
+}
+
+.fd-fin-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.fd-fin-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+}
+.fd-fin-stat-label {
+    color: #94a3b8;
+}
+.fd-fin-stat-val {
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.fd-fin-highlight-box {
+    background: rgba(22, 163, 74, 0.15);
+    border: 1.5px solid #16a34a;
+    border-radius: 4px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.fd-fin-hl-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.fd-fin-hl-val {
+    font-size: 22px;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.fd-fin-disclaimer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(148, 163, 184, 0.25);
+    font-size: 11px;
+    line-height: 1.5;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* 6. DELIVERY + RETURNS SECTION */
+.fd-logistics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.fd-logistic-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fd-logistic-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
+}
+.fd-logistic-icon {
+    width: 44px;
+    height: 44px;
+    background: #eff6ff;
+    border: 1.5px solid #dbeafe;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    margin-bottom: 18px;
+}
+.fd-logistic-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.02em;
+}
+.fd-logistic-copy {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0 0 20px 0;
+}
+.fd-logistic-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+}
+.fd-logistic-list li {
+    font-size: 13px;
+    color: #334155;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+.fd-logistic-list li svg {
+    width: 16px;
+    height: 16px;
+    color: #16a34a;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* 7. BORROWER FAQ ACCORDION */
+.fd-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.fd-faq-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+    background: #ffffff;
+}
+.fd-faq-item:hover {
+    border-color: #cbd5e1;
+}
+.fd-faq-q {
+    padding: 18px 20px;
+    background: #f8fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0f172a;
+    gap: 16px;
+}
+.fd-faq-icon {
+    font-size: 18px;
+    font-weight: 900;
+    color: #007bff;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+.fd-faq-a {
+    display: none;
+    padding: 18px 20px;
+    background: #ffffff;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #475569;
+    border-top: 1px solid #f1f5f9;
+}
+.fd-faq-a.is-open {
+    display: block;
+}
+
+/* 8. BOTTOM CONVERSION BANNER */
+.fd-cta-wrapper {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.fd-cta-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 14px 0;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+}
+.fd-cta-desc {
+    font-size: 16px;
+    color: #94a3b8;
+    max-width: 620px;
+    margin: 0 auto 30px auto;
+    line-height: 1.6;
+}
+.fd-cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+}
+.fd-cta-support {
+    font-size: 13px;
+    color: #64748b;
+}
+.fd-cta-support a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 700;
+}
+.fd-cta-support a:hover {
+    text-decoration: underline;
+}
+
+/* Anchor smooth scrolling offset for sticky header */
+#how-it-works,
+#featured-products,
+#financing,
+#delivery-returns,
+#faq {
+    scroll-margin-top: 80px;
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 1024px) {
+    .fd-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+    .fd-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .fd-steps-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .fd-products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .fd-financing-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .fd-hp-container {
+        padding: 0 20px !important;
+    }
+    .fd-sec-hero {
+        padding: 40px 0 44px 0 !important;
+    }
+    .fd-sec-benefits,
+    .fd-sec-hiw,
+    .fd-sec-products,
+    .fd-sec-financing,
+    .fd-sec-logistics,
+    .fd-sec-faq,
+    .fd-sec-cta {
+        padding: 44px 0 !important;
+    }
+    .fd-hero-headline {
+        font-size: 28px !important;
+        line-height: 1.22 !important;
+        letter-spacing: -0.02em !important;
+        word-break: keep-all !important;
+        hyphens: none !important;
+        margin-bottom: 14px !important;
+    }
+    .fd-desktop-br {
+        display: none !important;
+    }
+    .fd-hero-copy {
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 22px !important;
+    }
+    .fd-hero-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .fd-hero-actions a {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        padding: 14px 20px !important;
+        min-height: 48px !important;
+    }
+    .fd-hero-card {
+        padding: 20px !important;
+    }
+    .fd-sec-title {
+        font-size: 24px !important;
+    }
+    .fd-sec-header {
+        margin-bottom: 24px !important;
+    }
+    .fd-btn-primary,
+    .fd-btn-secondary,
+    .fd-btn-outline-white {
+        min-height: 44px !important;
+    }
+    .fd-cta-title {
+        font-size: 26px !important;
+    }
+    .fd-cta-desc {
+        font-size: 14px !important;
+    }
+    .fd-cta-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .fd-cta-actions a {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        padding: 14px 20px !important;
+        min-height: 48px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .fd-benefits-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .fd-steps-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .fd-products-grid {
+        grid-template-columns: 1fr !important;
+    }
+    /* Mobile: show 3 top products only, rest accessible via full catalog CTA */
+    .fd-products-grid .fd-prod-card:nth-child(n+4) {
+        display: none !important;
+    }
+    .fd-catalog-cta-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        min-height: 44px !important;
+    }
+    .fd-logistics-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .fd-logistic-card {
+        padding: 24px 20px !important;
+    }
+    .fd-fin-example-card {
+        padding: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .fd-hero-headline {
+        font-size: 24px !important;
+    }
+}
+</style>
+
+<div class="fd-hp-wrapper">
+
+    <!-- =============================================================
+         1. HERO SECTION (FULL-WIDTH NAVY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-navy fd-sec-hero">
+        <div class="fd-hp-container">
+            <div class="fd-hero-grid">
+                <div>
+                    <div class="fd-hero-partner-pill">
+                        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2.4;fill:none;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span>Center Street Lending Financing Partner</span>
+                    </div>
+
+                    <h1 class="fd-hero-headline">
+                        Buy Your Materials<br class="fd-desktop-br"> Without Using Your Cash
+                    </h1>
+
+                    <p class="fd-hero-copy">
+                        FixFlip advances eligible renovation materials through your existing Center Street Lending loan at the same interest rate you’re already paying.
+                    </p>
+
+                    <div class="fd-hero-actions">
+                        <a href="/commercial-flooring/" class="fd-btn-primary">
+                            <span>Shop Materials</span>
+                            <span>&rarr;</span>
+                        </a>
+                        <a href="#how-it-works" class="fd-btn-outline-white">
+                            <span>How It Works</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Institutional Borrower Card -->
+                <div class="fd-hero-card">
+                    <div class="fd-hero-card-header">
+                        <span class="fd-hero-card-kicker">CSL Material Advance</span>
+                        <span class="fd-hero-card-badge">Approved CSL Advances</span>
+                    </div>
+
+                    <div class="fd-hero-card-rows">
+                        <div class="fd-hero-card-row">
+                            <span class="fd-hero-card-label">Renovation Loan</span>
+                            <span class="fd-hero-card-val">Active CSL Rehab Loan</span>
+                        </div>
+                        <div class="fd-hero-card-row">
+                            <span class="fd-hero-card-label">Financing Rate</span>
+                            <span class="fd-hero-card-val">Matched to Existing Loan Rate</span>
+                        </div>
+                        <div class="fd-hero-card-row">
+                            <span class="fd-hero-card-label">Material Cash at Checkout</span>
+                            <span class="fd-hero-card-val" style="color: #4ade80; font-size: 15px;">$0.00</span>
+                        </div>
+                        <div class="fd-hero-card-row" style="border-bottom: none;">
+                            <span class="fd-hero-card-label">Jobsite Dispatch</span>
+                            <span class="fd-hero-card-val">Direct Curbside Freight</span>
+                        </div>
+                    </div>
+
+                    <div class="fd-hero-card-footer">
+                        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#38bdf8;stroke-width:2.2;fill:none;flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Advance tied to your active CSL renovation loan until final project payoff.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         2. FOUR KEY BENEFITS (FULL-WIDTH WHITE)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-white fd-sec-benefits">
+        <div class="fd-hp-container">
+            <div class="fd-benefits-grid">
+                <!-- Benefit 1 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">Same Loan Rate</h3>
+                    <p class="fd-benefit-desc">Pay the same interest rate already on your CSL loan. No separate markups or surprise loan fees.</p>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="10" y1="10" x2="23" y2="10"></line></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">No Material Cash Upfront</h3>
+                    <p class="fd-benefit-desc">$0 out-of-pocket required to order your renovation finishes. Keep cash available for labor.</p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">Direct Jobsite Delivery</h3>
+                    <p class="fd-benefit-desc">Scheduled commercial freight with liftgate and pallet jack unloading directly to your project.</p>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="fd-benefit-card">
+                    <div class="fd-benefit-icon">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                    </div>
+                    <h3 class="fd-benefit-title">Unopened Box Credits</h3>
+                    <p class="fd-benefit-desc">Return extra unopened cartons per published policy so you aren’t stuck paying for unused materials.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         3. HOW IT WORKS (FULL-WIDTH LIGHT GRAY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-gray fd-sec-hiw" id="how-it-works">
+        <div class="fd-hp-container">
+            <div class="fd-sec-header" style="text-align: center; max-width: 680px; margin: 0 auto 40px auto;">
+                <span class="fd-sec-kicker">BORROWER WORKFLOW</span>
+                <h2 class="fd-sec-title">How It Works</h2>
+                <p class="fd-sec-subtitle" style="margin: 0 auto;">Five clear steps to procure commercial renovation materials without draining your cash.</p>
+            </div>
+
+            <div class="fd-steps-grid">
+                <!-- Step 1 -->
+                <div class="fd-step-card">
+                    <span class="fd-step-number">STEP 01</span>
+                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <h4 class="fd-step-title">1. Choose Your Materials</h4>
+                    <p class="fd-step-text">Pick the products your renovation needs from our curated commercial collections.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="fd-step-card">
+                    <span class="fd-step-number">STEP 02</span>
+                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="10" y1="10" x2="23" y2="10"></line></svg>
+                    <h4 class="fd-step-title">2. FixFlip Advances the Cost</h4>
+                    <p class="fd-step-text">Eligible purchases are advanced through your existing loan at the same interest rate.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="fd-step-card">
+                    <span class="fd-step-number">STEP 03</span>
+                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    <h4 class="fd-step-title">3. We Deliver</h4>
+                    <p class="fd-step-text">Materials are delivered directly to your project with curbside pallet-jack unloading.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="fd-step-card">
+                    <span class="fd-step-number">STEP 04</span>
+                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <h4 class="fd-step-title">4. Build Your Project</h4>
+                    <p class="fd-step-text">Install your materials while keeping more of your own cash available for labor.</p>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="fd-step-card">
+                    <span class="fd-step-number">STEP 05</span>
+                    <svg class="fd-step-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.2;fill:none;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <h4 class="fd-step-title">5. Repay Through Your Loan</h4>
+                    <p class="fd-step-text">The advance remains tied to your existing loan until payoff at final project sale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         4. FEATURED PRODUCTS (FULL-WIDTH WHITE)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-white fd-sec-products" id="featured-products">
+        <div class="fd-hp-container">
+            <div class="fd-sec-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <span class="fd-sec-kicker">CURATED FINISHES</span>
+                    <h2 class="fd-sec-title">Featured Products</h2>
+                    <p class="fd-sec-subtitle">Top commercial-grade flooring warehoused and ready for direct jobsite dispatch.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <span style="font-size: 11.5px; font-weight: 700; color: #475569; background: #f8fafc; border: 1px solid #cbd5e1; padding: 7px 12px; border-radius: 4px;">
+                        11 public products &bull; 5 Contractor Desk products
+                    </span>
+                    <a href="/commercial-flooring/" class="fd-btn-secondary" style="padding: 10px 18px; font-size: 12px;">
+                        <span>View All Materials &rarr;</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="fd-products-grid">
+                <!-- Product 1: Zion Oak (SPC) -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_56103.webp?v=" alt="Zion Oak SPC Vinyl Plank" loading="lazy">
+                        <span class="fd-prod-tier-badge">Waterproof SPC</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Zion Oak</h3>
+                            <p class="fd-prod-spec">20mil Wear Layer &bull; Rigid Core SPC &bull; Attached Pad</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$3.56</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $4.81</span>
+                            </div>
+                            <div class="fd-prod-box-note">$98.72 / box &bull; 27.73 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/zion-oak-spc-vinyl-plank/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/zion-oak-spc-vinyl-plank/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2: Riverside Oak (SPC) -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_56140.webp?v=" alt="Riverside Oak SPC Vinyl Plank" loading="lazy">
+                        <span class="fd-prod-tier-badge">Waterproof SPC</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Riverside Oak</h3>
+                            <p class="fd-prod-spec">20mil Wear Layer &bull; Rigid Core SPC &bull; Attached Pad</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$3.56</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $4.81</span>
+                            </div>
+                            <div class="fd-prod-box-note">$98.72 / box &bull; 27.73 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/riverside-oak-spc-vinyl-plank/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/riverside-oak-spc-vinyl-plank/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3: Rustic Natural Red Oak -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_00135.webp?v=" alt="Rustic Natural Red Oak Engineered Wood" loading="lazy">
+                        <span class="fd-prod-tier-badge">Good Tier Hardwood</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Rustic Natural Red Oak</h3>
+                            <p class="fd-prod-spec">5" Wide Plank &bull; Authentic Natural Grain &bull; Multi-Ply</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$5.12</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $6.91</span>
+                            </div>
+                            <div class="fd-prod-box-note">$125.44 / box &bull; 24.50 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/rustic-natural-red-oak/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/rustic-natural-red-oak/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4: Biscuit Red Oak -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_01102.webp?v=" alt="Biscuit Red Oak Engineered Wood" loading="lazy">
+                        <span class="fd-prod-tier-badge">Good Tier Hardwood</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Biscuit Red Oak</h3>
+                            <p class="fd-prod-spec">5" Wide Plank &bull; Warm Biscuit Tone &bull; Multi-Ply</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$5.12</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $6.91</span>
+                            </div>
+                            <div class="fd-prod-box-note">$125.44 / box &bull; 24.50 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/biscuit-red-oak/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/biscuit-red-oak/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5: Exquisite White Oak -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_01015.webp?v=" alt="Exquisite White Oak Engineered Wood" loading="lazy">
+                        <span class="fd-prod-tier-badge">Better Tier Hardwood</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Exquisite White Oak</h3>
+                            <p class="fd-prod-spec">7.5" Ultra-Wide Plank &bull; European White Oak Wirebrushed</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$5.97</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $8.06</span>
+                            </div>
+                            <div class="fd-prod-box-note">$141.25 / box &bull; 23.66 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/exquisite-oak-engineered-hardwood/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/exquisite-oak-engineered-hardwood/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Product 6 (Logged In): Fawn White Oak (Best Tier) -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_17065.webp?v=" alt="Fawn White Oak Best Tier Engineered Wood" loading="lazy">
+                        <span class="fd-prod-tier-badge" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8;">BEST TIER 🔒</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Fawn White Oak</h3>
+                            <p class="fd-prod-spec">7.5" Wide &bull; Heavy 4mm Face Veneer &bull; UV Aluminum Oxide</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$9.00</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $12.15</span>
+                            </div>
+                            <div class="fd-prod-box-note">$209.79 / box &bull; 23.31 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/fawn-white-oak-ca399-provincial-plank/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/fawn-white-oak-ca399-provincial-plank/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 6 (Guest): Sophisticated White Oak -->
+                <div class="fd-prod-card">
+                    <div class="fd-prod-thumb">
+                        <img src="/images/hero_02012.webp?v=" alt="Sophisticated White Oak Engineered Wood" loading="lazy">
+                        <span class="fd-prod-tier-badge">Better Tier Hardwood</span>
+                    </div>
+                    <div class="fd-prod-body">
+                        <div>
+                            <h3 class="fd-prod-name">Sophisticated White Oak</h3>
+                            <p class="fd-prod-spec">7.5" Ultra-Wide Plank &bull; Warm European Oak Finish</p>
+                            <div class="fd-prod-pricing">
+                                <span class="fd-prod-cur-price">$5.97</span>
+                                <span class="fd-prod-unit">/ sq ft</span>
+                                <span class="fd-prod-retail-price">Retail $8.06</span>
+                            </div>
+                            <div class="fd-prod-box-note">$141.25 / box &bull; 23.66 sq ft per carton</div>
+                        </div>
+                        <div class="fd-prod-actions">
+                            <a href="/product/sophisticated-oak-engineered-hardwood/#sample" class="fd-btn-sample">Order Sample</a>
+                            <a href="/product/sophisticated-oak-engineered-hardwood/" class="fd-btn-shop">Shop Product</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Central Full Catalog Link -->
+            <div style="text-align: center;">
+                <a href="/commercial-flooring/" class="fd-btn-primary fd-catalog-cta-btn" style="padding: 14px 32px; min-height: 44px;">
+                    <span>View Full Catalog (16 Planks) &rarr;</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         5. FINANCING SECTION ("PRESERVE YOUR CASH" - FULL-WIDTH NAVY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-navy fd-sec-financing" id="financing">
+        <div class="fd-hp-container">
+            <div class="fd-financing-grid">
+                <div>
+                    <span class="fd-sec-kicker fd-sec-kicker-sky">CAPITAL PRESERVATION</span>
+                    <h2 class="fd-sec-title fd-sec-title-white">Preserve Your Cash</h2>
+                    <p class="fd-sec-subtitle fd-sec-subtitle-slate">
+                        Instead of paying for materials out of pocket, use the financing already available through your project.
+                    </p>
+
+                    <div class="fd-fin-comparison-points">
+                        <div class="fd-fin-point">
+                            <svg class="fd-fin-point-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <p class="fd-fin-point-text">
+                                <strong>Keep Liquid Capital:</strong> Maintain reserves for contractor labor, permit fees, and structural contingencies instead of tying it up in material boxes.
+                            </p>
+                        </div>
+                        <div class="fd-fin-point">
+                            <svg class="fd-fin-point-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <p class="fd-fin-point-text">
+                                <strong>No Financing Surcharge:</strong> Advance rates are matched dollar-for-dollar to your existing loan interest rate with zero extra points or markups.
+                            </p>
+                        </div>
+                        <div class="fd-fin-point">
+                            <svg class="fd-fin-point-icon" viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <p class="fd-fin-point-text">
+                                <strong>Simplified Accounting:</strong> All material advances are itemized and reconciled directly into your project statement until property sale.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Calculation Card -->
+                <div class="fd-fin-example-card">
+                    <div class="fd-fin-card-header">
+                        <span class="fd-fin-card-title">Illustrative Renovation Order</span>
+                        <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">CSL Active Loan</span>
+                    </div>
+
+                    <div class="fd-fin-stats">
+                        <div class="fd-fin-stat-row">
+                            <span class="fd-fin-stat-label">Material Order Total</span>
+                            <span class="fd-fin-stat-val">$25,000</span>
+                        </div>
+                        <div class="fd-fin-stat-row">
+                            <span class="fd-fin-stat-label">Existing Loan Rate</span>
+                            <span class="fd-fin-stat-val">9.25%</span>
+                        </div>
+                        <div class="fd-fin-stat-row">
+                            <span class="fd-fin-stat-label">FixFlip Advance Rate</span>
+                            <span class="fd-fin-stat-val">9.25%</span>
+                        </div>
+                    </div>
+
+                    <div class="fd-fin-highlight-box">
+                        <div>
+                            <div class="fd-fin-hl-label">Cash Needed for Materials Today</div>
+                            <div style="font-size: 11px; color: #86efac; margin-top: 2px;">$0 out-of-pocket at checkout</div>
+                        </div>
+                        <div class="fd-fin-hl-val">$0</div>
+                    </div>
+
+                    <div class="fd-fin-disclaimer">
+                        Illustrative example only. Eligibility, available loan funds, rates, and approval are subject to the borrower’s existing loan terms.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         6. DELIVERY + RETURNS SECTION (FULL-WIDTH LIGHT GRAY)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-gray fd-sec-logistics" id="delivery-returns">
+        <div class="fd-hp-container">
+            <div class="fd-sec-header" style="text-align: center; max-width: 680px; margin: 0 auto 40px auto;">
+                <span class="fd-sec-kicker">LOGISTICS & PEACE OF MIND</span>
+                <h2 class="fd-sec-title">Delivery & Returns</h2>
+                <p class="fd-sec-subtitle" style="margin: 0 auto;">Reliable jobsite freight and straightforward return policies designed for renovation schedules.</p>
+            </div>
+
+            <div class="fd-logistics-grid">
+                <!-- Delivery -->
+                <div class="fd-logistic-card">
+                    <div class="fd-logistic-icon">
+                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    </div>
+                    <h3 class="fd-logistic-title">Direct Jobsite Delivery</h3>
+                    <p class="fd-logistic-copy">
+                        FixFlip coordinates delivery directly to your project. Delivery pricing is calculated transparently before checkout so there are no surprise freight fees.
+                    </p>
+                    <ul class="fd-logistic-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Scheduled curbside delivery directly to your active jobsite</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Delivery equipment includes liftgate and pallet jack where site conditions permit (paved, level surface required)</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>100% transparent freight quotes presented prior to order submission</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Returns -->
+                <div class="fd-logistic-card">
+                    <div class="fd-logistic-icon">
+                        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                    </div>
+                    <h3 class="fd-logistic-title">Ordered Extra? Return Unopened Cartons</h3>
+                    <p class="fd-logistic-copy">
+                        Undamaged, unopened cartons in their original factory packaging may be returned for project credit in accordance with our published return policy.
+                    </p>
+                    <ul class="fd-logistic-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Order adequate 10% contingency with confidence</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Full, factory-sealed unopened cartons are eligible for credit</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Returns subject to published policy terms, return freight, and restocking guidelines</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" style="stroke:currentColor;stroke-width:2.4;fill:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <span>Approved credit is applied back against your material advance balance</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         7. BORROWER FAQ SECTION (FULL-WIDTH WHITE)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-white fd-sec-faq" id="faq">
+        <div class="fd-hp-container">
+            <div class="fd-sec-header" style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+                <span class="fd-sec-kicker">BORROWER QUESTIONS</span>
+                <h2 class="fd-sec-title">Frequently Asked Questions</h2>
+                <p class="fd-sec-subtitle" style="margin: 0 auto;">Answers to common questions about advancing renovation materials through your CSL loan.</p>
+            </div>
+
+            <div class="fd-faq-list">
+                <!-- Q1 -->
+                <div class="fd-faq-item">
+                    <div class="fd-faq-q" onclick="window.fdToggleFaq(this)">
+                        <span>How does FixFlip advance materials through my existing loan?</span>
+                        <span class="fd-faq-icon">+</span>
+                    </div>
+                    <div class="fd-faq-a">
+                        FixFlip partners directly with Center Street Lending. When placing your order, select the loan advance option and enter your active CSL loan number. The cost of materials and freight is tied into your existing loan at the same interest rate you are already paying, requiring $0 cash out of pocket today.
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="fd-faq-item">
+                    <div class="fd-faq-q" onclick="window.fdToggleFaq(this)">
+                        <span>Is the interest rate really the same as my existing loan?</span>
+                        <span class="fd-faq-icon">+</span>
+                    </div>
+                    <div class="fd-faq-a">
+                        Yes. There is zero interest rate markup and no separate financing application fee. You pay the exact same rate agreed upon with Center Street Lending for your rehabilitation loan.
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="fd-faq-item">
+                    <div class="fd-faq-q" onclick="window.fdToggleFaq(this)">
+                        <span>What information is needed during checkout?</span>
+                        <span class="fd-faq-icon">+</span>
+                    </div>
+                    <div class="fd-faq-a">
+                        You only need your active Center Street Lending loan number, your contractor contact information, and the jobsite delivery destination. No separate credit checks or bank statements are required.
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="fd-faq-item">
+                    <div class="fd-faq-q" onclick="window.fdToggleFaq(this)">
+                        <span>How does direct jobsite delivery work?</span>
+                        <span class="fd-faq-icon">+</span>
+                    </div>
+                    <div class="fd-faq-a">
+                        Orders are shipped via commercial freight carrier directly to your project within 1 week of advance authorization. Delivery trucks arrive equipped with hydraulic liftgates and pallet jacks to unload pallets directly to the curbside or driveway where paved, level surface conditions permit. Delivery fees are shown clearly before checkout with no surprise charges.
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="fd-faq-item">
+                    <div class="fd-faq-q" onclick="window.fdToggleFaq(this)">
+                        <span>How do unopened box returns work if we order extra?</span>
+                        <span class="fd-faq-icon">+</span>
+                    </div>
+                    <div class="fd-faq-a">
+                        We encourage ordering an adequate 10% waste contingency. If you finish your project with extra, undamaged, unopened cartons in their original packaging, you can return them in accordance with our published return policy terms, with approved credit applied directly against your advance balance.
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="fd-faq-item">
+                    <div class="fd-faq-q" onclick="window.fdToggleFaq(this)">
+                        <span>Can I order physical sample swatches before placing full pallet orders?</span>
+                        <span class="fd-faq-icon">+</span>
+                    </div>
+                    <div class="fd-faq-a">
+                        Yes! Free sample swatches &bull; $15 shipping per package of up to 3 via USPS Ground Advantage. Swatches are shipped directly to your jobsite or office so you can verify color, grain, and thickness on-site before ordering.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         8. BOTTOM CONVERSION BANNER (FULL-WIDTH NAVY, FLOWS INTO FOOTER)
+    ============================================================== -->
+    <section class="fd-hp-section fd-sec-navy fd-sec-cta">
+        <div class="fd-hp-container">
+            <div class="fd-cta-wrapper">
+                <span class="fd-sec-kicker fd-sec-kicker-sky" style="margin-bottom: 12px;">GET STARTED TODAY</span>
+                <h2 class="fd-cta-title">Buy Your Materials Without Using Your Cash</h2>
+                <p class="fd-cta-desc">
+                    Advance eligible renovation materials through your existing Center Street Lending loan today.
+                </p>
+                <div class="fd-cta-actions">
+                    <a href="/commercial-flooring/" class="fd-btn-primary">
+                        <span>Shop Materials</span>
+                        <span>&rarr;</span>
+                    </a>
+                    <a href="#how-it-works" class="fd-btn-outline-white">
+                        <span>How It Works</span>
+                    </a>
+                </div>
+                <div class="fd-cta-support">
+                    Contractor Support &bull; <a href="tel:9497054300">(949) 705-4300</a> &bull; <a href="mailto:support@fixflip.com">support@fixflip.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- =============================================================
+     HOMEPAGE INTERACTIVE JAVASCRIPT
+============================================================== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // FAQ Accordion Toggle
+    window.fdToggleFaq = function(el) {
+        const answer = el.nextElementSibling;
+        const icon = el.querySelector('.fd-faq-icon');
+        if (answer) {
+            if (answer.classList.contains('is-open')) {
+                answer.classList.remove('is-open');
+                if (icon) icon.textContent = '+';
+            } else {
+                answer.classList.add('is-open');
+                if (icon) icon.textContent = '−';
+            }
+        }
+    };
+
+    // Smooth Anchor Scroll for internal links (#how-it-works, #financing, etc.)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId !== '#') {
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    targetEl.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+});
+</script>
+
+
+
+
+
+        </div><!-- .col-full -->
+    </div><!-- #content -->
+
+<style>
+.fd-footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 40px;
+}
+.fd-footer-accordion-btn {
+    display: none;
+}
+@media (max-width: 992px) {
+    .fd-footer-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 32px !important;
+    }
+}
+@media (max-width: 768px) {
+    .fd-footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+        padding: 32px 16px 20px !important;
+    }
+    .fd-footer-brand-col {
+        padding-bottom: 20px !important;
+        border-bottom: 1px solid #1e293b !important;
+        margin-bottom: 4px !important;
+    }
+    .fd-footer-accordion-col {
+        border-bottom: 1px solid #1e293b !important;
+    }
+    .fd-footer-accordion-header {
+        display: none !important;
+    }
+    .fd-footer-accordion-btn {
+        display: flex !important;
+        width: 100% !important;
+        background: none !important;
+        border: none !important;
+        color: #ffffff !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+        padding: 14px 0 !important;
+        min-height: 48px !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        cursor: pointer !important;
+        box-sizing: border-box !important;
+    }
+    .fd-footer-accordion-content {
+        display: none;
+        padding-bottom: 16px !important;
+    }
+    .fd-footer-accordion-content.is-open {
+        display: block !important;
+    }
+    .fd-footer-arrow {
+        transition: transform 0.2s ease !important;
+        font-size: 10px !important;
+        color: #38bdf8 !important;
+    }
+    .fd-footer-accordion-btn[aria-expanded="true"] .fd-footer-arrow {
+        transform: rotate(180deg) !important;
+    }
+    .fd-footer-accordion-content a {
+        padding: 6px 0 !important;
+        min-height: 38px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+}
+</style>
+    <!-- CLEAN AUTHENTIC B2B FOOTER -->
+    <footer id="colophon" class="site-footer" style="background: #0f172a; color: #94a3b8; font-size: 14px; border-top: 3px solid #007bff; margin-top: 0;">
+        
+        <!-- TOP FOOTER CONTENT (4 COLUMNS ON DESKTOP, ACCORDIONS ON MOBILE) -->
+        <div class="fd-footer-grid" style="max-width: 1240px; margin: 0 auto; padding: 48px 20px 36px;">
+            
+            <!-- COLUMN 1: BRANDING & CSL INTEGRATION -->
+            <div class="fd-footer-brand-col">
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;">
+                    <a href="/" style="display: inline-block; text-decoration: none;">
+                        <img src="/FixFlip-dotCOM_Black.png" alt="FixFlip.com" style="height: 30px; width: auto; display: block; filter: brightness(0) invert(1);">
+                    </a>
+                    <span style="color: #475569; font-size: 16px; font-weight: 300;">|</span>
+                    <a href="https://centerstreetlending.com" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; text-decoration: none;">
+                        <img src="/images/center_street_lending_logo_white.svg?v=" alt="Center Street Lending" style="height: 20px; width: auto; display: block;">
+                    </a>
+                </div>
+                <div style="font-size: 11px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
+                    Exclusive Material Financing Partner
+                </div>
+                <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.55; margin: 0 0 16px 0; max-width: 360px;">
+                    Wholesale rehab flooring for real estate investors and contractors. Financed directly through your active Center Street Lending rehab loan.
+                </p>
+            </div>
+
+            <!-- COLUMN 2: PRODUCTS (ACCORDION ON MOBILE) -->
+            <div class="fd-footer-accordion-col">
+                <h4 class="fd-footer-accordion-header" style="font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0;">
+                    Products
+                </h4>
+                <button type="button" class="fd-footer-accordion-btn" aria-expanded="false" aria-controls="fd-foot-acc-products">
+                    <span>Products</span>
+                    <span class="fd-footer-arrow">▼</span>
+                </button>
+                <div id="fd-foot-acc-products" class="fd-footer-accordion-content">
+                    <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.1; font-size: 13.5px;">
+                        <li><a href="/category/vinyl-flooring/" style="color: #cbd5e1; text-decoration: none;">Vinyl Flooring (SPC)</a></li>
+                        <li><a href="/category/hardwood-good/" style="color: #cbd5e1; text-decoration: none;">Engineered Wood (Good Tier)</a></li>
+                        <li><a href="/category/hardwood-better/" style="color: #cbd5e1; text-decoration: none;">Engineered Wood (Better Tier)</a></li>
+                        <li><a href="/commercial-flooring/" style="color: #007bff; text-decoration: none; font-weight: 700;">View All Products &rarr;</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COLUMN 3: POLICIES & ACCOUNT (ACCORDION ON MOBILE) -->
+            <div class="fd-footer-accordion-col">
+                <h4 class="fd-footer-accordion-header" style="font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0;">
+                    Policies &amp; Orders
+                </h4>
+                <button type="button" class="fd-footer-accordion-btn" aria-expanded="false" aria-controls="fd-foot-acc-policies">
+                    <span>Policies &amp; Orders</span>
+                    <span class="fd-footer-arrow">▼</span>
+                </button>
+                <div id="fd-foot-acc-policies" class="fd-footer-accordion-content">
+                    <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.1; font-size: 13px;">
+                        <li><a href="/how-it-works/" style="color: #38bdf8; text-decoration: none; font-weight: 700;">How It Works &rarr;</a></li>
+                        <li><a href="/shipping-delivery/" style="color: #cbd5e1; text-decoration: none;">Shipping &amp; Delivery</a></li>
+                        <li><a href="/returns-unopened-box-credit/" style="color: #cbd5e1; text-decoration: none;">Returns &amp; Box Credit</a></li>
+                        <li><a href="/cancellation-refund-policy/" style="color: #cbd5e1; text-decoration: none;">Cancellation &amp; Refunds</a></li>
+                        <li><a href="/terms/" style="color: #cbd5e1; text-decoration: none;">Terms &amp; Conditions</a></li>
+                        <li><a href="/privacy-policy/" style="color: #cbd5e1; text-decoration: none;">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COLUMN 4: CONTACT & SUPPORT (ACCORDION ON MOBILE) -->
+            <div class="fd-footer-accordion-col">
+                <h4 class="fd-footer-accordion-header" style="font-size: 12px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0;">
+                    Order Desk &amp; Financing
+                </h4>
+                <button type="button" class="fd-footer-accordion-btn" aria-expanded="false" aria-controls="fd-foot-acc-contact">
+                    <span>Order Desk &amp; Financing</span>
+                    <span class="fd-footer-arrow">▼</span>
+                </button>
+                <div id="fd-foot-acc-contact" class="fd-footer-accordion-content">
+                    <div style="font-size: 13px; color: #94a3b8; line-height: 1.6;">
+                        <p style="margin: 0 0 8px 0; color: #cbd5e1; font-weight: 700;">
+                            Direct Jobsite Support:
+                        </p>
+                        <p style="margin: 0 0 10px 0; color: #94a3b8;">
+                            Phone: <a href="tel:9497054300" style="color: #38bdf8; text-decoration: none; font-weight: 700;">(949) 705-4300</a><br>
+                            Support: <a href="mailto:support@fixflip.com" style="color: #38bdf8; text-decoration: none;">support@fixflip.com</a><br>
+                            Orders: <a href="mailto:orders@fixflip.com" style="color: #38bdf8; text-decoration: none;">orders@fixflip.com</a>
+                        </p>
+                        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1e293b;">
+                            <span style="font-size: 11px; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">CSL Loan Advance Desk:</span>
+                            <a href="mailto:sscouig@centerstreetlending.com" style="color: #cbd5e1; text-decoration: none; font-size: 12px;">sscouig@centerstreetlending.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var accButtons = document.querySelectorAll('.fd-footer-accordion-btn');
+            accButtons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var targetId = this.getAttribute('aria-controls');
+                    var content = document.getElementById(targetId);
+                    var isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    if (content) {
+                        content.classList.toggle('is-open');
+                        this.setAttribute('aria-expanded', !isExpanded);
+                    }
+                });
+            });
+        });
+        </script>
+
+        <!-- BOTTOM COPYRIGHT BAR -->
+        <div style="background: #020617; border-top: 1px solid #1e293b; padding: 20px; font-size: 12px; color: #64748b;">
+            <div style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    &copy;  <strong>FixFlip.com</strong> &bull; In Partnership with <strong>Center Street Lending</strong>. All rights reserved.
+                </div>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <a href="/terms/" style="color: #94a3b8; text-decoration: none;">Terms</a>
+                    <a href="/privacy-policy/" style="color: #94a3b8; text-decoration: none;">Privacy</a>
+                    <a href="/shipping-delivery/" style="color: #94a3b8; text-decoration: none;">Shipping</a>
+                    <a href="/returns-unopened-box-credit/" style="color: #94a3b8; text-decoration: none;">Returns</a>
+                    <a href="/cancellation-refund-policy/" style="color: #94a3b8; text-decoration: none;">Refunds</a>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+</div><!-- #page -->
+
+
+
 </body>
 </html>
